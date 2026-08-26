@@ -137,9 +137,19 @@
   .btn-ver-detalle:hover{ background:#e2ecfc; }
   .img-equipo{
     width:120px; height:160px; border-radius:8px; background:#fff; border:2px solid var(--borde);
-    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0; position:relative;
+    overflow:hidden;
   }
   .img-equipo svg{ width:56px; height:56px; color:var(--gris); }
+  .img-equipo img{ width:100%; height:100%; object-fit:contain; padding:6px; }
+  .btn-zoom-equipo{
+    position:absolute; bottom:4px; right:4px; border:1px solid var(--borde); background:#fff;
+    color:var(--azul); border-radius:50%; width:24px; height:24px; font-size:12px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; padding:0; box-shadow:0 1px 4px rgba(0,0,0,.15);
+  }
+  .btn-zoom-equipo:hover{ background:var(--azul-bg); }
+  .modal-zoom-caja{ max-width:420px; text-align:center; }
+  .modal-zoom-caja img{ width:100%; max-height:60vh; object-fit:contain; border-radius:8px; }
   .ficha{ flex:1; min-width:220px; }
   .ficha .fila-ficha{ display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid #eee; font-size:13px; }
   .ficha .fila-ficha span:first-child{ color:var(--gris); font-weight:600; }
@@ -554,6 +564,7 @@
   body.tema-oscuro .autocomplete .lista,
   body.tema-oscuro .simulador-lista-equipos,
   body.tema-oscuro .img-equipo,
+  body.tema-oscuro .btn-zoom-equipo,
   body.tema-oscuro .btn.secundario,
   body.tema-oscuro .mapa-caja,
   body.tema-oscuro .panel-comparar,
@@ -1059,10 +1070,12 @@ if (location.protocol === "file:") {
 
       <div class="detalle-equipo" id="detalleEquipo">
         <div class="img-equipo">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <svg id="iconoEquipoGenerico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <rect x="6" y="2" width="12" height="20" rx="2"/>
             <line x1="10" y1="19" x2="14" y2="19"/>
           </svg>
+          <img class="oculto" id="fotoEquipo" alt="">
+          <button type="button" class="btn-zoom-equipo oculto" id="btnZoomEquipo" title="Ver imagen más grande">🔍</button>
         </div>
         <div class="ficha">
           <div class="fila-ficha"><span>MARCA:</span><span id="dMarca">-</span></div>
@@ -1668,6 +1681,16 @@ if (location.protocol === "file:") {
   </div>
 </div>
 
+<div class="modal-overlay oculto" id="modalZoomEquipo">
+  <div class="modal-caja modal-zoom-caja">
+    <div class="modal-header">
+      <b id="modalZoomTitulo">Equipo</b>
+      <button type="button" class="btn-cerrar" id="btnCerrarZoomEquipo">✕</button>
+    </div>
+    <img id="fotoEquipoGrande" alt="">
+  </div>
+</div>
+
 <div class="modal-overlay oculto" id="modalDatosGuion">
   <div class="modal-caja">
     <div class="modal-header">
@@ -1778,7 +1801,7 @@ if (location.protocol === "file:") {
   // Pega aquí la URL del Web App de Google Apps Script (ver GUIA_APPS_SCRIPT.md)
   var GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzXtTACG2tyOQ675d18Xc5nZDPeUfHGkdnzXcD_pN2HcfQSv55PDHa2P8hgLr3cTcEV/exec";
 
-  var DATA = { cobertura: [], specs: [], equiposPlanes: [], codFinanciamiento: [], stock: [], packs: [], planes: [], equiposTipoventa: {}, precios: {}, objeciones: [], regiones: [], gamaFinanciamiento: {} };
+  var DATA = { cobertura: [], specs: [], equiposPlanes: [], codFinanciamiento: [], stock: [], packs: [], planes: [], equiposTipoventa: {}, precios: {}, objeciones: [], regiones: [], gamaFinanciamiento: {}, equiposImagenes: [] };
 
   var SUBTIPOS = {
     PREPAGO: ["PREPAGO"],
@@ -1843,7 +1866,8 @@ if (location.protocol === "file:") {
     fetch("data/precios.json").then(function(r){ return r.json(); }),
     fetch("data/objeciones.json").then(function(r){ return r.json(); }),
     fetch("data/regiones.json").then(function(r){ return r.json(); }),
-    fetch("data/gama_financiamiento.json").then(function(r){ return r.json(); })
+    fetch("data/gama_financiamiento.json").then(function(r){ return r.json(); }),
+    fetch("data/equipos_imagenes.json").then(function(r){ return r.json(); })
   ]).then(function(res){
     DATA.cobertura = res[0];
     DATA.specs = res[1];
@@ -1857,12 +1881,13 @@ if (location.protocol === "file:") {
     DATA.objeciones = res[9];
     DATA.regiones = res[10];
     DATA.gamaFinanciamiento = res[11];
+    DATA.equiposImagenes = res[12];
 
     // Cada init() es independiente: si uno falla (dato raro, etc.) no debe tumbar a los
     // demas — sin esto, un solo error silencioso podia dejar sin usar, por ejemplo, el
     // buscador de EQUIPO (initAutocomplete) si algo antes de el en la lista fallaba.
     [initCodFinanciamiento, initPlanes, initAutocomplete, initComparar, initStockNacional,
-      initCosto, initSimuladorEquipos, initVerDetalleEquipo, initAgendarLlamada, initCasosAgendados, initAutoguardado, initEncabezadoColapsable, precargarCicloContrato, actualizarContrato, actualizarSimuladorFinanciamiento, actualizarEncabezado].forEach(function(fn){
+      initCosto, initSimuladorEquipos, initVerDetalleEquipo, initZoomEquipo, initAgendarLlamada, initCasosAgendados, initAutoguardado, initEncabezadoColapsable, precargarCicloContrato, actualizarContrato, actualizarSimuladorFinanciamiento, actualizarEncabezado].forEach(function(fn){
       try{ fn(); }catch(err){ console.error("Fallo al inicializar " + fn.name + ":", err); }
     });
   }).catch(function(err){
@@ -2959,6 +2984,10 @@ if (location.protocol === "file:") {
     $("detalleEquipo").classList.remove("visible", "expandido");
     $("btnVerDetalleEquipo").classList.add("oculto");
     $("btnVerDetalleEquipo").textContent = "🔍 Ver detalle técnico ▾";
+    $("fotoEquipo").classList.add("oculto");
+    $("fotoEquipo").removeAttribute("src");
+    $("iconoEquipoGenerico").classList.remove("oculto");
+    $("btnZoomEquipo").classList.add("oculto");
     $("packAviso").classList.add("oculto");
     $("packAviso").innerHTML = "";
     $("campoMotivo").classList.add("oculto");
@@ -4317,6 +4346,36 @@ if (location.protocol === "file:") {
     return mejorScore >= 0.35 ? mejor : null;
   }
 
+  // Igual criterio que mejorMatchSpecs, pero contra el manifest de fotos (una foto por
+  // linea de modelo, sin talla/color/red — ver extract_equipos_imagenes en extract_data.py).
+  // Umbral un poco mas exigente que el de specs: mostrar la foto de OTRO equipo por error
+  // es peor que no mostrar ninguna.
+  function mejorMatchImagen(nombreSeleccionado){
+    var qTokens = tokensEquipo(nombreSeleccionado);
+    if (!qTokens.length) return null;
+    var qModelo = tokensModelo(qTokens);
+    if (!qModelo.length) return null;
+    var qSet = {};
+    qTokens.forEach(function(t){ qSet[t] = true; });
+
+    var mejor = null, mejorScore = 0;
+    (DATA.equiposImagenes || []).forEach(function(row){
+      var candTokens = tokensEquipo(row.nombre);
+      if (!candTokens.length) return;
+      var candSet = {};
+      candTokens.forEach(function(t){ candSet[t] = true; });
+      var modeloCoincide = qModelo.every(function(t){ return candSet[t]; });
+      if (!modeloCoincide) return;
+
+      var interseccion = candTokens.filter(function(t){ return qSet[t]; }).length;
+      var union = {};
+      qTokens.concat(candTokens).forEach(function(t){ union[t] = true; });
+      var score = interseccion / Object.keys(union).length;
+      if (score > mejorScore){ mejorScore = score; mejor = row; }
+    });
+    return mejorScore >= 0.4 ? mejor : null;
+  }
+
   // Alias de búsqueda: el catálogo real usa abreviaturas ("GXY" para Samsung Galaxy) que
   // el agente rara vez escribe tal cual, así que se traducen antes de comparar.
   var ALIAS_BUSQUEDA = { "GALAXY": "GXY" };
@@ -4589,8 +4648,44 @@ if (location.protocol === "file:") {
 
     actualizarColoresYStock(nombreSeleccionado);
     actualizarPackAviso(nombreSeleccionado);
+    actualizarFotoEquipo(nombreSeleccionado);
     actualizarCosto();
     guardarProgreso();
+  }
+
+  // Muestra la foto real del equipo (DATA/EQUIPOS -> FLUJO/img/equipos) si el catalogo
+  // trae una que matchea; si no hay match confiable, se queda con el icono generico de
+  // siempre (mejor eso que mostrar la foto de un equipo distinto).
+  function actualizarFotoEquipo(nombreSeleccionado){
+    var img = $("fotoEquipo");
+    var icono = $("iconoEquipoGenerico");
+    var btnZoom = $("btnZoomEquipo");
+    var match = mejorMatchImagen(nombreSeleccionado);
+    if (match){
+      img.src = match.archivo;
+      img.alt = nombreSeleccionado;
+      img.classList.remove("oculto");
+      icono.classList.add("oculto");
+      btnZoom.classList.remove("oculto");
+    } else {
+      img.classList.add("oculto");
+      img.removeAttribute("src");
+      icono.classList.remove("oculto");
+      btnZoom.classList.add("oculto");
+    }
+  }
+
+  function initZoomEquipo(){
+    $("btnZoomEquipo").addEventListener("click", function(){
+      var img = $("fotoEquipo");
+      if (!img.src) return;
+      $("fotoEquipoGrande").src = img.src;
+      $("modalZoomTitulo").textContent = equipoActual || "Equipo";
+      $("modalZoomEquipo").classList.remove("oculto");
+    });
+    $("btnCerrarZoomEquipo").addEventListener("click", function(){
+      $("modalZoomEquipo").classList.add("oculto");
+    });
   }
 
   // ============ COMPARAR EQUIPOS ============

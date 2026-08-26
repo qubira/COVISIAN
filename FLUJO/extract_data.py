@@ -15,6 +15,8 @@ COBERTURERO_PATH = ROOT + r"\DATA\COBERTURERO\COBERTURERO - EQUIPOS AGO 13 V2.xl
 VISOR_PATH = ROOT + r"\DATA\PLANES\Visor.xlsb"
 STOCK_PATH = ROOT + r"\DATA\COLOR\INTSAP52_FINAL_20260822_094009.xlsx"
 OUT_DIR = ROOT + r"\FLUJO\data"
+EQUIPOS_IMG_DIR = ROOT + r"\DATA\EQUIPOS"
+IMG_OUT_DIR = ROOT + r"\FLUJO\img\equipos"
 
 
 def clean(v):
@@ -531,6 +533,66 @@ def necesita_actualizar():
     return False
 
 
+def _slug_imagen(nombre_sin_ext):
+    """
+    "MOTO EDGE 70 FUSION correct.png" / "Samsung S26 Ultra_.jpg" -> nombre de archivo
+    limpio para URL (sin espacios ni mayusculas mezcladas) + nombre legible para el
+    matching de tokens en el frontend (mismo criterio que ya limpia nombres de equipo
+    en otras extracciones de este archivo: quita basura de nomenclatura interna, no
+    cambia el equipo en si).
+    """
+    import re
+    s = re.sub(r"\bcorrect\b", "", nombre_sin_ext, flags=re.IGNORECASE)
+    s = re.sub(r"\s+", " ", s).strip().strip("_").strip()
+    slug = re.sub(r"[^a-zA-Z0-9]+", "-", s).strip("-").lower()
+    return slug, s
+
+
+def extract_equipos_imagenes():
+    """
+    Copia las fotos de DATA/EQUIPOS (una foto por linea de modelo, no por variante de
+    almacenamiento/color) a FLUJO/img/equipos con nombres de archivo limpios, y arma el
+    manifest equipos_imagenes.json que el frontend usa para encontrarle la foto a cada
+    equipo del catalogo por matching de tokens (misma logica que ya usa mejorMatchSpecs
+    en index.html para la ficha tecnica).
+    """
+    import os
+    import shutil
+
+    if not os.path.isdir(EQUIPOS_IMG_DIR):
+        return []
+
+    os.makedirs(IMG_OUT_DIR, exist_ok=True)
+    # limpia el destino primero para no dejar fotos huerfanas si se borra/renombra el
+    # archivo de origen entre una extraccion y la siguiente
+    for f in os.listdir(IMG_OUT_DIR):
+        os.remove(os.path.join(IMG_OUT_DIR, f))
+
+    manifest = []
+    usados = set()
+    for nombre_archivo in sorted(os.listdir(EQUIPOS_IMG_DIR)):
+        ruta = os.path.join(EQUIPOS_IMG_DIR, nombre_archivo)
+        if not os.path.isfile(ruta):
+            continue
+        base, ext = os.path.splitext(nombre_archivo)
+        ext = ext.lower()
+        if ext not in (".png", ".jpg", ".jpeg", ".webp"):
+            continue
+        slug, nombre_limpio = _slug_imagen(base)
+        if not slug:
+            continue
+        archivo_final = slug
+        n = 2
+        while archivo_final in usados:
+            archivo_final = slug + "-" + str(n)
+            n += 1
+        usados.add(archivo_final)
+        shutil.copyfile(ruta, os.path.join(IMG_OUT_DIR, archivo_final + ext))
+        manifest.append({"nombre": nombre_limpio.upper(), "archivo": "img/equipos/" + archivo_final + ext})
+
+    return manifest
+
+
 def main():
     import os
     os.makedirs(OUT_DIR, exist_ok=True)
@@ -545,6 +607,7 @@ def main():
     planes = extract_planes()
     equipos_tipoventa = extract_equipos_tipoventa()
     precios = extract_precios()
+    equipos_imagenes = extract_equipos_imagenes()
 
     with open(OUT_DIR + r"\cobertura.json", "w", encoding="utf-8") as f:
         json.dump(cobertura, f, ensure_ascii=False, indent=0)
@@ -566,6 +629,8 @@ def main():
         json.dump(equipos_tipoventa, f, ensure_ascii=False, indent=0)
     with open(OUT_DIR + r"\precios.json", "w", encoding="utf-8") as f:
         json.dump(precios, f, ensure_ascii=False, indent=0)
+    with open(OUT_DIR + r"\equipos_imagenes.json", "w", encoding="utf-8") as f:
+        json.dump(equipos_imagenes, f, ensure_ascii=False, indent=0)
 
     _escribir_meta()
 
@@ -579,6 +644,7 @@ def main():
     print("stock:", len(stock), "filas de stock por zona")
     print("packs:", len(packs), "combos con accesorio")
     print("precios:", len(precios), "combinaciones TIPO|SUBTIPO con tabla de precios")
+    print("equipos_imagenes:", len(equipos_imagenes), "fotos de equipos copiadas a FLUJO/img/equipos")
 
 
 if __name__ == "__main__":
