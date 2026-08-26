@@ -1,0 +1,152 @@
+[
+  {"departamento": "Amazonas", "region": "REGIÓN NORTE", "secciones": [
+    {"titulo": "Arqueología", "texto": "Fortaleza de Kuélap, una colosal urbe amurallada de la cultura Chachapoyas construida en la cima de montañas andinas. Destacan también los Sarcófagos de Karajía, tumbas de casi dos metros de alto empotradas en acantilados inaccesibles."},
+    {"titulo": "Paisajes", "texto": "Catarata de Gocta, una de las caídas de agua más altas del mundo (771 metros) envuelta en mitos de sirenas. La Caverna de Quiocta, con impresionantes formaciones de estalactitas y estalagmitas."},
+    {"titulo": "Personas Ilustres", "texto": "Alejandro Rodríguez de Mendoza (1750–1825), sacerdote, educador y prócer de la independencia, considerado un mentor de la generación que emancipó al Perú."},
+    {"titulo": "Cultura y Efemérides", "texto": "El 6 de junio se conmemora la Batalla de Higos Urco (1821), victoria clave de los patriotas chachapoyanos contra los realistas. Su cultura destaca por los telares tradicionales de seda y algodón en la provincia de Luya."}
+  ]},
+  {"departamento": "Áncash", "region": "REGIÓN NORTE", "secciones": [
+    {"titulo": "Arqueología", "texto": "Chavín de Huántar, centro ceremonial del primer gran horizonte andino, famoso por su red de galerías subterráneas, el Lanzón Monolítico y las Cabezas Clavas. También alberga Sechín, con muros de piedra grabados con guerreros y sacrificios humanos."},
+    {"titulo": "Paisajes", "texto": "Parque Nacional Huascarán, hogar del nevado Huascarán (6,757 m s. n. m.), el punto más alto del Perú. Destacan las lagunas de color turquesa intenso como Llanganuco y 69, además del imponente Cañón del Pato."},
+    {"titulo": "Personas Ilustres", "texto": "Santiago Antúnez de Mayolo (1887–1967), eminente físico, ingeniero y matemático que predijo la existencia del neutrón y diseñó las mayores centrales hidroeléctricas del país."},
+    {"titulo": "Cultura y Efemérides", "texto": "El Aniversario de la dación de la ley de creación política es el 12 de junio. Su folklore brilla con la danza de los Shacshas, una representación ritual andina declarada Patrimonio de la Nación."}
+  ]},
+  {"departamento": "Cajamarca", "region": "REGIÓN NORTE", "secciones": [
+    {"titulo": "Historia y Arqueología", "texto": "Escenario del fin del Tahuantinsuyo con la captura del inca Atahualpa. Alberga el Cuarto del Rescate, la única estructura inca en pie en la ciudad. En arqueología destacan las Ventanillas de Otuzco (necrópolis preinca excavada en roca) y el Canal de Cumbemayo, una asombrosa obra de ingeniería hidráulica preínca."},
+    {"titulo": "Paisajes", "texto": "Los Baños del Inca, aguas termales medicinales donde descansaba el soberano inca. El valle de Granja Porcón, un extenso bosque de pinos cooperativo ideal para el agroturismo."},
+    {"titulo": "Personas Ilustres", "texto": "Yma Súmac (1922–2008), soprano de impresionante registro vocal de cinco octavas que triunfó en Hollywood, autoproclamada descendiente directa de Atahualpa."},
+    {"titulo": "Cultura y Efemérides", "texto": "Capital del Carnaval Peruano (febrero/marzo), famoso por las coplas satíricas, las comparsas y el \"entierro del Ño Carnavalón\". Su aniversario de creación se celebra el 3 de enero."}
+  ]},
+  {"departamento": "La Libertad", "region": "REGIÓN NORTE", "secciones": [
+    {"titulo": "Arqueología", "texto": "Chan Chan, la ciudad de barro más grande de la América prehispánica y capital del Imperio Chimú. Las Huacas del Sol y de la Luna (Cultura Moche), templos piramidales con espectaculares murales polícromos que representan al dios Ai Apaec."},
+    {"titulo": "Paisajes", "texto": "Las playas de Huanchaco, famosas por los milenarios Caballitos de Totora usados por los pescadores locales desde hace 3,000 años, y el balneario de Chicama, que posee la ola izquierda perfecta más larga del mundo."},
+    {"titulo": "Personas Ilustres", "texto": "César Vallejo (1892–1938), nacido en Santiago de Chuco, el más grande poeta universal del Perú, autor de Los heraldos negros y Trilce. Víctor Raúl Haya de la Torre (1895–1979), pensador y líder político continental, fundador del APRA."},
+    {"titulo": "Cultura y Efemérides", "texto": "Trujillo es la Capital Nacional de la Marinera, celebrando en enero su concurso mundial de este baile bandera. El 29 de diciembre se conmemora la Proclamación de la Independencia de Trujillo (1820)."}
+  ]},
+  {"departamento": "Lambayeque", "region": "REGIÓN NORTE", "secciones": [
+    {"titulo": "Arqueología y Logros", "texto": "El descubrimiento del Señor de Sipán en Huaca Rajada (1987) por el arqueólogo Walter Alva, considerado uno de los hitos arqueológicos más importantes del siglo XX por la suntuosidad de su tumba intacta. Alberga también el complejo de las 26 Pirámides de Túcume y el Museo Tumbas Reales de Sipán."},
+    {"titulo": "Paisajes", "texto": "El Santuario Histórico Bosque de Pómac, el bosque de algarrobos más denso del planeta, que protege especies de aves endémicas y pirámides de la cultura Sicán."},
+    {"titulo": "Personas Ilustres", "texto": "Pedro Ruiz Gallo (1838–1880), militar, inventor y precursor de la aviación moderna, creador de un monumental reloj que tocaba el himno nacional y marcaba las fases lunares."},
+    {"titulo": "Cultura y Gastronomía", "texto": "Cuna de la gastronomía norteña con platos bandera como el Arroz con pato y el Seco de cabrito. Su aniversario de creación política es el 7 de enero."}
+  ]},
+  {"departamento": "Piura", "region": "REGIÓN NORTE", "secciones": [
+    {"titulo": "Historia y Arqueología", "texto": "Sede de San Miguel de Tangarará (fundada en 1532), la primera ciudad española establecida en el Pacífico Sur. Destaca el complejo arqueológico Aypate, un importante centro administrativo-ceremonial inca en la sierra piurana."},
+    {"titulo": "Paisajes", "texto": "Sus balnearios de renombre internacional como Máncora, Vichayito y Cabo Blanco (lugar que inspiró a Ernest Hemingway para escribir El viejo y el mar por su pesca de merlín negro)."},
+    {"titulo": "Personas Ilustres", "texto": "Miguel Grau Seminario (1834–1879), el \"Caballero de los Mares\", máximo héroe de la Marina de Guerra del Perú y ejemplo de caballerosidad y patriotismo a nivel mundial."},
+    {"titulo": "Cultura y Efemérides", "texto": "Famosa por la cerámica de Chulucanas (técnica ancestral de cocción con hojas de mango) y la filigrana de plata de Catacaos. El departamento se creó el 30 de enero de 1837."}
+  ]},
+  {"departamento": "Tumbes", "region": "REGIÓN NORTE", "secciones": [
+    {"titulo": "Historia", "texto": "Lugar del primer desembarco hispano en el norte peruano en 1528. En la guerra de 1941, fue el frente principal donde las fuerzas armadas peruanas detuvieron la invasión norteña."},
+    {"titulo": "Paisajes", "texto": "El Santuario Nacional Los Manglares de Tumbes, un majestuoso ecosistema acuático de árboles de mangle que sirve de hábitat para el cocodrilo de Tumbes, conchas negras y cangrejos. El Parque Nacional Cerros de Amotape (bosque seco ecuatorial)."},
+    {"titulo": "Personas Ilustres", "texto": "Ricardo Pérez Godoy (1905–1982), militar y político piurano-tumbesino que presidió la Junta Militar de Gobierno en 1962."},
+    {"titulo": "Cultura y Gastronomía", "texto": "Célebre por su Ceviche de conchas negras y el Majarisco. Celebra su independencia el 7 de enero y su elevación a departamento el 25 de noviembre."}
+  ]},
+  {"departamento": "Callao", "region": "REGIÓN CENTRO", "secciones": [
+    {"titulo": "Historia", "texto": "El principal puerto del país desde la colonia. Alberga la Fortaleza del Real Felipe, una masiva edificación militar del siglo XVIII que resistió el Sitio del Callao y el Combate del Dos de Mayo (1866) contra la flota española."},
+    {"titulo": "Paisajes", "texto": "Las Islas Palomino y Cavinzas, santuarios naturales donde cohabitan miles de lobos marinos y aves guaneras, permitiendo el turismo de nado directo con la fauna."},
+    {"titulo": "Personas Ilustres", "texto": "Manuel Cipriano Dulanto (1801–1867), prócer de la independencia, militar y primer alcalde de la Provincia Constitucional del Callao."},
+    {"titulo": "Cultura y Efemérides", "texto": "Capital histórica de la Salsa en el Perú. Destaca el barrio patrimonial de Chucuito (de influencia italiana) y el proyecto cultural Callao Monumental. Su aniversario político como Provincia Constitucional es el 22 de abril y el Día de la Autonomía el 20 de agosto."}
+  ]},
+  {"departamento": "Huánuco", "region": "REGIÓN CENTRO", "secciones": [
+    {"titulo": "Arqueología", "texto": "Kotosh, el Templo de las Manos Cruzadas, una estructura ceremonial con más de 4,000 años de antigüedad, siendo uno de los vestigios de arquitectura sagrada más antiguos de América. En la sierra alta destaca Huánuco Pampa, una colosal ciudadela administrativa inca."},
+    {"titulo": "Paisajes", "texto": "El Parque Nacional Tingo María, cuya cordillera forma la silueta de la Bella Durmiente (una mujer recostada). Alberga la Cueva de las Pavas y la Cueva de las Lechuzas, poblada por guácharos."},
+    {"titulo": "Personas Ilustres", "texto": "Daniel Alomía Robles (1871–1942), ilustre compositor y musicólogo, creador de la zarzuela El Cóndor Pasa, declarada Patrimonio Cultural de la Nación y famosa a nivel mundial."},
+    {"titulo": "Cultura y Efemérides", "texto": "La tradicional danza de Los Negritos de Huánuco, que evoca la libertad de los esclavos afrodescendientes durante la colonia, bailada entre diciembre y enero. Su aniversario de fundación española es el 15 de agosto."}
+  ]},
+  {"departamento": "Huancavelica", "region": "REGIÓN CENTRO", "secciones": [
+    {"titulo": "Historia", "texto": "Famosa durante el virreinato por la Mina de Santa Bárbara (la \"Preciosa Alhaja de la Corona\"), de donde se extraía el azogue o mercurio, insumo indispensable para purificar la plata extraída en Potosí."},
+    {"titulo": "Paisajes", "texto": "La Laguna de Choclococha y las aguas termales de San Cristóbal. El tramo andino del Tren Macho, ferrocarril histórico que conecta Huancavelica con Huancayo atravesando espectaculares precipicios."},
+    {"titulo": "Personas Ilustres", "texto": "Sergio Quijada Jara (1914–1990), notable escritor, folclorista y jurista dedicado al rescate de la literatura oral quechua y las costumbres andinas."},
+    {"titulo": "Cultura", "texto": "Cuna de la Danza de las Tijeras (Patrimonio Cultural Inmaterial de la Humanidad por la UNESCO), un baile ritual de competencia atlética y misticismo donde los danzantes hacen acrobacias al ritmo de violín y arpa. Su creación política se festeja el 28 de abril."}
+  ]},
+  {"departamento": "Ica", "region": "REGIÓN CENTRO", "secciones": [
+    {"titulo": "Arqueología y Misterios", "texto": "Las milenarias Líneas y Geoglifos de Nazca y Palpa, gigantescas figuras zoomorfas y geométricas grabadas en el desierto por la cultura Nazca, visibles solo desde el aire. Destaca también la finura textil de la cultura Paracas."},
+    {"titulo": "Paisajes", "texto": "El Oasis de la Huacachina, una laguna natural rodeada de inmensas dunas de arena fina ideales para el sandboarding. La Reserva Nacional de Paracas, donde el desierto se junta de forma abrupta con el Océano Pacífico."},
+    {"titulo": "Logros y Gastronomía", "texto": "Cuna y denominación de origen del Pisco, el destilado de uva bandera del Perú."},
+    {"titulo": "Personas Ilustres", "texto": "Abraham Valdelomar (1888–1919), escritor, poeta y periodista, fundador de la revista Colónida y autor del célebre cuento criollo El Caballero Carmelo."},
+    {"titulo": "Cultura y Efemérides", "texto": "El Festival Internacional de la Vendimia (marzo) celebra la cosecha de la uva con la tradicional pisa. Su aniversario es el 30 de enero."}
+  ]},
+  {"departamento": "Junín", "region": "REGIÓN CENTRO", "secciones": [
+    {"titulo": "Historia", "texto": "Escenario de la Batalla de Junín (6 de agosto de 1824) en la pampa de Chacamarca, donde la caballería patriota liderada por los Húsares del Perú logró una victoria decisiva contra el ejército realista."},
+    {"titulo": "Paisajes", "texto": "El fértil Valle del Mantaro, despensa agrícola del centro del país. El Lago Junín o Chinchaycocha, el segundo más grande del Perú, hábitat del zambullidor de Junín. La ceja de selva de Chanchamayo y Satipo."},
+    {"titulo": "Personas Ilustres", "texto": "Andrés Avelino Cáceres (1833–1923), el \"Brujo de los Andes\", mariscal, presidente de la República y héroe nacional que lideró la resistencia de la Breña en la sierra central durante la Guerra del Pacífico."},
+    {"titulo": "Cultura", "texto": "El Huaylarsh, una danza andina agrícola de zapateo enérgico y cortejo. Su creación política se celebra el 13 de septiembre."}
+  ]},
+  {"departamento": "Lima", "region": "REGIÓN CENTRO", "secciones": [
+    {"titulo": "Centro Histórico y Arqueología", "texto": "El Centro Histórico de Lima (Patrimonio de la Humanidad), con sus emblemáticos balcones virreinales, la Catedral y las catacumbas de San Francisco. En el sur de la región se ubica Caral, la civilización más antigua de América (3,000 a. C.), coetánea de Egipto y Mesopotamia."},
+    {"titulo": "Paisajes", "texto": "Las Lomas de Lachay (ecosistema de neblinas en el desierto), el balneario histórico de Ancón y la cordillera de la viuda en Canta."},
+    {"titulo": "Personas Ilustres", "texto": "Santa Rosa de Lima (1586–1617) y San Martín de Porres (1579–1639), los primeros santos católicos de América. Ricardo Palma (1833–1919), escritor tradicionalista y reconstructor de la Biblioteca Nacional."},
+    {"titulo": "Cultura y Gastronomía", "texto": "Capital gastronómica de América Latina, cuna del Ceviche, el lomo saltado y la causa limeña. El aniversario de la fundación de Lima se celebra el 18 de enero."}
+  ]},
+  {"departamento": "Pasco", "region": "REGIÓN CENTRO", "secciones": [
+    {"titulo": "Logros e Historia", "texto": "Cerro de Pasco ha sido históricamente la \"Capital Minera del Perú\" gracias a sus inmensos yacimientos de plata, cobre y zinc explotados desde la colonia. Es una de las ciudades habitadas más altas del mundo (más de 4,300 m s. n. m.)."},
+    {"titulo": "Paisajes", "texto": "El Santuario Nacional de Huayllay, un impresionante bosque de piedras de origen volcánico que recrea caprichosas formas humanas y de animales. La colonia austro-alemana de Pozuzo en su ceja de selva, con arquitectura de madera alpina centroeuropea."},
+    {"titulo": "Personas Ilustres", "texto": "Daniel Alcides Carrión (1857–1885), mártir de la medicina peruana, quien se inoculó el brote de la \"verruga peruana\" para estudiar su evolución científica y salvar vidas."},
+    {"titulo": "Cultura y Efemérides", "texto": "El Festival del Pozuzo o Festival del Cafeto en Oxapampa. El departamento se creó políticamente el 27 de noviembre de 1944."}
+  ]},
+  {"departamento": "Apurímac", "region": "REGIÓN SUR", "secciones": [
+    {"titulo": "Arqueología", "texto": "Comparte con Cusco el acceso a Choquequirao, el último bastión de resistencia de los Incas de Vilcabamba, considerada la \"hermana sagrada de Machu Picchu\" por su imponente arquitectura en terrazas de piedra. Destaca también el monolito de Saywite, una piedra tallada con más de 200 figuras geométricas y zoomorfas."},
+    {"titulo": "Paisajes", "texto": "El Cañón del Apurímac, uno de los más profundos e impresionantes del continente americano, ideal para el canotaje y el andinismo."},
+    {"titulo": "Personas Ilustres", "texto": "José María Arguedas (1911–1969), nacido en Andahuaylas, uno de los más grandes novelistas del siglo XX, quien plasmó con sensibilidad artística y visión antropológica el drama del mundo quechua. Chabuca Granda (1920–1983), icónica cantautora de música criolla nacida en Cotabambas."},
+    {"titulo": "Cultura y Efemérides", "texto": "El Sondor Raymi (Epopeya Chanka) escenificado en la laguna de Pacucha cada junio. Su aniversario se celebra el 28 de abril."}
+  ]},
+  {"departamento": "Arequipa", "region": "REGIÓN SUR", "secciones": [
+    {"titulo": "Centro Histórico", "texto": "Su Centro Histórico está construido casi en su totalidad con sillar, una piedra volcánica de color blanco que le otorga el apelativo de \"Ciudad Blanca\". Destaca el monumental Monasterio de Santa Catalina, una ciudadela religiosa amurallada dentro de la propia urbe."},
+    {"titulo": "Paisajes", "texto": "Custodiada por los volcanes Misti, Chachani y Pichu Pichu. Alberga el Cañón del Colca, uno de los más profundos del mundo y el principal mirador natural para contemplar el majestuoso vuelo del cóndor andino."},
+    {"titulo": "Personas Ilustres", "texto": "Mariano Melgar (1790–1815), poeta romántico, creador de los Yaravíes y prócer independentista. Mario Vargas Llosa (1936–presente), prolífico novelista y ensayista galardonado con el Premio Nobel de Literatura en 2010."},
+    {"titulo": "Cultura y Efemérides", "texto": "Posee una fuerte identidad regional con su propia \"moneda\" simbólica (el Characato de Oro) y pasaporte lírico. Su aniversario de fundación española es el 15 de agosto, celebrado con el gran Corso de la Amistad."}
+  ]},
+  {"departamento": "Ayacucho", "region": "REGIÓN SUR", "secciones": [
+    {"titulo": "Historia y Arqueología", "texto": "En la Pampa de la Quinua se libró la Batalla de Ayacucho (9 de diciembre de 1824), donde se firmó la Capitulación que selló de forma definitiva la independencia hispanoamericana. En arqueología alberga el Complejo Wari, la inmensa urbe que fue capital del primer imperio panandino preínca."},
+    {"titulo": "Paisajes", "texto": "Las Aguas Turquesas de Millpu, una serie de 20 piscinas naturales escalonadas de agua cristalina escondidas en un cañón de piedra en Circamarca."},
+    {"titulo": "Personas Ilustres", "texto": "Andrés Avelino Cáceres (nacido en Ayacucho), estratega militar. Andrés Alencastre Gutiérrez (Kilku Warak'a), renombrado poeta quechua."},
+    {"titulo": "Cultura", "texto": "Famosa por sus Retablos Ayacuchanos (cajas de madera con detalladas figuras de pasta que retratan escenas religiosas y andinas) y la orfebrería en filigrana de plata. Su celebración de la Semana Santa es la más ferviente y multitudinaria del país. Su fundación se conmemora el 25 de abril."}
+  ]},
+  {"departamento": "Cusco", "region": "REGIÓN SUR", "secciones": [
+    {"titulo": "Historia y Arqueología", "texto": "El \"Ombligo del Mundo\", antigua capital del Imperio Incaico y joya de la arquitectura mestiza. Alberga a Machu Picchu, una de las 7 Maravillas del Mundo Moderno. Cuenta con fortalezas colosales como Sacsayhuamán, Ollantaytambo, Pisac y el templo solar del Qorikancha."},
+    {"titulo": "Paisajes", "texto": "El Valle Sagrado de los Incas, el río Vilcanota, y la Montaña de Siete Colores (Vinicunca), un capricho geológico que atrae a miles de visitantes por sus franjas de minerales de colores vivos."},
+    {"titulo": "Personas Ilustres", "texto": "Inca Garcilaso de la Vega (1539–1616), el primer mestizo racial y cultural de América que escribió los Comentarios Reales de los Incas. Clorinda Matto de Turner (1852–1909), escritora precursora del indigenismo con su novela Aves sin nido."},
+    {"titulo": "Cultura", "texto": "El Inti Raymi (Fiesta del Sol), recreación histórica que se escenifica cada 24 de junio en Sacsayhuamán. Cusco celebra su mes jubilar en junio."}
+  ]},
+  {"departamento": "Madre de Dios", "region": "REGIÓN SUR", "secciones": [
+    {"titulo": "Logros y Biodiversidad", "texto": "Oficialmente reconocida como la \"Capital de la Biodiversidad del Perú\". Sus selvas vírgenes albergan récords mundiales en número de especies de aves, mariposas y plantas por metro cuadrado."},
+    {"titulo": "Paisajes", "texto": "El Parque Nacional del Manu (Patrimonio de la Humanidad por la UNESCO) y la Reserva Nacional Tambopata, donde destaca el Lago Sandoval y las espectaculares colpas de guacamayos, donde cientos de estas aves se reúnen a lamer la arcilla."},
+    {"titulo": "Cultura y Etnias", "texto": "Territorio ancestral de comunidades nativas como los Ese'Eja, Harakbut y Matsigenka, quienes conservan sus conocimientos botánicos medicinales intactos. Su efeméride de creación política se celebra el 26 de diciembre."}
+  ]},
+  {"departamento": "Moquegua", "region": "REGIÓN SUR", "secciones": [
+    {"titulo": "Gastronomía y Logros", "texto": "Posee una exquisita tradición repostera colonial heredada de los conventos españoles (guargüeros, alfajores de penco). Es parte de la Ruta del Pisco sureña y destaca por sus valles frutícolas de palta de exportación."},
+    {"titulo": "Paisajes", "texto": "El valle geológico de Moquegua y la campiña de Omate, rodeados por volcanes activos como el Ubinas y el Ticsani. Las formaciones rocosas de la Quebrada de Honda."},
+    {"titulo": "Personas Ilustres", "texto": "Mercedes Cabello de Carbonera (1842–1909), escritora ilustrada, pionera del realismo literario y una de las primeras intelectuales feministas del Perú. José Carlos Mariátegui (1894–1930), uno de los pensadores políticos más influyentes de América Latina, autor de 7 ensayos de interpretación de la realidad peruana."},
+    {"titulo": "Efemérides", "texto": "Su aniversario de fundación española es el 25 de noviembre."}
+  ]},
+  {"departamento": "Puno", "region": "REGIÓN SUR", "secciones": [
+    {"titulo": "Historia y Mitología", "texto": "Cuna mítica de la civilización inca: según la leyenda, de las aguas del Titicaca emergieron Manco Cápac y Mama Ocllo para fundar el imperio. Alberga el complejo arqueológico de las Chullpas de Sillustani (torres funerarias de piedra de las culturas Colla e Inca)."},
+    {"titulo": "Paisajes", "texto": "El Lago Titicaca, el lago navegable más alto del mundo (3,812 m s. n. m.), hogar de las Islas Flotantes de los Uros (construidas artificialmente con totora), y las islas naturales de Taquile y Amantaní."},
+    {"titulo": "Personas Ilustres", "texto": "Carlos Oquendo de Amat (1905–1936), poeta vanguardista de talla internacional, autor del célebre libro-objeto 5 metros de poemas."},
+    {"titulo": "Cultura", "texto": "\"Capital del Folklore Peruano\". Su máxima expresión es la Festividad de la Virgen de la Candelaria (febrero), declarada Patrimonio Cultural Inmaterial por la UNESCO, donde se presentan miles de músicos y danzantes ejecutando la Diablada, la Morenada o el Rey Moreno. Su aniversario es el 4 de noviembre."}
+  ]},
+  {"departamento": "Tacna", "region": "REGIÓN SUR", "secciones": [
+    {"titulo": "Historia", "texto": "Conocida con orgullo como la \"Ciudad Heroica\". Durante la Guerra del Pacífico sufrió casi 50 años de cautiverio bajo administración extranjera, manteniendo incólume su amor por el Perú hasta su retorno al suelo patrio en 1929. En sus pampas se ubica el Complejo Monumental del Alto de la Alianza."},
+    {"titulo": "Paisajes", "texto": "Los valles de Locumba y Tarata, con andenerías preincas en producción, y las fuentes termales de Calientes."},
+    {"titulo": "Personas Ilustres", "texto": "Jorge Basadre Grohmann (1903–1980), el más ilustre historiador de la República del Perú, autor de la monumental Historia de la República del Perú. Francisco Antonio de Zela, quien dio el primer grito libertario en 1811."},
+    {"titulo": "Efemérides y Tradición", "texto": "Cada 28 de agosto se celebra la Procesión de la Bandera, una festividad civil solemne y emotiva que conmemora la reincorporación de Tacna al Perú."}
+  ]},
+  {"departamento": "Loreto", "region": "REGIÓN ORIENTE (AMAZONÍA)", "secciones": [
+    {"titulo": "Logros y Paisajes", "texto": "Es el departamento más extenso del Perú. En su territorio nace formalmente el Río Amazonas, el más largo y caudaloso del planeta, producto de la confluencia de los ríos Ucayali y Marañón. Alberga la Reserva Nacional Pacaya Samiria, una inmensa área protegida conocida como la \"selva de los espejos\" por el reflejo nítido del cielo en sus aguas oscuras."},
+    {"titulo": "Historia y Cultura", "texto": "Iquitos vivió el auge de la Fiebre del Caucho (fines del siglo XIX), época que dejó suntuosas mansiones decoradas con azulejos importados de Europa y la famosa Casa de Fierro, diseñada por los talleres de Gustave Eiffel."},
+    {"titulo": "Personas Ilustres", "texto": "Juana Alarco de Dammert (1842–1932), filántropa y benefactora de la infancia peruana, conocida como \"La abuelita de los niños\" (nacida en Lima pero con gran labor social vinculada al país profundo y la Amazonía)."},
+    {"titulo": "Efemérides", "texto": "Su fiesta principal es el Día de San Juan (24 de junio), la celebración más importante de toda la Amazonía peruana. Su aniversario de creación política es el 7 de febrero."}
+  ]},
+  {"departamento": "San Martín", "region": "REGIÓN ORIENTE (AMAZONÍA)", "secciones": [
+    {"titulo": "Arqueología", "texto": "El Gran Pajatén, un imponente complejo arqueológico de piedra con relieves de la cultura Chachapoyas, resguardado en los densos e inaccesibles bosques nublados del Parque Nacional del Río Abiseo."},
+    {"titulo": "Paisajes", "texto": "La Laguna Azul en el distrito de El Sauce, un hermoso espejo de agua templada rodeado de selva alta. Tarapoto, famosa por sus refrescantes caídas de agua como la Catarata de Ahuashiyacu, y el valle del Alto Mayo (Moyobamba y Rioja), paraíso de orquídeas y colibríes."},
+    {"titulo": "Personas Ilustres", "texto": "Eduardo Peña Meza (1893–1947), destacado músico y compositor moyobambino que dedicó su obra a documentar las melodías tradicionales amazónicas."},
+    {"titulo": "Cultura y Gastronomía", "texto": "Cuna del plato emblema de la selva: el Juane (arroz sazonado con palillo, gallina de chacra y huevo, envuelto en hojas de bijao), consumido masivamente durante la Fiesta de San Juan. Su aniversario se celebra el 4 de septiembre."}
+  ]},
+  {"departamento": "Ucayali", "region": "REGIÓN ORIENTE (AMAZONÍA)", "secciones": [
+    {"titulo": "Cultura Viva", "texto": "Cuna del pueblo indígena Shipibo-Conibo, guardianes del arte Kené. El Kené es un sistema de diseños geométricos sagrados plasmados en cerámicas y textiles que representa la cosmovisión, los ríos y la energía medicinal de las plantas de la selva (Patrimonio Cultural de la Nación)."},
+    {"titulo": "Paisajes", "texto": "El Boquerón del Padre Abad, un estrecho y espectacular cañón geológico donde las montañas de la cordillera azul se abren para dar paso al río, decorado con decenas de caídas de agua como el Velo de la Novia y la Ducha del Diablo. El Lago de Yarinacocha en Pucallpa."},
+    {"titulo": "Personas Ilustres", "texto": "Arturo Reátegui Bartra, reconocido pintor y gestor cultural indigenista que promovió la identidad y los mitos amazónicos en las artes plásticas del siglo XX."},
+    {"titulo": "Efemérides", "texto": "Su aniversario de creación política autónoma es el 18 de junio. Celebra también el Festival de la Región Ucayali en octubre."}
+  ]}
+]

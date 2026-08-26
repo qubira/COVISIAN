@@ -1,0 +1,666 @@
+[
+{
+"origen": "PACKS (version marzo 2026)",
+"marca": "HONOR",
+"equipo": "HONOR X7C 256GB",
+"nombreStock": "PACK1-HONOR X7C 256GB",
+"accesorio": "HONOR CHOICE EARBUDS X7I",
+"precio": 759
+},
+{
+"origen": "PACKS (version marzo 2026)",
+"marca": "HONOR",
+"equipo": "HONOR X8C",
+"nombreStock": "PACK-HONOR X8C 256GB",
+"accesorio": "EARBUDS X7 LITE",
+"precio": 919
+},
+{
+"origen": "PACKS (version marzo 2026)",
+"marca": "IPHONE",
+"equipo": "IPHONE 15 128GB",
+"nombreStock": "PACK - IPHONE 15 MTP03BE/A 128GB",
+"accesorio": "APPLE CARGADOR 20W",
+"precio": 3288
+},
+{
+"origen": "PACKS (version marzo 2026)",
+"marca": "IPHONE",
+"equipo": "IPHONE 16 128GB",
+"nombreStock": "PACK - IPHONE 16 MYE73BE/A 128GB",
+"accesorio": "APPLE CARGADOR 20W",
+"precio": 3838
+},
+{
+"origen": "PACKS (version marzo 2026)",
+"marca": "IPHONE",
+"equipo": "MOTOROLA G54",
+"nombreStock": null,
+"accesorio": "APPLE CARGADOR MAGSAFE",
+"precio": 5769
+},
+{
+"origen": "PACKS (version marzo 2026)",
+"marca": "IPHONE",
+"equipo": "IPHONE 16 PRO MAX 256GB",
+"nombreStock": null,
+"accesorio": "APPLE CARGADOR MAGSAFE",
+"precio": 6159
+},
+{
+"origen": "PACKS (version marzo 2026)",
+"marca": "OPPO",
+"equipo": "OPPO A6 PRO 256GB 5G",
+"nombreStock": "OPPO A6 PRO 256GB 5G C/PACK",
+"accesorio": "OPPO PARLANTE BLUETOOH",
+"precio": 1499
+},
+{
+"origen": "PACKS (version marzo 2026)",
+"marca": "OPPO",
+"equipo": "OPPO RENO 14F 256GB 5G",
+"nombreStock": "OPPO RENO 14F 256GB 5G C/PACK",
+"accesorio": "AUDIFONOS HY60",
+"precio": 2329
+},
+{
+"origen": "PACKS (version marzo 2026)",
+"marca": "SAMSUNG",
+"equipo": "SAMSUNG A26 128GB 5G",
+"nombreStock": "PACK - SAMSUNG A26 A266M 128GB 5G",
+"accesorio": "SAMSUNG CARGADOR 15W",
+"precio": 909
+},
+{
+"origen": "PACKS (version marzo 2026)",
+"marca": "SAMSUNG",
+"equipo": "SAMSUNG A36 128GB 5G",
+"nombreStock": "PACK - SAMSUNG A36 A366M 128GB 5G",
+"accesorio": "SAMSUNG GALAXY BUDS CORE",
+"precio": 1178
+},
+{
+"origen": "PACKS (version marzo 2026)",
+"marca": "XIAOMI",
+"equipo": "XIAOMI 15T 512GB",
+"nombreStock": "XIAOMI 15T 512GB C/PACK",
+"accesorio": "XIAOMI REDMI WATCH ACTIVE",
+"precio": 2479
+},
+{
+"origen": "PACKS (version marzo 2026)",
+"marca": "XIAOMI",
+"equipo": "XIAOMI 15T PRO 512GB",
+"nombreStock": "XIAOMI 15T PRO 512GB C/PACK",
+"accesorio": "XIAOMI REDMI WATCH ACTIVE",
+"precio": 3339
+},
+{
+"origen": "PACKS (version marzo 2026)",
+"marca": "XIAOMI",
+"equipo": "XIAOMI REDMI NOTE 15 PRO 5G",
+"nombreStock": "XIAOMI REDMI NOTE 15 PRO+ 512 5G C/P",
+"accesorio": "BUDS 6 LITE",
+"precio": 1449
+},
+{
+"origen": "PACKS (version marzo 2026)",
+"marca": "XIAOMI",
+"equipo": "XIAOMI REDMI NOTE 15 PRO 5G",
+"nombreStock": "XIAOMI REDMI NOTE 15 PRO 512 5G C/P",
+"accesorio": "PARLANTE BLOETOOH",
+"precio": 1869
+},
+{
+"origen": "PACKS (version marzo 2026)",
+"marca": "ZTE",
+"equipo": "ZTE NUBIA AIR 256GB 5G",
+"nombreStock": "ZTE NUBIA AIR 256GB 5G C/P",
+"accesorio": "AUDIFONO INHALAMBRICO",
+"precio": 959
+},
+{
+"origen": "PACK (version mayo 2026)",
+"marca": "HONOR",
+"equipo": "HONOR MAGIC 8 LITE 512GB 5G C/P",
+"nombreStock": "HONOR MAGIC 8 LITE 512GB 5G C/P",
+"accesorio": "HEALPHONES PRO",
+"precio": null
+},
+{
+"origen": "PACK (version mayo 2026)",
+"marca": "HONOR",
+"equipo": "HONOR X7D 256GB LTE C/PACK",
+"nombreStock": "HONOR X7D 256GB LTE C/PACK",
+"accesorio": "AUDIFORNOS X7 LITE",
+"precio": null
+},
+{
+"origen": "PACK (version mayo 2026)",
+"marca": "HONOR",
+"equipo": "HONOR 600E 512GB C/ PACK",
+"nombreStock": "HONOR 600E 512GB C/ PACK",
+"accesorio": "HONOR WATCH 2i",
+"precio": null
+},
+{
+"origen": "PACK (version mayo 2026)",
+"marca": "HONOR",
+"equipo": "HONOR X8C 256GB 5G C/PACK",
+"nombreStock": "HONOR X8C 256GB 5G C/PACK",
+"accesorio": "AUDIFORNOS X7 LITE",
+"precio": null
+},
+{
+"origen": "PACK (version mayo 2026)",
+"marca": "IPHONE",
+"equipo": "PACK - IPHONE 15 MTP03BE/A 128GB",
+"nombreStock": "PACK - IPHONE 15 MTP03BE/A 128GB",
+"accesorio": "APPLE CARGADOR 20W",
+"precio": null
+},
+{
+"origen": "PACK (version mayo 2026)",
+"marca": "IPHONE",
+"equipo": "PACK - IPHONE 16 MYE73BE/A 128GB",
+"nombreStock": "PACK - IPHONE 16 MYE73BE/A 128GB",
+"accesorio": "APPLE CARGADOR 20W",
+"precio": null
+},
+{
+"origen": "PACK (version mayo 2026)",
+"marca": "IPHONE",
+"equipo": "IPHONE 15 MTP03BE/A 128GB C/P",
+"nombreStock": "IPHONE 15 MTP03BE/A 128GB C/P",
+"accesorio": "APPLE CARGADOR 20W",
+"precio": null
+},
+{
+"origen": "PACK (version mayo 2026)",
+"marca": "IPHONE",
+"equipo": "IPHONE 17 MG6L4BE/A 256GB C/P",
+"nombreStock": "IPHONE 17 MG6L4BE/A 256GB C/P",
+"accesorio": "APPLE MAGSAFE",
+"precio": null
+},
+{
+"origen": "PACK (version mayo 2026)",
+"marca": "MOTOROLA",
+"equipo": "MOTOROLA EDGE 70 FUSION 256G C/P",
+"nombreStock": "MOTOROLA EDGE 70 FUSION 256G C/P",
+"accesorio": "MOTOROLA BUDS BASS",
+"precio": null
+},
+{
+"origen": "PACK (version mayo 2026)",
+"marca": "MOTOROLA",
+"equipo": "MOTOROLA G77 XT2621 256GB C/PACK",
+"nombreStock": "MOTOROLA G77 XT2621 256GB C/PACK",
+"accesorio": "MOTO TAG",
+"precio": null
+},
+{
+"origen": "PACK (version mayo 2026)",
+"marca": "MOTOROLA",
+"equipo": "MOTOROLA G67 XT2621 256GB C/PACK",
+"nombreStock": "MOTOROLA G67 XT2621 256GB C/PACK",
+"accesorio": "MOTO TAG",
+"precio": null
+},
+{
+"origen": "PACK (version mayo 2026)",
+"marca": "MOTOROLA",
+"equipo": "MOTOROLA EDGE 70 512G C/P",
+"nombreStock": "MOTOROLA EDGE 70 512G C/P",
+"accesorio": "MOTO WATCH",
+"precio": null
+},
+{
+"origen": "PACK (version mayo 2026)",
+"marca": "OPPO",
+"equipo": "OPPO A6 PRO 256GB 5G C/CAMP",
+"nombreStock": "OPPO A6 PRO 256GB 5G C/CAMP",
+"accesorio": "BLUETOOTH EARPHONES",
+"precio": null
+},
+{
+"origen": "PACK (version mayo 2026)",
+"marca": "OPPO",
+"equipo": "OPPO A6 PRO 256GB 5G C/PACK",
+"nombreStock": "OPPO A6 PRO 256GB 5G C/PACK",
+"accesorio": "OPPO BLUETOOTH SPEAKER",
+"precio": null
+},
+{
+"origen": "PACK (version mayo 2026)",
+"marca": "OPPO",
+"equipo": "OPPO A6X 256GB 5G C/PACK",
+"nombreStock": "OPPO A6X 256GB 5G C/PACK",
+"accesorio": "OPPO BLUETOOTH SPEAKER",
+"precio": null
+},
+{
+"origen": "PACK (version mayo 2026)",
+"marca": "OPPO",
+"equipo": "OPPO RENO 14F 256GB 5G C/PACK",
+"nombreStock": "OPPO RENO 14F 256GB 5G C/PACK",
+"accesorio": "BLUETOOTH EARPHONES",
+"precio": null
+},
+{
+"origen": "PACK (version mayo 2026)",
+"marca": "SAMSUNG",
+"equipo": "SAMSUNG GXY A37 SMA376B 256GB C/P",
+"nombreStock": "SAMSUNG GXY A37 SMA376B 256GB C/P",
+"accesorio": "SAMSUNG GALAXY FIT 3",
+"precio": null
+},
+{
+"origen": "PACK (version mayo 2026)",
+"marca": "SAMSUNG",
+"equipo": "SAMSUNG GXY A57 SMA576B 256G C/P",
+"nombreStock": "SAMSUNG GXY A57 SMA576B 256G C/P",
+"accesorio": "SAMSUNG GALAXY BUDS CORE",
+"precio": null
+},
+{
+"origen": "PACK (version mayo 2026)",
+"marca": "SAMSUNG",
+"equipo": "SAMSUNG GXY A17 SMA176 128G 5G C/P",
+"nombreStock": "SAMSUNG GXY A17 SMA176 128G 5G C/P",
+"accesorio": "SAMSUNG CARGADOR 15W",
+"precio": null
+},
+{
+"origen": "PACK (version mayo 2026)",
+"marca": "XIAOMI",
+"equipo": "XIAOMI 15T 512GB C/PACK",
+"nombreStock": "XIAOMI 15T 512GB C/PACK",
+"accesorio": "REDMI WATCH 5 ACTIVE",
+"precio": null
+},
+{
+"origen": "PACK (version mayo 2026)",
+"marca": "XIAOMI",
+"equipo": "XIAOMI 15T PRO 512GB C/PACK",
+"nombreStock": "XIAOMI 15T PRO 512GB C/PACK",
+"accesorio": "REDMI WATCH 5 ACTIVE",
+"precio": null
+},
+{
+"origen": "PACK (version mayo 2026)",
+"marca": "XIAOMI",
+"equipo": "XIAOMI REDMI NOTE 15 256GB LTE C/P",
+"nombreStock": "XIAOMI REDMI NOTE 15 256GB LTE C/P",
+"accesorio": "XIAOMI BUDS 6 PLAY",
+"precio": null
+},
+{
+"origen": "PACK (version mayo 2026)",
+"marca": "XIAOMI",
+"equipo": "XIAOMI REDMI NOTE 15 PRO 512 5G C/P",
+"nombreStock": "XIAOMI REDMI NOTE 15 PRO 512 5G C/P",
+"accesorio": "XIAOMI SOUND POCKET",
+"precio": null
+},
+{
+"origen": "PACK (version mayo 2026)",
+"marca": "XIAOMI",
+"equipo": "XIAOMI REDMI NOTE 15 PRO+ 512G C/C",
+"nombreStock": "XIAOMI REDMI NOTE 15 PRO+ 512G C/C",
+"accesorio": "XIAOMI REDMI BUDs 8 lite",
+"precio": null
+},
+{
+"origen": "PACK (version mayo 2026)",
+"marca": "ZTE",
+"equipo": "ZTE NUBIA AIR 256GB 5G C/P",
+"nombreStock": "ZTE NUBIA AIR 256GB 5G C/P",
+"accesorio": "ZTE BUDS 2",
+"precio": null
+},
+{
+"origen": "PACK (version mayo 2026)",
+"marca": "ZTE",
+"equipo": "ZTE NUBIA AIR 512GB 5G C/C",
+"nombreStock": "ZTE NUBIA AIR 512GB 5G C/C",
+"accesorio": "NUBIA LIVE CLIP",
+"precio": null
+},
+{
+"origen": "PACK (version mayo 2026)",
+"marca": "ZTE",
+"equipo": "ZTE NUBIA NEO 5 256GB 5G C/P",
+"nombreStock": "ZTE NUBIA NEO 5 256GB 5G C/P",
+"accesorio": "ZTE NEO GAMEPAD",
+"precio": null
+},
+{
+"origen": "PACK (version mayo 2026)",
+"marca": "ZTE",
+"equipo": "ZTE NUBIA V80 PRO 256GB C/PACK",
+"nombreStock": "ZTE NUBIA V80 PRO 256GB C/PACK",
+"accesorio": "NUBIA SPORTS EARPHONES",
+"precio": null
+},
+{
+"origen": "PACK (version mayo 2026)",
+"marca": "ZTE",
+"equipo": "ZTE NUBIA AIR 512GB 5G C/P",
+"nombreStock": "ZTE NUBIA AIR 512GB 5G C/P",
+"accesorio": "NUBIA ROCK SPEAKER",
+"precio": null
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "HONOR",
+"equipo": "HONOR X7D 256GB LTE",
+"nombreStock": "CAMP-HONOR X7D 256GB LTE",
+"accesorio": "HC SPEAKER MINI",
+"precio": null
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "IPHONE",
+"equipo": "IPHONE 15 128GB",
+"nombreStock": "CAMP-IPHONE 15 MTP03BE/A 128GB",
+"accesorio": "FLUYE CUP PRO 590ML",
+"precio": null
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "IPHONE",
+"equipo": "IPHONE 16 128GB",
+"nombreStock": "CAMP-IPHONE 16 MYE93BE/A 128GB",
+"accesorio": "FLUYE CUP PRO 590ML",
+"precio": 889
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "IPHONE",
+"equipo": "IPHONE 17 256GB",
+"nombreStock": "CAMP-IPHONE 17 MG6M4BE/A 256GB",
+"accesorio": "MOCHILA VIAJERA",
+"precio": null
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "IPHONE",
+"equipo": "IPHONE 17 PRO MAX 256GB",
+"nombreStock": "CAMP-IPHONE 17 PRO MAX MFYN4BE 256GB",
+"accesorio": "PROYECTOR H300 PRO",
+"precio": 3249
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "MOTOROLA",
+"equipo": "MOTOROLA EDGE 70 512GB 5G",
+"nombreStock": "CAMP-MOTOROLA EDGE 70 512GB",
+"accesorio": "PROYECTOR H300 PRO",
+"precio": 4619
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "MOTOROLA",
+"equipo": "MOTOROLA EDGE 70 FUSION 256GB 5G",
+"nombreStock": "CAMP-MOTOROLA EDGE 70 FUSION 256GB",
+"accesorio": "MOCHILA VIAJERA",
+"precio": 2149
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "MOTOROLA",
+"equipo": "MOTOROLA G67 XT2621 256GB 5G",
+"nombreStock": "CAMP-MOTOROLA G67 XT2621 256GB",
+"accesorio": "FLUYE CUP PRO 590ML",
+"precio": 1359
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "MOTOROLA",
+"equipo": "MOTOROLA G77 XT2621 256GB 5G",
+"nombreStock": "CAMP-MOTOROLA G77 XT2621 256GB",
+"accesorio": "FLUYE CUP PRO 590ML",
+"precio": 859
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "ZTE",
+"equipo": "ZTE NUBIA V80 PRO 256GB LTE",
+"nombreStock": "CAMP-ZTE NUBIA V80 PRO 256GB",
+"accesorio": "BOTELLA FLUYE 750 ml",
+"precio": 999
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "HONOR",
+"equipo": null,
+"nombreStock": "HONOR 600 SMART 256GB 5G C/PACK",
+"accesorio": "EARBUDS X7 Lite",
+"precio": null
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "HONOR",
+"equipo": "HONOR 600 VKJ-NX9 512GB 5G",
+"nombreStock": "HONOR 600 VKJ-NX9 512GB C/PACK",
+"accesorio": "HONOR WATCH 2i",
+"precio": null
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "HONOR",
+"equipo": "HONOR 600E LNA-NX3 512GB 5G",
+"nombreStock": "HONOR 600E LNA-NX3 512GB C/PACK",
+"accesorio": "HONOR WATCH 2i",
+"precio": null
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "HONOR",
+"equipo": "HONOR MAGIC 8 LITE",
+"nombreStock": "HONOR MAGIC 8 LITE 512GB 5G C/P",
+"accesorio": "HEALPHONES PRO",
+"precio": null
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "MOTOROLA",
+"equipo": null,
+"nombreStock": "MOTOROLA EDGE 50 PRO 512G C/PACK",
+"accesorio": "FLUYE CUP PRO 590ML",
+"precio": 6929
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "MOTOROLA",
+"equipo": null,
+"nombreStock": "MOTOROLA EDGE 70 512G C/P",
+"accesorio": "MOCHILA VIAJERA",
+"precio": 3749
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "OPPO",
+"equipo": "OPPO A5 256GB LTE",
+"nombreStock": "OPPO A5 256GB C/PACK",
+"accesorio": "OPPO BLUETOOTH SPEAKER",
+"precio": null
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "OPPO",
+"equipo": "OPPO A6 PRO 256GB 5G",
+"nombreStock": "OPPO A6 PRO 256GB 5G C/CAMP",
+"accesorio": "BLUETOOTH EARPHONES",
+"precio": null
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "OPPO",
+"equipo": "OPPO A6 PRO 256GB 5G C/CAMP",
+"nombreStock": "OPPO A6 PRO 256GB 5G C/PACK",
+"accesorio": "OPPO BLUETOOTH SPEAKER",
+"precio": null
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "OPPO",
+"equipo": "OPPO A6K 256GB LTE",
+"nombreStock": "OPPO A6K 256GB LTE C/PACK",
+"accesorio": "PACK CHAMPIONS",
+"precio": null
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "OPPO",
+"equipo": "OPPO A6X 256GB 5G",
+"nombreStock": "OPPO A6X 256GB 5G C/PACK",
+"accesorio": "OPPO BLUETOOTH SPEAKER",
+"precio": null
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "OPPO",
+"equipo": "OPPO RENO 14F 256GB 5G",
+"nombreStock": "OPPO RENO 14F 256GB 5G C/PACK",
+"accesorio": "BLUETOOTH EARPHONES",
+"precio": null
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "OPPO",
+"equipo": "OPPO A6 PRO 256GB 5G C/PACK",
+"nombreStock": "OPPO RENO 14F 256GB 5G C/SW",
+"accesorio": "STAR WARS",
+"precio": null
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "SAMSUNG",
+"equipo": null,
+"nombreStock": "PACK - SAMSUNG A26 A266M 128GB 5G",
+"accesorio": "CARGADOR",
+"precio": null
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "SAMSUNG",
+"equipo": null,
+"nombreStock": "PACK - SAMSUNG A36 A366E 128GB 5G",
+"accesorio": "CARGADOR",
+"precio": null
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "SAMSUNG",
+"equipo": "SAMSUNG GXY A17 SMA176 128G 5G C/P",
+"nombreStock": "SAMSUNG GXY A17 SMA176 128G 5G C/P",
+"accesorio": "SAMSUNG CARGADOR 15W",
+"precio": null
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "SAMSUNG",
+"equipo": "SAMSUNG GXY A37 SMA376B 256GB C/P",
+"nombreStock": "SAMSUNG GXY A37 SMA376B 256GB C/P",
+"accesorio": "SAMSUNG GALAXY FIT 3",
+"precio": null
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "SAMSUNG",
+"equipo": "SAMSUNG GXY A57 SMA576B 256G C/P",
+"nombreStock": "SAMSUNG GXY A57 SMA576B 256G C/P",
+"accesorio": "SAMSUNG GALAXY BUDS CORE",
+"precio": null
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "XIAOMI",
+"equipo": "XIAOMI 15T 512GB 5G",
+"nombreStock": "XIAOMI 15T 512GB C/PACK",
+"accesorio": "REDMI WATCH 5 ACTIVE",
+"precio": null
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "XIAOMI",
+"equipo": "XIAOMI 15T PRO 512GB 5G",
+"nombreStock": "XIAOMI 15T PRO 512GB C/PACK",
+"accesorio": "REDMI WATCH 5 ACTIVE",
+"precio": null
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "XIAOMI",
+"equipo": "XIAOMI 17T 512GB 5G",
+"nombreStock": "XIAOMI 17T 512GB C/PACK",
+"accesorio": "REDMI WATCH 5 ACTIVE",
+"precio": null
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "XIAOMI",
+"equipo": "XIAOMI 17T PRO 512GB 5G",
+"nombreStock": "XIAOMI 17T PRO 512GB C/PACK",
+"accesorio": "REDMI WATCH 5 ACTIVE",
+"precio": null
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "XIAOMI",
+"equipo": "XIAOMI REDMI NOTE 15 256GB LTE",
+"nombreStock": "XIAOMI REDMI NOTE 15 256GB LTE C/P",
+"accesorio": "XIAOMI BUDS 6 PLAY",
+"precio": null
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "XIAOMI",
+"equipo": "XIAOMI REDMI NOTE 15 PRO 512GB 5G",
+"nombreStock": "XIAOMI REDMI NOTE 15 PRO 512 5G C/P",
+"accesorio": "XIAOMI SOUND POCKET",
+"precio": 859
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "XIAOMI",
+"equipo": "XIAOMI REDMI NOTE 15 PRO+ 512GB 5G",
+"nombreStock": "XIAOMI REDMI NOTE 15 PRO+ 512G C/C",
+"accesorio": "XIAOMI REDMI BUDs 8 lite",
+"precio": 999
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "ZTE",
+"equipo": "ZTE NUBIA AIR 512GB 5G",
+"nombreStock": "ZTE NUBIA AIR 512GB 5G C/C",
+"accesorio": "NUBIA LIVE CLIP",
+"precio": null
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "ZTE",
+"equipo": "ZTE NUBIA AIR 512GB 5G",
+"nombreStock": "ZTE NUBIA AIR 512GB 5G C/P",
+"accesorio": "NUBIA ROCK SPEAKER",
+"precio": null
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "ZTE",
+"equipo": "ZTE NUBIA NEO 5 256GB 5G",
+"nombreStock": "ZTE NUBIA NEO 5 256GB 5G C/P",
+"accesorio": "ZTE NEO GAMEPAD",
+"precio": null
+},
+{
+"origen": "CAMPANA (version mayo 2026)",
+"marca": "ZTE",
+"equipo": "ZTE NUBIA V80 PRO 256GB LTE",
+"nombreStock": "ZTE NUBIA V80 PRO NEGRO 256GB C/PACK",
+"accesorio": "NUBIA SPORTS EARPHONES",
+"precio": null
+}
+]

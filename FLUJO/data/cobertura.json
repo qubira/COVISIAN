@@ -1,0 +1,1289 @@
+[
+{
+"departamento": "ANCASH",
+"provincia": "HUARAZ",
+"distrito": "HUARAZ",
+"express": "NO",
+"hasta": null,
+"rango": "2 Y 3",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "ANCASH",
+"provincia": "HUARAZ",
+"distrito": "INDEPENDENCIA",
+"express": "NO",
+"hasta": null,
+"rango": "2 Y 3",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "ANCASH",
+"provincia": "SANTA",
+"distrito": "CHIMBOTE",
+"express": "NO",
+"hasta": null,
+"rango": "2 Y 3",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "ANCASH",
+"provincia": "SANTA",
+"distrito": "NUEVO CHIMBOTE",
+"express": "NO",
+"hasta": null,
+"rango": "2 Y 3",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "AREQUIPA",
+"provincia": "AREQUIPA",
+"distrito": "ALTO SELVA ALEGRE",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "AREQUIPA",
+"provincia": "AREQUIPA",
+"distrito": "AREQUIPA",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "AREQUIPA",
+"provincia": "AREQUIPA",
+"distrito": "CAYMA",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "AREQUIPA",
+"provincia": "AREQUIPA",
+"distrito": "CERRO COLORADO",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "AREQUIPA",
+"provincia": "AREQUIPA",
+"distrito": "JACOBO HUNTER",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "AREQUIPA",
+"provincia": "AREQUIPA",
+"distrito": "JOSE LUIS BUSTAMANTE Y RIVERO",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "AREQUIPA",
+"provincia": "AREQUIPA",
+"distrito": "MARIANO MELGAR",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "AREQUIPA",
+"provincia": "AREQUIPA",
+"distrito": "MIRAFLORES",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "AREQUIPA",
+"provincia": "AREQUIPA",
+"distrito": "PAUCARPATA",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "AREQUIPA",
+"provincia": "AREQUIPA",
+"distrito": "SOCABAYA",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "AREQUIPA",
+"provincia": "AREQUIPA",
+"distrito": "YANAHUARA",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "AYACUCHO",
+"provincia": "HUAMANGA",
+"distrito": "AYACUCHO",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "AYACUCHO",
+"provincia": "HUAMANGA",
+"distrito": "Andrés Avelino Cáceres Dorregaray",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "AYACUCHO",
+"provincia": "HUAMANGA",
+"distrito": "CARMEN ALTO",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "AYACUCHO",
+"provincia": "HUAMANGA",
+"distrito": "JESUS NAZARENO",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "AYACUCHO",
+"provincia": "HUAMANGA",
+"distrito": "SAN JUAN BAUTISTA",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "CAJAMARCA",
+"provincia": "CAJAMARCA",
+"distrito": "CAJAMARCA",
+"express": "NO",
+"hasta": null,
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "CAJAMARCA",
+"provincia": "CAJAMARCA",
+"distrito": "LOS BAÑOS DEL INCA",
+"express": "NO",
+"hasta": null,
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "CUSCO",
+"provincia": "CUSCO",
+"distrito": "CUSCO",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "CUSCO",
+"provincia": "CUSCO",
+"distrito": "SAN JERONIMO",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "CUSCO",
+"provincia": "CUSCO",
+"distrito": "SAN SEBASTIAN",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "CUSCO",
+"provincia": "CUSCO",
+"distrito": "SANTIAGO",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "CUSCO",
+"provincia": "CUSCO",
+"distrito": "WANCHAQ",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "HUANUCO",
+"provincia": "HUANUCO",
+"distrito": "AMARILIS",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "HUANUCO",
+"provincia": "HUANUCO",
+"distrito": "HUANUCO",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "HUANUCO",
+"provincia": "HUANUCO",
+"distrito": "PILLCO MARCA",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "ICA",
+"provincia": "CHINCHA",
+"distrito": "CHINCHA ALTA",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "ICA",
+"provincia": "CHINCHA",
+"distrito": "CHINCHA BAJA",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "ICA",
+"provincia": "CHINCHA",
+"distrito": "GROCIO PRADO",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "ICA",
+"provincia": "CHINCHA",
+"distrito": "SUNAMPE",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "ICA",
+"provincia": "CHINCHA",
+"distrito": "TAMBO DE MORA",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "ICA",
+"provincia": "ICA",
+"distrito": "ICA",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "ICA",
+"provincia": "ICA",
+"distrito": "LA TINGUIÑA",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "ICA",
+"provincia": "ICA",
+"distrito": "PARCONA",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "ICA",
+"provincia": "ICA",
+"distrito": "PUEBLO NUEVO",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "ICA",
+"provincia": "ICA",
+"distrito": "SUBTANJALLA",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "ICA",
+"provincia": "PISCO",
+"distrito": "PARACAS",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "ICA",
+"provincia": "PISCO",
+"distrito": "PISCO",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "ICA",
+"provincia": "PISCO",
+"distrito": "SAN ANDRES",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "ICA",
+"provincia": "PISCO",
+"distrito": "SAN CLEMENTE",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "ICA",
+"provincia": "PISCO",
+"distrito": "TUPAC AMARU INCA",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "JUNIN",
+"provincia": "HUANCAYO",
+"distrito": "CHILCA",
+"express": "NO",
+"hasta": "",
+"rango": "2 Y 3",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "JUNIN",
+"provincia": "HUANCAYO",
+"distrito": "EL TAMBO",
+"express": "NO",
+"hasta": "",
+"rango": "2 Y 3",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "JUNIN",
+"provincia": "HUANCAYO",
+"distrito": "HUANCAN",
+"express": "NO",
+"hasta": "",
+"rango": "2 Y 3",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "JUNIN",
+"provincia": "HUANCAYO",
+"distrito": "HUANCAYO",
+"express": "NO",
+"hasta": "",
+"rango": "2 Y 3",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LA LIBERTAD",
+"provincia": "TRUJILLO",
+"distrito": "EL PORVENIR",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LA LIBERTAD",
+"provincia": "TRUJILLO",
+"distrito": "FLORENCIA DE MORA",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LA LIBERTAD",
+"provincia": "TRUJILLO",
+"distrito": "HUANCHACO",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LA LIBERTAD",
+"provincia": "TRUJILLO",
+"distrito": "LA ESPERANZA",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LA LIBERTAD",
+"provincia": "TRUJILLO",
+"distrito": "LAREDO",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LA LIBERTAD",
+"provincia": "TRUJILLO",
+"distrito": "MOCHE",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LA LIBERTAD",
+"provincia": "TRUJILLO",
+"distrito": "SALAVERRY",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LA LIBERTAD",
+"provincia": "TRUJILLO",
+"distrito": "TRUJILLO",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LA LIBERTAD",
+"provincia": "TRUJILLO",
+"distrito": "VICTOR LARCO HERRERA",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LA LIBERTAD",
+"provincia": "VIRU",
+"distrito": "CHAO",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "VIERNES"
+},
+{
+"departamento": "LA LIBERTAD",
+"provincia": "VIRU",
+"distrito": "VIRU",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "VIERNES"
+},
+{
+"departamento": "LAMBAYEQUE",
+"provincia": "CHICLAYO",
+"distrito": "CHICLAYO",
+"express": "SI",
+"hasta": "17:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LAMBAYEQUE",
+"provincia": "CHICLAYO",
+"distrito": "JOSE LEONARDO ORTIZ",
+"express": "SI",
+"hasta": "17:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LAMBAYEQUE",
+"provincia": "CHICLAYO",
+"distrito": "LA VICTORIA",
+"express": "SI",
+"hasta": "17:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LAMBAYEQUE",
+"provincia": "CHICLAYO",
+"distrito": "MONSEFU",
+"express": "SI",
+"hasta": "17:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LAMBAYEQUE",
+"provincia": "CHICLAYO",
+"distrito": "PIMENTEL",
+"express": "SI",
+"hasta": "17:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LAMBAYEQUE",
+"provincia": "CHICLAYO",
+"distrito": "POMALCA",
+"express": "SI",
+"hasta": "17:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LAMBAYEQUE",
+"provincia": "CHICLAYO",
+"distrito": "REQUE",
+"express": "SI",
+"hasta": "17:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LAMBAYEQUE",
+"provincia": "FERREÑAFE",
+"distrito": "FERREÑAFE",
+"express": "NO",
+"hasta": null,
+"rango": "TODOS",
+"diaEntrega": "JUEVES"
+},
+{
+"departamento": "LAMBAYEQUE",
+"provincia": "LAMBAYEQUE",
+"distrito": "LAMBAYEQUE",
+"express": "NO",
+"hasta": null,
+"rango": "TODOS",
+"diaEntrega": "JUEVES"
+},
+{
+"departamento": "LIMA",
+"provincia": "CALLAO",
+"distrito": "BELLAVISTA",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "CALLAO",
+"distrito": "CALLAO",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "CALLAO",
+"distrito": "CARMEN DE LA LEGUA",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "CALLAO",
+"distrito": "LA PERLA",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "CALLAO",
+"distrito": "LA PUNTA",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "CALLAO",
+"distrito": "MI PERU",
+"express": "NO",
+"hasta": "-",
+"rango": 1,
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "CALLAO",
+"distrito": "VENTANILLA",
+"express": "NO",
+"hasta": "-",
+"rango": 1,
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "ANCON",
+"express": "NO",
+"hasta": "-",
+"rango": 1,
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "ATE",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "BARRANCO",
+"express": "SI",
+"hasta": "17:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "BREÑA",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "CARABAYLLO",
+"express": "NO",
+"hasta": "-",
+"rango": 1,
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "CHACLACAYO",
+"express": "NO",
+"hasta": "-",
+"rango": 1,
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "CHORRILLOS",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "CIENEGUILLA",
+"express": "NO",
+"hasta": "-",
+"rango": 1,
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "COMAS",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "EL AGUSTINO",
+"express": "NO",
+"hasta": "-",
+"rango": 1,
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "INDEPENDENCIA",
+"express": "SI",
+"hasta": "17:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "JESUS MARIA",
+"express": "SI",
+"hasta": "17:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "LA MOLINA",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "LA VICTORIA",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "LIMA",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "LINCE",
+"express": "SI",
+"hasta": "17:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "LOS OLIVOS",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "LURIGANCHO (chosica)",
+"express": "NO",
+"hasta": "-",
+"rango": 1,
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "LURIN",
+"express": "NO",
+"hasta": "-",
+"rango": 1,
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "MAGDALENA DEL MAR",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "MIRAFLORES",
+"express": "SI",
+"hasta": "17:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "PACHACAMAC",
+"express": "NO",
+"hasta": "-",
+"rango": 1,
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "PUCUSANA",
+"express": "NO",
+"hasta": "-",
+"rango": 1,
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "PUEBLO LIBRE",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "PUENTE PIEDRA",
+"express": "NO",
+"hasta": "-",
+"rango": 1,
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "PUNTA HERMOSA",
+"express": "NO",
+"hasta": "-",
+"rango": 1,
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "PUNTA NEGRA",
+"express": "NO",
+"hasta": "-",
+"rango": 1,
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "RIMAC",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "SAN BARTOLO",
+"express": "NO",
+"hasta": "-",
+"rango": 1,
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "SAN BORJA",
+"express": "SI",
+"hasta": "17:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "SAN ISIDRO",
+"express": "SI",
+"hasta": "17:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "SAN JUAN DE LURIGANCHO",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "SAN JUAN DE MIRAFLORES",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "SAN LUIS",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "SAN MARTIN DE PORRES",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "SAN MIGUEL",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "SANTA ANITA",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "SANTA MARIA DEL MAR",
+"express": "NO",
+"hasta": "-",
+"rango": 1,
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "SANTA ROSA",
+"express": "NO",
+"hasta": "-",
+"rango": 1,
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "SANTIAGO DE SURCO",
+"express": "SI",
+"hasta": "17:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "SURQUILLO",
+"express": "SI",
+"hasta": "17:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "VILLA EL SALVADOR",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LIMA",
+"provincia": "LIMA",
+"distrito": "VILLA MARIA DEL TRIUNFO",
+"express": "SI",
+"hasta": "16:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "LORETO",
+"provincia": "MAYNAS",
+"distrito": "IQUITOS",
+"express": "NO",
+"hasta": null,
+"rango": "TODOS",
+"diaEntrega": "JUEVES"
+},
+{
+"departamento": "MOQUEGUA",
+"provincia": "MARISCAL NIETO",
+"distrito": "MOQUEGUA",
+"express": "NO",
+"hasta": null,
+"rango": "TODOS",
+"diaEntrega": "JUEVES"
+},
+{
+"departamento": "PIURA",
+"provincia": "MORROPON",
+"distrito": "CHULUCANAS",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "PIURA",
+"provincia": "PAITA",
+"distrito": "PAITA",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "VIERNES"
+},
+{
+"departamento": "PIURA",
+"provincia": "PIURA",
+"distrito": "26 de Octubre",
+"express": "SI",
+"hasta": "17:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "PIURA",
+"provincia": "PIURA",
+"distrito": "CASTILLA",
+"express": "SI",
+"hasta": "17:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "PIURA",
+"provincia": "PIURA",
+"distrito": "CATACAOS",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "PIURA",
+"provincia": "PIURA",
+"distrito": "LA ARENA",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "JUEVES"
+},
+{
+"departamento": "PIURA",
+"provincia": "PIURA",
+"distrito": "LA UNION",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "JUEVES"
+},
+{
+"departamento": "PIURA",
+"provincia": "PIURA",
+"distrito": "PIURA",
+"express": "SI",
+"hasta": "17:00",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "PIURA",
+"provincia": "PIURA",
+"distrito": "TAMBO GRANDE",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "PIURA",
+"provincia": "SULLANA",
+"distrito": "SULLANA",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "PIURA",
+"provincia": "TALARA",
+"distrito": "TALARA",
+"express": "NO",
+"hasta": "",
+"rango": "TODOS",
+"diaEntrega": "JUEVES"
+},
+{
+"departamento": "PUNO",
+"provincia": "PUNO",
+"distrito": "PUNO",
+"express": "NO",
+"hasta": null,
+"rango": "TODOS",
+"diaEntrega": "JUEVES"
+},
+{
+"departamento": "PUNO",
+"provincia": "SAN ROMAN",
+"distrito": "JULIACA",
+"express": "NO",
+"hasta": null,
+"rango": "TODOS",
+"diaEntrega": "JUEVES"
+},
+{
+"departamento": "SAN MARTIN",
+"provincia": "SAN MARTIN",
+"distrito": "TARAPOTO",
+"express": "NO",
+"hasta": null,
+"rango": 3,
+"diaEntrega": "MIERCOLES"
+},
+{
+"departamento": "TACNA",
+"provincia": "TACNA",
+"distrito": "ALTO DE LA ALIANZA",
+"express": "NO",
+"hasta": null,
+"rango": "TODOS",
+"diaEntrega": "JUEVES"
+},
+{
+"departamento": "TACNA",
+"provincia": "TACNA",
+"distrito": "CIUDAD NUEVA",
+"express": "NO",
+"hasta": null,
+"rango": "TODOS",
+"diaEntrega": "JUEVES"
+},
+{
+"departamento": "TACNA",
+"provincia": "TACNA",
+"distrito": "Coronel Gregorio Albarracin",
+"express": "NO",
+"hasta": null,
+"rango": "TODOS",
+"diaEntrega": "JUEVES"
+},
+{
+"departamento": "TACNA",
+"provincia": "TACNA",
+"distrito": "POCOLLAY",
+"express": "NO",
+"hasta": null,
+"rango": "TODOS",
+"diaEntrega": "JUEVES"
+},
+{
+"departamento": "TACNA",
+"provincia": "TACNA",
+"distrito": "TACNA",
+"express": "NO",
+"hasta": null,
+"rango": "TODOS",
+"diaEntrega": "JUEVES"
+},
+{
+"departamento": "UCAYALI",
+"provincia": "CORONEL PORTILLO",
+"distrito": "CALLERIA",
+"express": "NO",
+"hasta": null,
+"rango": "TODOS",
+"diaEntrega": "JUEVES"
+},
+{
+"departamento": "UCAYALI",
+"provincia": "CORONEL PORTILLO",
+"distrito": "MANANTAY",
+"express": "NO",
+"hasta": null,
+"rango": "TODOS",
+"diaEntrega": "JUEVES"
+},
+{
+"departamento": "UCAYALI",
+"provincia": "CORONEL PORTILLO",
+"distrito": "YARINACOCHA",
+"express": "NO",
+"hasta": null,
+"rango": "TODOS",
+"diaEntrega": "JUEVES"
+}
+]
