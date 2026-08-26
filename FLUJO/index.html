@@ -224,10 +224,22 @@
   .mapas-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px; }
   @media (max-width:600px){ .mapas-grid{ grid-template-columns:1fr; } }
   .mapa-caja{ border:1px solid var(--borde); border-radius:8px; overflow:hidden; background:#fff; }
-  .mapa-titulo{ background:var(--azul-bg); color:var(--azul); font-size:12px; font-weight:700; padding:6px 10px; }
+  .mapa-titulo{
+    background:var(--azul-bg); color:var(--azul); font-size:12px; font-weight:700; padding:6px 10px;
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+  }
+  .btn-expandir-mapa{
+    border:1px solid var(--azul); background:#fff; color:var(--azul); border-radius:5px;
+    width:20px; height:20px; font-size:11px; cursor:pointer; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; padding:0;
+  }
+  .btn-expandir-mapa:hover{ background:var(--azul); color:#fff; }
   .mapa-estado{ padding:16px 10px; font-size:12px; color:var(--gris); text-align:center; }
   .mapa-iframe{ width:100%; height:260px; border:0; display:block; }
   .mapa-iframe.oculto{ display:none; }
+  .modal-mapa-caja{ max-width:90vw; width:900px; padding:14px 16px; }
+  .modal-mapa-caja #mapaGrandeContenedor{ width:100%; height:75vh; }
+  .modal-mapa-caja #mapaGrandeContenedor iframe{ width:100%; height:100%; border:0; display:block; }
   .mapa-aviso-aprox{
     margin-top:10px; padding:8px 12px; border-radius:8px; background:#fff7e0;
     border:1px solid #f0d789; color:#8a6a00; font-size:12px; font-weight:600;
@@ -582,6 +594,7 @@
   body.tema-oscuro .btn-zoom-equipo,
   body.tema-oscuro .btn.secundario,
   body.tema-oscuro .mapa-caja,
+  body.tema-oscuro .btn-expandir-mapa,
   body.tema-oscuro .panel-comparar,
   body.tema-oscuro .btn-comparar-costo,
   body.tema-oscuro .tabla-costo-comp th,
@@ -903,12 +916,18 @@ if (location.protocol === "file:") {
       </div>
       <div class="mapas-grid">
         <div class="mapa-caja">
-          <div class="mapa-titulo">Geodir Maps</div>
+          <div class="mapa-titulo">
+            Geodir Maps
+            <button type="button" class="btn-expandir-mapa" id="btnExpandirGeodir" title="Ver mapa más grande">⛶</button>
+          </div>
           <div class="mapa-estado" id="mapaEstado1">Seleccione ubicación para ver el mapa</div>
           <iframe id="iframeGeodir" class="mapa-iframe oculto" loading="lazy"></iframe>
         </div>
         <div class="mapa-caja">
-          <div class="mapa-titulo">Mapa de Cobertura</div>
+          <div class="mapa-titulo">
+            Mapa de Cobertura
+            <button type="button" class="btn-expandir-mapa" id="btnExpandirGoogleMyMaps" title="Ver mapa más grande">⛶</button>
+          </div>
           <div class="mapa-estado" id="mapaEstado2">Seleccione ubicación para ver el mapa</div>
           <iframe id="iframeGoogleMyMaps" class="mapa-iframe oculto" loading="lazy"></iframe>
         </div>
@@ -1709,6 +1728,16 @@ if (location.protocol === "file:") {
   </div>
 </div>
 
+<div class="modal-overlay oculto" id="modalMapaGrande">
+  <div class="modal-caja modal-mapa-caja">
+    <div class="modal-header">
+      <b id="modalMapaGrandeTitulo">Mapa</b>
+      <button type="button" class="btn-cerrar" id="btnCerrarMapaGrande">✕</button>
+    </div>
+    <div id="mapaGrandeContenedor"></div>
+  </div>
+</div>
+
 <div class="modal-overlay oculto" id="modalZoomEquipo">
   <div class="modal-caja modal-zoom-caja">
     <div class="modal-header">
@@ -1922,7 +1951,7 @@ if (location.protocol === "file:") {
     // demas — sin esto, un solo error silencioso podia dejar sin usar, por ejemplo, el
     // buscador de EQUIPO (initAutocomplete) si algo antes de el en la lista fallaba.
     [initCodFinanciamiento, initPlanes, initAutocomplete, initComparar, initStockNacional,
-      initCosto, initSimuladorEquipos, initVerDetalleEquipo, initZoomEquipo, initAgendarLlamada, initCasosAgendados, initAutoguardado, initEncabezadoColapsable, precargarCicloContrato, actualizarContrato, actualizarSimuladorFinanciamiento, actualizarEncabezado].forEach(function(fn){
+      initCosto, initSimuladorEquipos, initVerDetalleEquipo, initZoomEquipo, initExpandirMapas, initAgendarLlamada, initCasosAgendados, initAutoguardado, initEncabezadoColapsable, precargarCicloContrato, actualizarContrato, actualizarSimuladorFinanciamiento, actualizarEncabezado].forEach(function(fn){
       try{ fn(); }catch(err){ console.error("Fallo al inicializar " + fn.name + ":", err); }
     });
   }).catch(function(err){
@@ -3093,6 +3122,7 @@ if (location.protocol === "file:") {
     $("cajaCobertura").classList.remove("visible");
     clearTimeout(geocodeTimer);
     GEOCODE_CACHE = {};
+    cerrarMapaGrande(); // por si el mapa quedo movido dentro del modal de zoom
     $("iframeGeodir").src = "";
     $("iframeGoogleMyMaps").src = "";
     marcarEstadoMapas("Seleccione ubicación para ver el mapa");
@@ -4823,6 +4853,39 @@ if (location.protocol === "file:") {
       zoomEquipoNivel = Math.max(ZOOM_EQUIPO_MIN, zoomEquipoNivel - ZOOM_EQUIPO_PASO);
       aplicarZoomEquipo();
     });
+  }
+
+  // Los mapas (Geodir/Mapa de Cobertura) se muestran mas grandes moviendo el MISMO <iframe>
+  // dentro del modal (en vez de crear uno nuevo con el mismo src) — asi no se recarga el
+  // mapa ni se pierde el zoom/paneo que el agente ya haya hecho, y al cerrar vuelve a su
+  // lugar original en la grilla de dos columnas.
+  var mapaExpandidoInfo = null;
+
+  function expandirMapa(iframeId, titulo){
+    var iframe = $(iframeId);
+    if (iframe.classList.contains("oculto") || !iframe.src) return;
+    mapaExpandidoInfo = { iframe: iframe, padre: iframe.parentNode, siguiente: iframe.nextSibling };
+    $("modalMapaGrandeTitulo").textContent = titulo;
+    $("mapaGrandeContenedor").appendChild(iframe);
+    $("modalMapaGrande").classList.remove("oculto");
+  }
+
+  function cerrarMapaGrande(){
+    if (mapaExpandidoInfo){
+      mapaExpandidoInfo.padre.insertBefore(mapaExpandidoInfo.iframe, mapaExpandidoInfo.siguiente);
+      mapaExpandidoInfo = null;
+    }
+    $("modalMapaGrande").classList.add("oculto");
+  }
+
+  function initExpandirMapas(){
+    $("btnExpandirGeodir").addEventListener("click", function(){
+      expandirMapa("iframeGeodir", "Geodir Maps");
+    });
+    $("btnExpandirGoogleMyMaps").addEventListener("click", function(){
+      expandirMapa("iframeGoogleMyMaps", "Mapa de Cobertura");
+    });
+    $("btnCerrarMapaGrande").addEventListener("click", cerrarMapaGrande);
   }
 
   // ============ COMPARAR EQUIPOS ============
