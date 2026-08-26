@@ -1,7 +1,7 @@
 /**
  * Google Apps Script para recibir los envíos del formulario (FLUJO/index.html)
- * y escribirlos en el Google Sheet:
- * https://docs.google.com/spreadsheets/d/1HHSIzZ9rVhyX05RmryG_0Ej9QVB8Vd8BMJKLtJ1Kk_U/edit
+ * y escribirlos en el Google Sheet al que este script esté vinculado (Extensiones →
+ * Apps Script del propio Sheet — ver GUIA_APPS_SCRIPT.md).
  *
  * Maneja 5 tipos de envio (campo "accion" en el POST):
  *  - "venta"               (o sin campo accion): agrega una fila nueva en la hoja "Ventas".

@@ -7,8 +7,7 @@ formulario. Se hace una sola vez, dura 5 minutos.
 
 ## Pasos
 
-1. Abre tu Google Sheet:
-   https://docs.google.com/spreadsheets/d/1HHSIzZ9rVhyX05RmryG_0Ej9QVB8Vd8BMJKLtJ1Kk_U/edit
+1. Abre el Google Sheet que quieras conectar a este formulario.
 
 2. Ve a **Extensiones → Apps Script**.
 
