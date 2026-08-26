@@ -885,6 +885,12 @@ if (location.protocol === "file:") {
       </div>
     </li>
     <li>
+      <div class="fila" style="align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+        <span style="font-weight:400;font-size:12.5px;color:var(--gris);">Si el cliente objeta o no quiere continuar la llamada:</span>
+        <button type="button" class="btn-negativa" id="btnAbrirNegativa2" disabled>⚠ Negativa / Objeción del cliente</button>
+      </div>
+    </li>
+    <li>
       Para confirmar cobertura, ¿en qué ciudad se encuentra?
       <div class="fila" style="margin-top:8px;">
         <div class="campo autocomplete" id="ac-distrito">
@@ -3180,8 +3186,10 @@ if (location.protocol === "file:") {
     bitacoraRebate = [];
     negativaResultado = "";
     $("listaRebates").innerHTML = "";
+    panelNegativaFilaOriginal.insertAdjacentElement("afterend", $("panelNegativa"));
     $("panelNegativa").classList.add("oculto");
     $("btnAbrirNegativa").disabled = true;
+    $("btnAbrirNegativa2").disabled = true;
     $("btnBitacoraRebate").classList.add("oculto");
 
     $("campoZondeoFecha").classList.add("oculto");
@@ -3427,7 +3435,9 @@ if (location.protocol === "file:") {
   }
 
   function actualizarBotonNegativa(){
-    $("btnAbrirNegativa").disabled = !datosBasicosApertura();
+    var deshabilitado = !datosBasicosApertura();
+    $("btnAbrirNegativa").disabled = deshabilitado;
+    $("btnAbrirNegativa2").disabled = deshabilitado;
   }
 
   // busqueda por palabras clave: cada palabra de la consulta que aparezca dentro del texto
@@ -3547,12 +3557,22 @@ if (location.protocol === "file:") {
     cont.appendChild(crearFilaRebate());
   }
 
-  $("btnAbrirNegativa").addEventListener("click", function(){
+  // Hay 2 botones "Negativa / Objecion" (SONDEO y antes de confirmar cobertura) que abren
+  // el MISMO panel — en vez de duplicarlo (duplicaria tambien listaRebates/btnNoQuiere y
+  // complicaria toda la logica de bitacora), se reubica el panel justo despues de la fila
+  // del boton que se clickeo, asi siempre aparece pegado a donde el agente hizo clic.
+  var panelNegativaFilaOriginal = $("panelNegativa").previousElementSibling;
+
+  function abrirPanelNegativa(boton){
+    var fila = boton.closest(".fila") || boton.parentNode;
+    fila.insertAdjacentElement("afterend", $("panelNegativa"));
     $("panelNegativa").classList.remove("oculto");
     if (!$("listaRebates").children.length){
       $("listaRebates").appendChild(crearFilaRebate());
     }
-  });
+  }
+  $("btnAbrirNegativa").addEventListener("click", function(){ abrirPanelNegativa(this); });
+  $("btnAbrirNegativa2").addEventListener("click", function(){ abrirPanelNegativa(this); });
 
   $("btnNoQuiere").addEventListener("click", function(){
     if (!confirm("¿Confirma que el cliente NO acepta continuar la llamada, a pesar del rebate?")) return;
