@@ -246,14 +246,19 @@
   }
   .linea-coordenadas{ margin-top:6px; font-size:12px; color:var(--gris); }
   .linea-coordenadas b{ color:var(--azul); font-weight:700; }
-  .chip-checkbox{
-    display:inline-flex; align-items:center; gap:6px; border:1px solid var(--azul);
-    background:var(--azul-bg); color:var(--azul); border-radius:20px; padding:5px 12px 5px 10px;
-    font-size:11.5px; font-weight:700; letter-spacing:.2px; cursor:pointer;
-    box-shadow:0 1px 3px rgba(15,61,145,.1); transition:background .15s, box-shadow .15s;
+  .switch-toggle{ display:inline-flex; align-items:center; gap:8px; cursor:pointer; }
+  .switch-toggle input{ position:absolute; opacity:0; width:0; height:0; }
+  .switch-track{
+    display:inline-block; width:34px; height:19px; background:#ccd2dc; border-radius:20px;
+    position:relative; flex-shrink:0; transition:background .2s;
   }
-  .chip-checkbox:hover{ background:#e2ecfc; box-shadow:0 2px 6px rgba(15,61,145,.18); }
-  .chip-checkbox input{ width:14px; height:14px; accent-color:var(--azul); cursor:pointer; flex-shrink:0; }
+  .switch-thumb{
+    position:absolute; top:2px; left:2px; width:15px; height:15px; background:#fff;
+    border-radius:50%; transition:left .2s; box-shadow:0 1px 3px rgba(0,0,0,.25);
+  }
+  .switch-toggle input:checked ~ .switch-track{ background:var(--azul); }
+  .switch-toggle input:checked ~ .switch-track .switch-thumb{ left:17px; }
+  .switch-label{ font-size:12px; font-weight:700; color:var(--texto); }
 
   .panel-comparar{
     max-width:720px; margin:0 auto 14px; background:#fff; border:1px solid var(--borde);
@@ -693,6 +698,7 @@
 
   body.tema-oscuro .btn:disabled{ background:#454b58; }
   body.tema-oscuro .barra-autoguardado .punto{ background:#4d5566; }
+  body.tema-oscuro .switch-track{ background:#454b58; }
 </style>
 </head>
 <body>
@@ -924,9 +930,10 @@ if (location.protocol === "file:") {
         <label for="direccion">DIRECCIÓN (BUSQUEDA BASICA)</label>
         <input type="text" id="direccion" placeholder="Ej: Av. Los Pinos 123, Urb. San Carlos">
         <div class="linea-coordenadas oculto" id="coordenadasResultado">📍 Coordenadas: <b id="coordenadasTexto">-</b></div>
-        <label class="chip-checkbox" style="margin-top:8px;">
+        <label class="switch-toggle" style="margin-top:8px;">
           <input type="checkbox" id="chkFiltroAvanzadoDireccion">
-          Filtro avanzado de dirección
+          <span class="switch-track"><span class="switch-thumb"></span></span>
+          <span class="switch-label">Filtro avanzado de dirección</span>
         </label>
         <div class="oculto" id="filtroAvanzadoDireccion" style="margin-top:8px;"></div>
       </div>
