@@ -2146,13 +2146,26 @@ if (location.protocol === "file:") {
   // una sola opcion, asi que se oculta el campo entero y se usa ese unico valor directamente.
   function poblarRadiosConvenio(convenios, seleccionado){
     var cont = $("radiosConvenio");
-    cont.innerHTML = "";
     if (convenios.length <= 1){
+      cont.innerHTML = "";
       $("campoConvenio").classList.add("oculto");
       return convenios[0] || "";
     }
     $("campoConvenio").classList.remove("oculto");
     var actual = convenios.indexOf(seleccionado) !== -1 ? seleccionado : convenios[0];
+
+    // Evita reconstruir el DOM si ya esta correcto: esta funcion se llama en casi cada
+    // input del formulario, y si un click sobre uno de estos radios coincide con el "blur"
+    // de otro campo (ej. PLAN) que dispara un recalculo, destruir y recrear los <input>
+    // justo ahi deja el click a mitad de camino sobre un nodo que ya no existe — el radio
+    // nunca queda marcado aunque el usuario si lo haya clickeado.
+    var yaCorrecto = cont.children.length === convenios.length && convenios.every(function(c, i){
+      var input = cont.children[i] && cont.children[i].querySelector("input");
+      return input && input.value === c && input.checked === (c === actual);
+    });
+    if (yaCorrecto) return actual;
+
+    cont.innerHTML = "";
     convenios.forEach(function(c){
       var label = document.createElement("label");
       var input = document.createElement("input");
@@ -2349,7 +2362,13 @@ if (location.protocol === "file:") {
     var esBancos = (clave === "OTROS|BANCOS (Cuotas sin intereses)");
 
     if (!equipoActual){
-      actualizarBloqueoScoring(poblarRadiosConvenio(esBancos ? [] : tabla.convenios, null));
+      // OJO: aca antes se pasaba "null" a proposito (sin equipo aun no habia nada que
+      // "seleccionado" pudiera valer) — pero como esta funcion se re-ejecuta en casi
+      // cualquier input del formulario, cada vez que corria esta rama volvia a pisar
+      // el radio CONTADO/FINANCIADO que el agente ya habia elegido, aunque el equipo
+      // se elija despues. Hay que leer lo que este marcado ahora mismo y respetarlo.
+      actualizarBloqueoScoring(poblarRadiosConvenio(esBancos ? [] : tabla.convenios,
+        (document.querySelector('input[name=convenioCosto]:checked') || {}).value));
       pintarAvisoCosto("Seleccione el equipo en MARCA Y MODELO para calcular el costo.", "info");
       return;
     }
