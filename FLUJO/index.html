@@ -244,6 +244,8 @@
     margin-top:10px; padding:8px 12px; border-radius:8px; background:#fff7e0;
     border:1px solid #f0d789; color:#8a6a00; font-size:12px; font-weight:600;
   }
+  .linea-coordenadas{ margin-top:6px; font-size:12px; color:var(--gris); }
+  .linea-coordenadas b{ color:var(--azul); font-weight:700; }
 
   .panel-comparar{
     max-width:720px; margin:0 auto 14px; background:#fff; border:1px solid var(--borde);
@@ -913,6 +915,7 @@ if (location.protocol === "file:") {
       <div class="campo" id="campoDireccion" style="margin-top:8px;">
         <label for="direccion">DIRECCIÓN (referencia, opcional)</label>
         <input type="text" id="direccion" placeholder="Ej: Av. Los Pinos 123, Urb. San Carlos">
+        <div class="linea-coordenadas oculto" id="coordenadasResultado">📍 Coordenadas: <b id="coordenadasTexto">-</b></div>
       </div>
       <div class="mapa-aviso-aprox oculto" id="mapaAviso">
         📍 No se encontró la dirección exacta en el mapa — se muestra el centro del distrito como referencia aproximada.
@@ -4131,6 +4134,7 @@ if (location.protocol === "file:") {
     $("mapaEstado2").classList.remove("oculto");
     $("iframeGeodir").classList.add("oculto");
     $("iframeGoogleMyMaps").classList.add("oculto");
+    $("coordenadasResultado").classList.add("oculto");
   }
 
   function mostrarMapasEnCoordenada(coords, aproximado){
@@ -4144,6 +4148,8 @@ if (location.protocol === "file:") {
     $("mapaEstado2").classList.add("oculto");
     $("iframeGeodir").classList.remove("oculto");
     $("iframeGoogleMyMaps").classList.remove("oculto");
+    $("coordenadasTexto").textContent = coords.lat.toFixed(6) + ", " + coords.lon.toFixed(6);
+    $("coordenadasResultado").classList.remove("oculto");
     $("mapaAviso").classList.toggle("oculto", !aproximado);
   }
 
