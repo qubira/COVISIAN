@@ -1161,15 +1161,28 @@ if (location.protocol === "file:") {
 
     <div class="guion-texto oculto" id="costoGuion" style="margin-top:14px;"></div>
 
-    <div class="campo oculto" id="campoComparaCosto" style="margin-top:10px;">
-      <button type="button" class="btn-comparar-costo" id="btnComparaCosto">
-        🔍 ¿No sabe cuál elegir? Ver diferencia CONTADO / FINANCIADO
-      </button>
-      <div class="tabla-costo-comp-wrap oculto" id="tablaCompararCostoWrap">
-        <table class="tabla-costo-comp" id="tablaCompararCosto">
-          <thead><tr><th>MODELO</th><th>PLAN</th><th>AL CONTADO</th><th>FINANCIADO</th></tr></thead>
-          <tbody></tbody>
-        </table>
+    <div class="fila" style="margin-top:10px; align-items:flex-start;">
+      <div class="campo oculto" id="campoComparaCosto" style="margin:0;">
+        <button type="button" class="btn-comparar-costo" id="btnComparaCosto">
+          🔍 ¿No sabe cuál elegir? Ver diferencia CONTADO / FINANCIADO
+        </button>
+        <div class="tabla-costo-comp-wrap oculto" id="tablaCompararCostoWrap">
+          <table class="tabla-costo-comp" id="tablaCompararCosto">
+            <thead><tr><th>MODELO</th><th>PLAN</th><th>AL CONTADO</th><th>FINANCIADO</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="campo oculto" id="campoComparaCaeqPhoenix" style="margin:0;">
+        <button type="button" class="btn-comparar-costo" id="btnComparaCaeqPhoenix">
+          🔍 Evaluar equipo: CAEQ_GENERICA / ESP_PHOENIX
+        </button>
+        <div class="tabla-costo-comp-wrap oculto" id="tablaCaeqPhoenixWrap">
+          <table class="tabla-costo-comp" id="tablaCaeqPhoenix">
+            <thead><tr><th>EQUIPO</th><th>CAEQ_GENERICA</th><th>ESP_PHOENIX</th><th>DIFERENCIA</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -2383,6 +2396,7 @@ if (location.protocol === "file:") {
     ultimoAvisoCosto = null;
     $("costoGuion").classList.add("oculto");
     ocultarCompararCosto();
+    actualizarCompararCaeqPhoenix();
     var tipo = $("tipo").value, subtipo = $("subtipo").value;
     var planBase = $("plan").value.trim();
 
@@ -2546,6 +2560,77 @@ if (location.protocol === "file:") {
     });
   }
 
+  // ---- Comparador "CAEQ_GENERICA vs ESP_PHOENIX" (al contado, mismo equipo y mismo PLAN):
+  // a diferencia del comparador de arriba, no depende del TIPO/SUBTIPO elegido — compara
+  // siempre estas dos hojas puntuales de Visor.xlsb, asi el agente puede evaluar por cual
+  // de los dos canales le conviene mas vender el equipo sin tener que cambiar TIPO/SUBTIPO
+  // ida y vuelta. Ver _MAPA_PRECIOS_TIPO_SUBTIPO en extract_data.py para el detalle de
+  // que hoja alimenta cada clave TIPO|SUBTIPO.
+  function ocultarCompararCaeqPhoenix(){
+    $("campoComparaCaeqPhoenix").classList.add("oculto");
+    $("tablaCaeqPhoenixWrap").classList.add("oculto");
+    $("btnComparaCaeqPhoenix").textContent = "🔍 Evaluar equipo: CAEQ_GENERICA / ESP_PHOENIX";
+  }
+
+  function actualizarCompararCaeqPhoenix(){
+    ocultarCompararCaeqPhoenix();
+    if (!equipoActual) return;
+    var tablaCaeq = DATA.precios["POSTPAGO|CAEQ"];
+    var tablaPhoenix = DATA.precios["ESPECIALES|PHOENIX (Contado)"];
+    var modeloCaeq = tablaCaeq ? buscarModeloEnTablaPrecios(equipoActual, tablaCaeq.precios.CONTADO || {}) : null;
+    var modeloPhoenix = tablaPhoenix ? buscarModeloEnTablaPrecios(equipoActual, tablaPhoenix.precios.CONTADO || {}) : null;
+    if (!modeloCaeq && !modeloPhoenix) return; // el equipo no aparece en ninguna de las dos hojas
+    $("campoComparaCaeqPhoenix").classList.remove("oculto");
+  }
+
+  function renderTablaCaeqPhoenix(){
+    var tablaCaeq = DATA.precios["POSTPAGO|CAEQ"];
+    var tablaPhoenix = DATA.precios["ESPECIALES|PHOENIX (Contado)"];
+    var modeloCaeq = tablaCaeq ? buscarModeloEnTablaPrecios(equipoActual, tablaCaeq.precios.CONTADO || {}) : null;
+    var modeloPhoenix = tablaPhoenix ? buscarModeloEnTablaPrecios(equipoActual, tablaPhoenix.precios.CONTADO || {}) : null;
+    var claveP = claveDePlan($("plan").value);
+    var precioCaeq = (modeloCaeq && claveP) ? tablaCaeq.precios.CONTADO[modeloCaeq][claveP] : undefined;
+    var precioPhoenix = (modeloPhoenix && claveP) ? tablaPhoenix.precios.CONTADO[modeloPhoenix][claveP] : undefined;
+
+    var tbody = document.querySelector("#tablaCaeqPhoenix tbody");
+    tbody.innerHTML = "";
+    var tr = document.createElement("tr");
+    var tdEquipo = document.createElement("td");
+    tdEquipo.className = "col-modelo";
+    tdEquipo.textContent = modeloCaeq || modeloPhoenix || equipoActual;
+    tr.appendChild(tdEquipo);
+    var tdCaeq = document.createElement("td");
+    tdCaeq.textContent = precioCaeq !== undefined ? ("S/ " + precioCaeq.toFixed(2)) : "-";
+    tr.appendChild(tdCaeq);
+    var tdPhoenix = document.createElement("td");
+    tdPhoenix.textContent = precioPhoenix !== undefined ? ("S/ " + precioPhoenix.toFixed(2)) : "-";
+    tr.appendChild(tdPhoenix);
+    var tdDif = document.createElement("td");
+    if (precioCaeq !== undefined && precioPhoenix !== undefined){
+      var dif = precioCaeq - precioPhoenix;
+      tdDif.textContent = (dif > 0 ? "+" : "") + "S/ " + dif.toFixed(2);
+      tdDif.style.fontWeight = "700";
+      tdDif.style.color = dif > 0 ? "var(--rojo)" : (dif < 0 ? "var(--verde)" : "var(--gris)");
+    } else if (claveP) {
+      tdDif.textContent = "-";
+    } else {
+      tdDif.textContent = "";
+      tdEquipo.colSpan = 1;
+    }
+    tr.appendChild(tdDif);
+    tbody.appendChild(tr);
+    if (!claveP){
+      var trAviso = document.createElement("tr");
+      var tdAviso = document.createElement("td");
+      tdAviso.colSpan = 4;
+      tdAviso.style.color = "var(--gris)";
+      tdAviso.style.fontStyle = "italic";
+      tdAviso.textContent = "Ingrese un PLAN válido para ver el precio en cada hoja.";
+      trAviso.appendChild(tdAviso);
+      tbody.appendChild(trAviso);
+    }
+  }
+
   function initCosto(){
     $("tipo").addEventListener("change", actualizarCosto);
     $("subtipo").addEventListener("change", actualizarCosto);
@@ -2568,6 +2653,15 @@ if (location.protocol === "file:") {
       $("btnComparaCosto").textContent = abrir
         ? "🔼 Ocultar diferencia CONTADO / FINANCIADO"
         : "🔍 ¿No sabe cuál elegir? Ver diferencia CONTADO / FINANCIADO";
+    });
+    $("btnComparaCaeqPhoenix").addEventListener("click", function(){
+      var wrap = $("tablaCaeqPhoenixWrap");
+      var abrir = wrap.classList.contains("oculto");
+      if (abrir) renderTablaCaeqPhoenix();
+      wrap.classList.toggle("oculto", !abrir);
+      $("btnComparaCaeqPhoenix").textContent = abrir
+        ? "🔼 Ocultar CAEQ_GENERICA / ESP_PHOENIX"
+        : "🔍 Evaluar equipo: CAEQ_GENERICA / ESP_PHOENIX";
     });
     $("resumenColorEquipo").addEventListener("input", actualizarResumen);
     actualizarCosto();
