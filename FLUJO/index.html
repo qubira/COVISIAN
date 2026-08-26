@@ -149,7 +149,22 @@
   }
   .btn-zoom-equipo:hover{ background:var(--azul-bg); }
   .modal-zoom-caja{ max-width:420px; text-align:center; }
-  .modal-zoom-caja img{ width:100%; max-height:60vh; object-fit:contain; border-radius:8px; }
+  .zoom-controles{
+    display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:10px;
+  }
+  .btn-zoom-nivel{
+    border:1.5px solid var(--azul); background:var(--azul-bg); color:var(--azul);
+    border-radius:50%; width:28px; height:28px; font-size:16px; font-weight:700; line-height:1;
+    cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0;
+  }
+  .btn-zoom-nivel:hover{ background:var(--azul); color:#fff; }
+  .btn-zoom-nivel:disabled{ opacity:.4; cursor:not-allowed; background:var(--azul-bg); color:var(--azul); }
+  #zoomNivelTexto{ font-size:12.5px; font-weight:700; color:var(--gris); min-width:42px; }
+  .zoom-imagen-wrap{ max-height:60vh; overflow:auto; border-radius:8px; }
+  .zoom-imagen-wrap img{
+    width:100%; display:block; object-fit:contain; border-radius:8px;
+    transition:width .15s;
+  }
   .ficha{ flex:1; min-width:220px; }
   .ficha .fila-ficha{ display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid #eee; font-size:13px; }
   .ficha .fila-ficha span:first-child{ color:var(--gris); font-weight:600; }
@@ -1687,7 +1702,14 @@ if (location.protocol === "file:") {
       <b id="modalZoomTitulo">Equipo</b>
       <button type="button" class="btn-cerrar" id="btnCerrarZoomEquipo">✕</button>
     </div>
-    <img id="fotoEquipoGrande" alt="">
+    <div class="zoom-controles">
+      <button type="button" class="btn-zoom-nivel" id="btnZoomMenos" title="Achicar">−</button>
+      <span id="zoomNivelTexto">100%</span>
+      <button type="button" class="btn-zoom-nivel" id="btnZoomMas" title="Agrandar">+</button>
+    </div>
+    <div class="zoom-imagen-wrap" id="zoomImagenWrap">
+      <img id="fotoEquipoGrande" alt="">
+    </div>
   </div>
 </div>
 
@@ -4675,16 +4697,37 @@ if (location.protocol === "file:") {
     }
   }
 
+  var ZOOM_EQUIPO_PASO = 20; // %
+  var ZOOM_EQUIPO_MIN = 40, ZOOM_EQUIPO_MAX = 300;
+  var zoomEquipoNivel = 100;
+
+  function aplicarZoomEquipo(){
+    $("fotoEquipoGrande").style.width = zoomEquipoNivel + "%";
+    $("zoomNivelTexto").textContent = zoomEquipoNivel + "%";
+    $("btnZoomMenos").disabled = zoomEquipoNivel <= ZOOM_EQUIPO_MIN;
+    $("btnZoomMas").disabled = zoomEquipoNivel >= ZOOM_EQUIPO_MAX;
+  }
+
   function initZoomEquipo(){
     $("btnZoomEquipo").addEventListener("click", function(){
       var img = $("fotoEquipo");
       if (!img.src) return;
       $("fotoEquipoGrande").src = img.src;
       $("modalZoomTitulo").textContent = equipoActual || "Equipo";
+      zoomEquipoNivel = 100;
+      aplicarZoomEquipo();
       $("modalZoomEquipo").classList.remove("oculto");
     });
     $("btnCerrarZoomEquipo").addEventListener("click", function(){
       $("modalZoomEquipo").classList.add("oculto");
+    });
+    $("btnZoomMas").addEventListener("click", function(){
+      zoomEquipoNivel = Math.min(ZOOM_EQUIPO_MAX, zoomEquipoNivel + ZOOM_EQUIPO_PASO);
+      aplicarZoomEquipo();
+    });
+    $("btnZoomMenos").addEventListener("click", function(){
+      zoomEquipoNivel = Math.max(ZOOM_EQUIPO_MIN, zoomEquipoNivel - ZOOM_EQUIPO_PASO);
+      aplicarZoomEquipo();
     });
   }
 
