@@ -916,6 +916,8 @@ if (location.protocol === "file:") {
         <label for="direccion">DIRECCIÓN (BUSQUEDA BASICA)</label>
         <input type="text" id="direccion" placeholder="Ej: Av. Los Pinos 123, Urb. San Carlos">
         <div class="linea-coordenadas oculto" id="coordenadasResultado">📍 Coordenadas: <b id="coordenadasTexto">-</b></div>
+        <button type="button" class="btn-mini" id="btnFiltroAvanzadoDireccion" style="margin-top:8px;">Activar filtro avanzado de dirección</button>
+        <div class="oculto" id="filtroAvanzadoDireccion" style="margin-top:8px;"></div>
       </div>
       <div class="mapa-aviso-aprox oculto" id="mapaAviso">
         📍 No se encontró la dirección exacta en el mapa — se muestra el centro del distrito como referencia aproximada.
@@ -1957,7 +1959,7 @@ if (location.protocol === "file:") {
     // demas — sin esto, un solo error silencioso podia dejar sin usar, por ejemplo, el
     // buscador de EQUIPO (initAutocomplete) si algo antes de el en la lista fallaba.
     [initCodFinanciamiento, initPlanes, initAutocomplete, initComparar, initStockNacional,
-      initCosto, initSimuladorEquipos, initVerDetalleEquipo, initZoomEquipo, initExpandirMapas, initAgendarLlamada, initCasosAgendados, initAutoguardado, initEncabezadoColapsable, precargarCicloContrato, actualizarContrato, actualizarSimuladorFinanciamiento, actualizarEncabezado].forEach(function(fn){
+      initCosto, initSimuladorEquipos, initVerDetalleEquipo, initZoomEquipo, initExpandirMapas, initFiltroAvanzadoDireccion, initAgendarLlamada, initCasosAgendados, initAutoguardado, initEncabezadoColapsable, precargarCicloContrato, actualizarContrato, actualizarSimuladorFinanciamiento, actualizarEncabezado].forEach(function(fn){
       try{ fn(); }catch(err){ console.error("Fallo al inicializar " + fn.name + ":", err); }
     });
   }).catch(function(err){
@@ -4909,6 +4911,19 @@ if (location.protocol === "file:") {
       expandirMapa("iframeGoogleMyMaps", "Mapa de Cobertura");
     });
     $("btnCerrarMapaGrande").addEventListener("click", cerrarMapaGrande);
+  }
+
+  // Filtro avanzado de direccion: por ahora solo el boton/panel colapsable, el contenido
+  // se agrega despues.
+  function initFiltroAvanzadoDireccion(){
+    $("btnFiltroAvanzadoDireccion").addEventListener("click", function(){
+      var panel = $("filtroAvanzadoDireccion");
+      var activar = panel.classList.contains("oculto");
+      panel.classList.toggle("oculto", !activar);
+      $("btnFiltroAvanzadoDireccion").textContent = activar
+        ? "Desactivar filtro avanzado de dirección"
+        : "Activar filtro avanzado de dirección";
+    });
   }
 
   // ============ COMPARAR EQUIPOS ============
