@@ -261,6 +261,11 @@
     display:flex; align-items:center; justify-content:center; padding:0;
   }
   .btn-limpiar-avanzado:hover{ background:var(--azul-bg); }
+  .btn-laboratorio-ubicacion{
+    border:1px solid var(--azul); background:var(--azul); color:#fff; border-radius:6px;
+    padding:5px 10px; font-size:11.5px; font-weight:700; cursor:pointer; white-space:nowrap;
+  }
+  .btn-laboratorio-ubicacion:hover{ background:var(--azul-claro); border-color:var(--azul-claro); }
   .mapa-estado{ padding:16px 10px; font-size:12px; color:var(--gris); text-align:center; }
   .mapa-iframe{ width:100%; height:260px; border:0; display:block; }
   .mapa-iframe.oculto{ display:none; }
@@ -514,6 +519,13 @@
     background:var(--rojo); color:#fff; border-radius:10px; padding:0 6px; font-size:10px;
     font-weight:800; line-height:16px; min-width:16px; text-align:center;
   }
+  #avisoLaboratorioAplicado{
+    position:fixed; left:50%; bottom:20px; transform:translate(-50%, 20px); z-index:950;
+    background:var(--verde); color:#fff; font-weight:700; font-size:13px;
+    padding:10px 18px; border-radius:20px; box-shadow:0 8px 24px rgba(0,0,0,.25);
+    opacity:0; transition:opacity .3s, transform .3s; pointer-events:none;
+  }
+  #avisoLaboratorioAplicado.visible{ opacity:1; transform:translate(-50%, 0); }
   #alertasCasosContainer{
     position:fixed; top:10px; right:10px; z-index:900; display:flex; flex-direction:column; gap:8px;
     max-width:340px;
@@ -777,6 +789,7 @@ if (location.protocol === "file:") {
 </script>
 
 <div id="alertasCasosContainer"></div>
+<div class="oculto" id="avisoLaboratorioAplicado">✓ Ubicación importada desde el Laboratorio de Ubicación</div>
 
 <div class="banner-sin-datos oculto" id="bannerSinDatos">
   ⛔ NO se pudieron cargar los datos (distritos, equipos, precios, etc.) — por eso nada se
@@ -973,13 +986,16 @@ if (location.protocol === "file:") {
         <label for="direccion">DIRECCIÓN (BUSQUEDA BASICA)</label>
         <input type="text" id="direccion" placeholder="Ej: Av. Los Pinos 123, Urb. San Carlos">
         <div class="linea-coordenadas oculto" id="coordenadasResultado">📍 Coordenadas: <b id="coordenadasTexto">-</b></div>
-        <div class="fila" style="align-items:center; justify-content:space-between; margin-top:8px;">
+        <div class="fila" style="align-items:center; justify-content:space-between; margin-top:8px; gap:8px;">
           <label class="switch-toggle" style="margin:0;">
             <input type="checkbox" id="chkFiltroAvanzadoDireccion">
             <span class="switch-track"><span class="switch-thumb"></span></span>
             <span class="switch-label">Filtro avanzado de dirección</span>
           </label>
-          <button type="button" class="btn-limpiar-avanzado" id="btnLimpiarFiltroAvanzado" title="Limpiar datos del filtro avanzado">🧹</button>
+          <div style="display:flex; gap:6px; flex-shrink:0;">
+            <button type="button" class="btn-laboratorio-ubicacion" id="btnLaboratorioUbicacion" title="Abrir el Laboratorio de Ubicación en una pestaña nueva">🧭 Laboratorio de Ubicación</button>
+            <button type="button" class="btn-limpiar-avanzado" id="btnLimpiarFiltroAvanzado" title="Limpiar datos del filtro avanzado">🧹</button>
+          </div>
         </div>
         <div class="oculto" id="filtroAvanzadoDireccion" style="margin-top:8px;">
           <div class="fila">
@@ -5350,7 +5366,102 @@ if (location.protocol === "file:") {
       actualizarDireccionEstructurada();
       guardarProgreso();
     });
+
+    initLaboratorioUbicacion();
   }
+
+  // ============ LABORATORIO DE UBICACION ============
+  // Abre laboratorio-ubicacion.html en una pestaña nueva (pagina aparte, con sus propios 4
+  // mapas y campos extra para casos dificiles de ubicar). La comunicacion entre las dos
+  // pestañas es por localStorage + postMessage porque son documentos HTML independientes,
+  // no hay ningun estado de JS compartido entre ellas:
+  //  - Al abrir: esta pagina deja un "punto de partida" en localStorage (lo que ya se llenó
+  //    aca) para que el laboratorio no empiece de cero.
+  //  - Al volver ("Jalar ubicación" en el laboratorio): el laboratorio escribe el resultado
+  //    en localStorage Y, si sigue teniendo la referencia de window.opener, lo manda tambien
+  //    por postMessage (mas inmediato). Esta pagina reacciona a cualquiera de los dos.
+  var LS_LAB_INICIAL = "laboratorio_ubicacion_inicial";
+  var LS_LAB_RESULTADO = "laboratorio_ubicacion_resultado";
+
+  function initLaboratorioUbicacion(){
+    $("btnLaboratorioUbicacion").addEventListener("click", function(){
+      var inicial = {
+        direccion: $("direccion").value,
+        distrito: seleccionCobertura ? seleccionCobertura.distrito : "",
+        provincia: seleccionCobertura ? seleccionCobertura.provincia : "",
+        departamento: seleccionCobertura ? seleccionCobertura.departamento : "",
+        filtroAvanzado: $("chkFiltroAvanzadoDireccion").checked ? {
+          tipoZona: $("direccionTipoZona").value, nombreZona: $("direccionNombreZona").value,
+          tipoVia: $("direccionTipoVia").value, nombreVia: $("direccionNombreVia").value,
+          numero: $("direccionNumero").value, mz: $("direccionMz").value, lt: $("direccionLt").value
+        } : null,
+        referencias: obtenerReferencias()
+      };
+      try{ localStorage.setItem(LS_LAB_INICIAL, JSON.stringify(inicial)); }catch(err){}
+      window.open("laboratorio-ubicacion.html", "_blank");
+    });
+  }
+
+  function mostrarAvisoLaboratorioAplicado(){
+    var el = $("avisoLaboratorioAplicado");
+    if (!el) return;
+    el.classList.remove("oculto");
+    void el.offsetWidth; // fuerza reflow: sin esto, quitar "oculto" y agregar "visible" en el
+                          // mismo tick le impide al navegador animar la transicion de opacidad.
+    el.classList.add("visible");
+    clearTimeout(mostrarAvisoLaboratorioAplicado._t);
+    mostrarAvisoLaboratorioAplicado._t = setTimeout(function(){
+      el.classList.remove("visible");
+      setTimeout(function(){ el.classList.add("oculto"); }, 300);
+    }, 4000);
+  }
+
+  function aplicarResultadoLaboratorio(datos){
+    if (!datos) return;
+    if (datos.coberturaRow){
+      aplicarCobertura(datos.coberturaRow);
+    }
+    var fa = datos.filtroAvanzado;
+    var hayFiltroAvanzado = fa && (fa.tipoZona || fa.nombreZona || fa.tipoVia || fa.nombreVia || fa.numero || fa.mz || fa.lt);
+    if (hayFiltroAvanzado){
+      $("chkFiltroAvanzadoDireccion").checked = true;
+      $("filtroAvanzadoDireccion").classList.remove("oculto");
+      $("direccion").disabled = true;
+      $("direccionTipoZona").value = fa.tipoZona || "";
+      $("direccionNombreZona").value = fa.nombreZona || "";
+      $("direccionTipoVia").value = fa.tipoVia || "";
+      $("direccionNombreVia").value = fa.nombreVia || "";
+      $("direccionNumero").value = fa.numero || "";
+      $("direccionMz").value = fa.mz || "";
+      $("direccionLt").value = fa.lt || "";
+      sincronizarDistritoDireccionAvanzada();
+      actualizarDireccionEstructurada();
+    } else if (datos.direccionLibre){
+      $("chkFiltroAvanzadoDireccion").checked = false;
+      $("filtroAvanzadoDireccion").classList.add("oculto");
+      $("direccion").disabled = false;
+      $("direccion").value = datos.direccionLibre;
+      $("direccion").dispatchEvent(new Event("input", { bubbles: true }));
+    }
+    if (datos.referencias && datos.referencias.length) restaurarReferencias(datos.referencias);
+    if (datos.coords) mostrarMapasEnCoordenada(datos.coords, !!datos.aproximado);
+    guardarProgreso();
+    var campo = $("campoDireccion");
+    if (campo) campo.scrollIntoView({ behavior: "smooth", block: "center" });
+    mostrarAvisoLaboratorioAplicado();
+  }
+
+  window.addEventListener("storage", function(e){
+    if (e.key === LS_LAB_RESULTADO && e.newValue){
+      try{ aplicarResultadoLaboratorio(JSON.parse(e.newValue)); }catch(err){}
+    }
+  });
+  window.addEventListener("message", function(e){
+    if (e.origin !== location.origin) return;
+    if (e.data && e.data.tipo === "laboratorioUbicacionResultado"){
+      aplicarResultadoLaboratorio(e.data.datos);
+    }
+  });
 
   // ============ CAMBIOS HISTORICOS DE STOCK (equipos/colores agregados o eliminados) ============
   // DATA.cambiosHistoricos viene de FLUJO/data/cambios_historicos.json, generado por

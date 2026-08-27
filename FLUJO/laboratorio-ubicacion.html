@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laboratorio de Ubicación - Movistar</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  :root{
+    --azul:#0f3d91; --azul-claro:#1a56d6; --azul-bg:#eef3fc;
+    --verde:#1a8f4c; --rojo:#c0392b; --gris:#6b7280; --gris-bg:#f4f5f7;
+    --borde:#d7dce3; --texto:#1f2530;
+  }
+  *{ box-sizing:border-box; }
+  body{
+    font-family:'Segoe UI', Arial, sans-serif; background:var(--gris-bg); color:var(--texto);
+    margin:0; padding:0 12px 60px;
+  }
+  body.tema-oscuro{
+    --azul:#5b9bff; --azul-claro:#7db2ff; --azul-bg:#16233d;
+    --verde:#3ddc84; --rojo:#ff6b5e; --gris:#9aa3b2; --gris-bg:#1a1e27;
+    --borde:#333846; --texto:#e4e7ee;
+  }
+  body.tema-oscuro fieldset, body.tema-oscuro .mapa-caja, body.tema-oscuro .autocomplete .lista,
+  body.tema-oscuro input[type=text], body.tema-oscuro select{ background:#1c2029; color:var(--texto); }
+  main{ max-width:760px; margin:0 auto; }
+
+  header{
+    max-width:760px; margin:0 auto; padding:16px 0 10px; display:flex; align-items:center;
+    justify-content:space-between; gap:10px;
+  }
+  header h1{ font-size:17px; color:var(--azul); margin:0; }
+  header p{ font-size:12px; color:var(--gris); margin:2px 0 0; }
+  .btn-tema{
+    border:1px solid var(--borde); background:#fff; border-radius:50%; width:32px; height:32px;
+    font-size:15px; cursor:pointer; flex-shrink:0;
+  }
+  body.tema-oscuro .btn-tema{ background:#1c2029; }
+
+  fieldset{ border:1px solid var(--borde); border-radius:10px; background:#fff; padding:14px 16px 16px; margin-bottom:12px; }
+  legend{ font-weight:700; color:#fff; background:var(--azul); padding:4px 12px; border-radius:6px; font-size:12.5px; letter-spacing:.4px; }
+  .campo{ margin:8px 0; }
+  .campo label{ display:block; font-size:11.5px; font-weight:700; color:var(--gris); margin-bottom:3px; letter-spacing:.2px; }
+  input[type=text]{
+    width:100%; padding:8px 9px; border:1px solid var(--borde); border-radius:6px;
+    font-size:13.5px; background:#fff; color:var(--texto);
+  }
+  input:focus{ outline:2px solid var(--azul-claro); outline-offset:1px; }
+  .fila{ display:flex; gap:10px; flex-wrap:wrap; }
+  .fila > .campo{ flex:1; min-width:140px; }
+  .nota{ font-size:11.5px; color:var(--gris); margin:2px 0 0; line-height:1.4; }
+
+  .autocomplete{ position:relative; }
+  .autocomplete .lista{
+    position:absolute; z-index:250; top:100%; left:0; right:0; background:#fff;
+    border:1px solid var(--borde); border-top:none; border-radius:0 0 6px 6px;
+    max-height:220px; overflow-y:auto; display:none; box-shadow:0 6px 14px rgba(0,0,0,.1);
+  }
+  body.tema-oscuro .autocomplete .lista{ background:#1c2029; }
+  .autocomplete .lista.abierta{ display:block; }
+  .autocomplete .opcion{ padding:7px 9px; font-size:13px; cursor:pointer; }
+  .autocomplete .opcion:hover{ background:var(--azul-bg); }
+  .autocomplete .opcion small{ display:block; color:var(--gris); font-size:10.5px; }
+
+  .fila-referencia{ display:flex; gap:6px; margin-bottom:6px; align-items:center; }
+  .fila-referencia input{ flex:1; }
+  .btn-quitar-referencia{
+    border:1px solid var(--borde); background:#fff; color:var(--gris); border-radius:5px;
+    width:26px; height:26px; font-size:12px; cursor:pointer; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; padding:0;
+  }
+  .btn-quitar-referencia:hover{ border-color:var(--rojo); color:var(--rojo); }
+  .btn-agregar-referencia{
+    border:1px dashed var(--azul); background:#fff; color:var(--azul); border-radius:6px;
+    padding:5px 12px; font-size:12px; font-weight:700; cursor:pointer;
+  }
+  body.tema-oscuro .btn-quitar-referencia, body.tema-oscuro .btn-agregar-referencia{ background:#1c2029; }
+
+  .distrito-resultado{ font-size:12px; color:var(--gris); margin-top:4px; }
+  .distrito-resultado b{ color:var(--azul); }
+
+  .btn-buscar{
+    width:100%; background:var(--azul); color:#fff; border:none; border-radius:8px;
+    padding:13px; font-size:14.5px; font-weight:700; cursor:pointer; margin-top:4px;
+  }
+  .btn-buscar:hover{ background:var(--azul-claro); }
+  .btn-buscar:disabled{ opacity:.5; cursor:not-allowed; }
+  .estado-busqueda{ text-align:center; font-size:12.5px; color:var(--gris); margin-top:8px; min-height:16px; }
+  .estado-busqueda.error{ color:var(--rojo); font-weight:700; }
+
+  .linea-coordenadas{ text-align:center; font-size:14px; margin:10px 0; padding:10px; background:var(--azul-bg); border-radius:8px; color:var(--azul); font-weight:700; }
+  .linea-coordenadas.oculto{ display:none; }
+
+  .mapas-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; }
+  @media (max-width:600px){ .mapas-grid{ grid-template-columns:1fr; } }
+  .mapa-caja{ border:1px solid var(--borde); border-radius:8px; overflow:hidden; background:#fff; }
+  .mapa-titulo{ background:var(--azul-bg); color:var(--azul); font-size:11.5px; font-weight:700; padding:6px 9px; }
+  .mapa-estado{ padding:30px 10px; font-size:12px; color:var(--gris); text-align:center; }
+  .mapa-iframe{ width:100%; height:230px; border:0; display:block; }
+  .mapa-iframe.oculto{ display:none; }
+  #mapaLeafletLab{ position:relative; z-index:0; height:230px; }
+
+  .btn-jalar{
+    width:100%; background:var(--verde); color:#fff; border:none; border-radius:8px;
+    padding:13px; font-size:14.5px; font-weight:700; cursor:pointer; margin-top:12px;
+  }
+  .btn-jalar:hover{ opacity:.9; }
+  .btn-jalar:disabled{ opacity:.4; cursor:not-allowed; }
+  .aviso-enviado{
+    text-align:center; font-size:12.5px; color:var(--verde); font-weight:700; margin-top:8px; min-height:16px;
+  }
+  .oculto{ display:none; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>🧭 Laboratorio de Ubicación</h1>
+    <p>Junta todos los datos que el cliente pueda dar (o que le consultes) hasta ubicar el punto exacto, y mándalo a la ficha principal.</p>
+  </div>
+  <button type="button" class="btn-tema" id="btnTema" title="Cambiar a modo oscuro">🌙</button>
+</header>
+
+<main>
+
+  <fieldset>
+    <legend>1. UBICACIÓN GENERAL</legend>
+    <div class="campo autocomplete" id="ac-labDistrito">
+      <label for="labDistrito">DISTRITO</label>
+      <input type="text" id="labDistrito" placeholder="Buscar distrito..." autocomplete="off">
+      <div class="lista" id="lista-labDistrito"></div>
+    </div>
+    <div class="distrito-resultado oculto" id="labDistritoResultado"></div>
+  </fieldset>
+
+  <fieldset>
+    <legend>2. BÚSQUEDA LIBRE</legend>
+    <div class="campo">
+      <label for="labBusquedaLibre">Cualquier dato que el cliente te dicte tal cual (calle, urbanización, "al lado de...")</label>
+      <input type="text" id="labBusquedaLibre" placeholder="Ej: Jr. Los Andes 450, cerca al mercado de Santa Rosa">
+    </div>
+    <p class="nota">Si llenas esto, se usa en vez de los campos estructurados de abajo — útil cuando el cliente dicta la dirección de corrido.</p>
+  </fieldset>
+
+  <fieldset>
+    <legend>3. FILTRO ESTRUCTURADO</legend>
+    <div class="fila">
+      <div class="campo autocomplete" id="ac-labTipoZona" style="max-width:150px;">
+        <label for="labTipoZona">TIPO DE ZONA</label>
+        <input type="text" id="labTipoZona" placeholder="Ej: AAHH" autocomplete="off">
+        <div class="lista" id="lista-labTipoZona"></div>
+      </div>
+      <div class="campo"><label for="labNombreZona">NOMBRE</label><input type="text" id="labNombreZona" placeholder="Ej: Las Flores"></div>
+    </div>
+    <div class="fila" style="margin-top:6px;">
+      <div class="campo autocomplete" id="ac-labTipoVia" style="max-width:130px;">
+        <label for="labTipoVia">TIPO DE VÍA</label>
+        <input type="text" id="labTipoVia" placeholder="Ej: JR" autocomplete="off">
+        <div class="lista" id="lista-labTipoVia"></div>
+      </div>
+      <div class="campo"><label for="labNombreVia">NOMBRE</label><input type="text" id="labNombreVia" placeholder="Ej: Los Pinos"></div>
+      <div class="campo" style="max-width:90px;"><label for="labNumero">NÚMERO</label><input type="text" id="labNumero" placeholder="Ej: 123"></div>
+    </div>
+    <div class="fila" style="margin-top:6px;">
+      <div class="campo"><label for="labEtapa">ETAPA</label><input type="text" id="labEtapa" placeholder="Ej: 3"></div>
+      <div class="campo"><label for="labSector">SECTOR</label><input type="text" id="labSector" placeholder="Ej: B"></div>
+      <div class="campo"><label for="labCuadra">CUADRA</label><input type="text" id="labCuadra" placeholder="Ej: 5"></div>
+      <div class="campo"><label for="labMz">MZ</label><input type="text" id="labMz" placeholder="Mz"></div>
+      <div class="campo"><label for="labLt">LT</label><input type="text" id="labLt" placeholder="Lt"></div>
+    </div>
+    <div class="fila" style="margin-top:6px;">
+      <div class="campo"><label for="labPiso">PISO</label><input type="text" id="labPiso" placeholder="Ej: 3"></div>
+      <div class="campo"><label for="labInterior">INTERIOR / DPTO</label><input type="text" id="labInterior" placeholder="Ej: Int. 302"></div>
+    </div>
+    <p class="nota">ETAPA/SECTOR/CUADRA/MZ/LT se usan para buscar el punto en el mapa. PISO e INTERIOR son solo para que quede anotado (un edificio entero geolocaliza igual, el piso no cambia el punto en el mapa).</p>
+  </fieldset>
+
+  <fieldset>
+    <legend>4. REFERENCIAS Y CARACTERÍSTICAS</legend>
+    <div class="campo">
+      <label>PUNTOS DE REFERENCIA (el cliente puede dar más de uno)</label>
+      <div id="labReferenciasCont"></div>
+      <button type="button" class="btn-agregar-referencia" id="labBtnAgregarReferencia">+ Agregar referencia</button>
+    </div>
+    <div class="campo" style="margin-top:10px;">
+      <label for="labCaracteristicas">CARACTERÍSTICAS DE LA VIVIENDA (fachada, rejas, color, pisos, etc.)</label>
+      <input type="text" id="labCaracteristicas" placeholder="Ej: Casa de dos pisos, rejas verdes, tienda al costado">
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>5. COORDENADAS O LINK DE GOOGLE MAPS</legend>
+    <div class="campo">
+      <label for="labCoordDirectas">Si el cliente te compartió su ubicación de WhatsApp/Google Maps, pégala aquí</label>
+      <input type="text" id="labCoordDirectas" placeholder="Ej: -12.046400, -77.042800 — o un link de Google Maps">
+    </div>
+    <p class="nota">Funciona con un link normal de Google Maps o con coordenadas sueltas. Los links acortados (goo.gl/maps) no se pueden leer automáticamente: pide que abra el link y te lea la dirección o las coordenadas que aparecen arriba.</p>
+  </fieldset>
+
+  <button type="button" class="btn-buscar" id="labBtnBuscar">🔍 Buscar ubicación con estos datos</button>
+  <div class="estado-busqueda" id="labEstadoBusqueda"></div>
+
+  <div class="linea-coordenadas oculto" id="labCoordenadasResultado">📍 -</div>
+
+  <div class="mapa-caja" id="labCajaLeaflet" style="margin-top:10px;">
+    <div class="mapa-titulo">Mapa interactivo (arrastra el pin para ajustar el punto)</div>
+    <div class="mapa-estado" id="labMapaEstado0">Busca una ubicación para ver el mapa</div>
+    <div id="mapaLeafletLab" class="oculto"></div>
+  </div>
+
+  <div class="mapas-grid">
+    <div class="mapa-caja">
+      <div class="mapa-titulo">Google Maps</div>
+      <div class="mapa-estado" id="labMapaEstado1">Busca una ubicación para ver el mapa</div>
+      <iframe id="labIframeGoogleMaps" class="mapa-iframe oculto" loading="lazy"></iframe>
+    </div>
+    <div class="mapa-caja">
+      <div class="mapa-titulo">Geodir Maps</div>
+      <div class="mapa-estado" id="labMapaEstado2">Busca una ubicación para ver el mapa</div>
+      <iframe id="labIframeGeodir" class="mapa-iframe oculto" loading="lazy"></iframe>
+    </div>
+    <div class="mapa-caja">
+      <div class="mapa-titulo">Mapa de Cobertura</div>
+      <div class="mapa-estado" id="labMapaEstado3">Busca una ubicación para ver el mapa</div>
+      <iframe id="labIframeGoogleMyMaps" class="mapa-iframe oculto" loading="lazy"></iframe>
+    </div>
+  </div>
+
+  <button type="button" class="btn-jalar" id="labBtnJalar" disabled>⬇ Jalar ubicación a la página principal</button>
+  <div class="aviso-enviado" id="labAvisoEnviado"></div>
+
+</main>
+
+<script>
+(function(){
+  "use strict";
+  function $(id){ return document.getElementById(id); }
+  function norm(s){
+    return (s || "").toString().toUpperCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+      .replace(/\s+/g, " ").trim();
+  }
+
+  // ---- Tema (comparte la misma clave que la pagina principal, asi quedan sincronizados) ----
+  (function initTema(){
+    var LS_TEMA = "tema_oscuro";
+    var btn = $("btnTema");
+    function aplicar(oscuro){
+      document.body.classList.toggle("tema-oscuro", oscuro);
+      btn.textContent = oscuro ? "☀️" : "🌙";
+    }
+    var guardado = false;
+    try{ guardado = localStorage.getItem(LS_TEMA) === "1"; }catch(err){}
+    aplicar(guardado);
+    btn.addEventListener("click", function(){
+      var oscuro = !document.body.classList.contains("tema-oscuro");
+      aplicar(oscuro);
+      try{ localStorage.setItem(LS_TEMA, oscuro ? "1" : "0"); }catch(err){}
+    });
+  })();
+
+  var OPCIONES_TIPO_ZONA = [
+    { value: "AAHH", label: "Asentamiento Humano" }, { value: "AH", label: "Asentamiento Humano" },
+    { value: "UR", label: "Urbanización" }, { value: "URB", label: "Urbanización" },
+    { value: "PPJJ", label: "Pueblo Joven" }, { value: "ASOC", label: "Asociación" },
+    { value: "CP", label: "Centro Poblacional" }, { value: "COOP", label: "Cooperativa" }, { value: "S COOP", label: "Cooperativa" },
+    { value: "BO", label: "Barrio" }, { value: "RES", label: "Residencia / Residencial" },
+    { value: "COND", label: "Condominio" }, { value: "SECT", label: "Sector" }, { value: "SEC", label: "Sector" }
+  ];
+  var OPCIONES_TIPO_VIA = [
+    { value: "CL", label: "Calle" }, { value: "C/", label: "Calle" }, { value: "JR", label: "Jirón" },
+    { value: "AV", label: "Avenida" }, { value: "AVD", label: "Avenida" }, { value: "PROL", label: "Prolongación" },
+    { value: "ALAM", label: "Alameda" }, { value: "AL", label: "Alameda" }
+  ];
+
+  function configurarAutocompleteAbreviatura(inputId, listaId, opciones){
+    var input = $(inputId); var lista = $(listaId);
+    function render(filtro){
+      lista.innerHTML = "";
+      var q = norm(filtro);
+      var coincidencias = opciones.filter(function(o){
+        return norm(o.value).indexOf(q) !== -1 || norm(o.label).indexOf(q) !== -1;
+      });
+      coincidencias.forEach(function(o){
+        var div = document.createElement("div");
+        div.className = "opcion";
+        div.innerHTML = "<b>" + o.value + "</b><small>" + o.label + "</small>";
+        div.addEventListener("mousedown", function(e){
+          e.preventDefault();
+          input.value = o.value;
+          lista.classList.remove("abierta");
+        });
+        lista.appendChild(div);
+      });
+      lista.classList.toggle("abierta", coincidencias.length > 0);
+    }
+    input.addEventListener("focus", function(){ render(input.value); });
+    input.addEventListener("input", function(){ render(input.value); });
+    input.addEventListener("blur", function(){ setTimeout(function(){ lista.classList.remove("abierta"); }, 150); });
+  }
+  configurarAutocompleteAbreviatura("labTipoZona", "lista-labTipoZona", OPCIONES_TIPO_ZONA);
+  configurarAutocompleteAbreviatura("labTipoVia", "lista-labTipoVia", OPCIONES_TIPO_VIA);
+
+  // ---- Referencias (misma logica que la pagina principal: siempre queda al menos 1 fila) ----
+  function crearFilaReferencia(valor){
+    var fila = document.createElement("div");
+    fila.className = "fila-referencia";
+    var input = document.createElement("input");
+    input.type = "text";
+    input.className = "input-referencia";
+    input.placeholder = "Ej: Frente al parque, casa de rejas verdes";
+    input.value = valor || "";
+    var btnQuitar = document.createElement("button");
+    btnQuitar.type = "button";
+    btnQuitar.className = "btn-quitar-referencia";
+    btnQuitar.title = "Quitar esta referencia";
+    btnQuitar.textContent = "✕";
+    btnQuitar.addEventListener("click", function(){
+      fila.remove();
+      if (!$("labReferenciasCont").children.length) agregarFilaReferencia();
+    });
+    fila.appendChild(input);
+    fila.appendChild(btnQuitar);
+    return fila;
+  }
+  function agregarFilaReferencia(valor){ $("labReferenciasCont").appendChild(crearFilaReferencia(valor)); }
+  function obtenerReferencias(){
+    return Array.prototype.map.call(document.querySelectorAll("#labReferenciasCont .input-referencia"),
+      function(inp){ return inp.value.trim(); }).filter(Boolean);
+  }
+  function restaurarReferencias(lista){
+    $("labReferenciasCont").innerHTML = "";
+    if (lista && lista.length) lista.forEach(function(v){ agregarFilaReferencia(v); });
+    else agregarFilaReferencia();
+  }
+  restaurarReferencias([]);
+  $("labBtnAgregarReferencia").addEventListener("click", function(){ agregarFilaReferencia(); });
+
+  // ---- Distrito: autocomplete contra data/cobertura.json ----
+  var coberturaData = [];
+  var seleccionCobertura = null;
+  fetch("data/cobertura.json").then(function(r){ return r.json(); }).then(function(data){
+    coberturaData = data;
+  }).catch(function(){});
+
+  (function initDistrito(){
+    var input = $("labDistrito");
+    var lista = $("lista-labDistrito");
+    input.addEventListener("input", function(){
+      seleccionCobertura = null;
+      $("labDistritoResultado").classList.add("oculto");
+      var q = norm(input.value);
+      lista.innerHTML = "";
+      if (!q){ lista.classList.remove("abierta"); return; }
+      var vistos = {};
+      var unicos = [];
+      coberturaData.filter(function(row){ return row.distrito && norm(row.distrito).indexOf(q) !== -1; })
+        .forEach(function(row){
+          var key = row.departamento + "|" + row.provincia + "|" + row.distrito;
+          if (!vistos[key]){ vistos[key] = true; unicos.push(row); }
+        });
+      unicos.slice(0, 30).forEach(function(row){
+        var div = document.createElement("div");
+        div.className = "opcion";
+        div.innerHTML = "<b>" + row.distrito + "</b><small>" + row.provincia + " - " + row.departamento + "</small>";
+        div.addEventListener("mousedown", function(e){
+          e.preventDefault();
+          seleccionCobertura = row;
+          input.value = row.distrito;
+          $("labDistritoResultado").innerHTML = "Provincia: <b>" + row.provincia + "</b> — Departamento: <b>" + row.departamento + "</b>";
+          $("labDistritoResultado").classList.remove("oculto");
+          lista.classList.remove("abierta");
+        });
+        lista.appendChild(div);
+      });
+      lista.classList.toggle("abierta", unicos.length > 0);
+    });
+    input.addEventListener("blur", function(){ setTimeout(function(){ lista.classList.remove("abierta"); }, 150); });
+  })();
+
+  // ---- Parser de coordenadas / link de Google Maps ----
+  function parsearCoordenadasOLink(texto){
+    texto = (texto || "").trim();
+    if (!texto) return null;
+    var m = texto.match(/^(-?\d{1,3}\.\d+)\s*,\s*(-?\d{1,3}\.\d+)$/);
+    if (m) return { lat: parseFloat(m[1]), lon: parseFloat(m[2]) };
+    m = texto.match(/[@=](-?\d{1,3}\.\d+),(-?\d{1,3}\.\d+)/);
+    if (m) return { lat: parseFloat(m[1]), lon: parseFloat(m[2]) };
+    return null;
+  }
+
+  // ---- Direccion armada a partir del filtro estructurado ----
+  function armarDireccionEstructurada(){
+    var zona = [$("labTipoZona").value.trim(), $("labNombreZona").value.trim()].filter(Boolean).join(" ");
+    var via = [$("labTipoVia").value.trim(), $("labNombreVia").value.trim(), $("labNumero").value.trim()].filter(Boolean).join(" ");
+    var etapaSector = [];
+    if ($("labEtapa").value.trim()) etapaSector.push("Etapa " + $("labEtapa").value.trim());
+    if ($("labSector").value.trim()) etapaSector.push("Sector " + $("labSector").value.trim());
+    if ($("labCuadra").value.trim()) etapaSector.push("Cuadra " + $("labCuadra").value.trim());
+    var mzLt = [];
+    if ($("labMz").value.trim()) mzLt.push("Mz. " + $("labMz").value.trim());
+    if ($("labLt").value.trim()) mzLt.push("Lt. " + $("labLt").value.trim());
+    return [zona, via, etapaSector.join(" "), mzLt.join(" ")].filter(Boolean).join(", ");
+  }
+
+  // ---- Geocodificacion (misma API gratuita que la pagina principal) ----
+  var GEOCODE_CACHE = {};
+  function buscarCoordenada(query){
+    if (GEOCODE_CACHE[query]) return Promise.resolve(GEOCODE_CACHE[query]);
+    return fetch("https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=pe&q=" + encodeURIComponent(query))
+      .then(function(r){ return r.json(); })
+      .then(function(res){
+        if (!res || !res.length) return null;
+        var coords = { lat: parseFloat(res[0].lat), lon: parseFloat(res[0].lon) };
+        GEOCODE_CACHE[query] = coords;
+        return coords;
+      });
+  }
+
+  // ---- Mapas ----
+  var mapaLeaflet = null, marcadorLeaflet = null, actualizando = false;
+  var ultimoResultado = null; // { coords, aproximado }
+
+  function mostrarMapaLeaflet(coords, zoom){
+    if (!window.L) return;
+    if (!mapaLeaflet){
+      mapaLeaflet = L.map("mapaLeafletLab").setView([coords.lat, coords.lon], zoom);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "© OpenStreetMap contributors", maxZoom: 19
+      }).addTo(mapaLeaflet);
+      marcadorLeaflet = L.marker([coords.lat, coords.lon], { draggable: true }).addTo(mapaLeaflet);
+      marcadorLeaflet.on("dragend", function(){
+        if (actualizando) return;
+        var pos = marcadorLeaflet.getLatLng();
+        mostrarResultado({ lat: pos.lat, lon: pos.lng }, false);
+      });
+    } else {
+      actualizando = true;
+      mapaLeaflet.setView([coords.lat, coords.lon], zoom);
+      marcadorLeaflet.setLatLng([coords.lat, coords.lon]);
+      actualizando = false;
+    }
+    setTimeout(function(){ if (mapaLeaflet) mapaLeaflet.invalidateSize(); }, 50);
+  }
+
+  function mostrarResultado(coords, aproximado){
+    ultimoResultado = { coords: coords, aproximado: aproximado };
+    var zoom = aproximado ? 14 : 17;
+    var latlng = coords.lat + "," + coords.lon;
+
+    $("labMapaEstado0").classList.add("oculto");
+    $("mapaLeafletLab").classList.remove("oculto");
+    mostrarMapaLeaflet(coords, zoom);
+
+    $("labIframeGoogleMaps").src = "https://www.google.com/maps?q=" + coords.lat + "," + coords.lon + "&z=" + zoom + "&output=embed";
+    $("labMapaEstado1").classList.add("oculto");
+    $("labIframeGoogleMaps").classList.remove("oculto");
+
+    $("labIframeGeodir").src = "https://maps.geodir.co/coordinate/" + encodeURIComponent(latlng) + "/" + coords.lat + "/" + coords.lon + "/" + zoom;
+    $("labMapaEstado2").classList.add("oculto");
+    $("labIframeGeodir").classList.remove("oculto");
+
+    $("labIframeGoogleMyMaps").src = "https://www.google.com/maps/d/embed?mid=1wBsUrIlARzqGFDmorbChCKTP0wMplDc&ll=" + coords.lat + "," + coords.lon + "&z=" + zoom;
+    $("labMapaEstado3").classList.add("oculto");
+    $("labIframeGoogleMyMaps").classList.remove("oculto");
+
+    $("labCoordenadasResultado").textContent = "📍 " + coords.lat.toFixed(6) + ", " + coords.lon.toFixed(6) +
+      (aproximado ? " (aproximado — solo se encontró el distrito, ajusta el pin a mano)" : "");
+    $("labCoordenadasResultado").classList.remove("oculto");
+
+    $("labBtnJalar").disabled = false;
+  }
+
+  function estadoBusqueda(texto, esError){
+    var el = $("labEstadoBusqueda");
+    el.textContent = texto;
+    el.classList.toggle("error", !!esError);
+  }
+
+  $("labBtnBuscar").addEventListener("click", function(){
+    var directo = parsearCoordenadasOLink($("labCoordDirectas").value);
+    if (directo){
+      estadoBusqueda("Coordenadas leídas directamente — no hizo falta buscar.");
+      mostrarResultado(directo, false);
+      return;
+    }
+    var direccionLibre = $("labBusquedaLibre").value.trim();
+    var direccionArmada = direccionLibre || armarDireccionEstructurada();
+    if (!direccionArmada && !seleccionCobertura){
+      estadoBusqueda("Escribe al menos un dato de dirección, o elige un distrito arriba.", true);
+      return;
+    }
+    var partes = [];
+    if (direccionArmada) partes.push(direccionArmada);
+    if (seleccionCobertura) partes.push(seleccionCobertura.distrito, seleccionCobertura.provincia, seleccionCobertura.departamento);
+    partes.push("Peru");
+    var query = partes.filter(Boolean).join(", ");
+
+    estadoBusqueda("Buscando...");
+    $("labBtnBuscar").disabled = true;
+    buscarCoordenada(query).then(function(coords){
+      if (coords){
+        estadoBusqueda("Ubicación encontrada.");
+        mostrarResultado(coords, false);
+        $("labBtnBuscar").disabled = false;
+        return;
+      }
+      if (seleccionCobertura){
+        var queryDistrito = [seleccionCobertura.distrito, seleccionCobertura.provincia, seleccionCobertura.departamento, "Peru"].filter(Boolean).join(", ");
+        if (queryDistrito !== query){
+          return buscarCoordenada(queryDistrito).then(function(c2){
+            $("labBtnBuscar").disabled = false;
+            if (c2){
+              estadoBusqueda("No se encontró la dirección exacta — se muestra el centro del distrito, ajusta el pin a mano.");
+              mostrarResultado(c2, true);
+            } else {
+              estadoBusqueda("No se encontró esa ubicación. Prueba con menos datos o con el distrito solo.", true);
+            }
+          });
+        }
+      }
+      $("labBtnBuscar").disabled = false;
+      estadoBusqueda("No se encontró esa ubicación. Prueba con menos datos o con el distrito solo.", true);
+    }).catch(function(){
+      $("labBtnBuscar").disabled = false;
+      estadoBusqueda("No se pudo consultar el mapa (revisa tu conexión).", true);
+    });
+  });
+
+  // ---- Jalar ubicación a la pagina principal (localStorage + postMessage) ----
+  var LS_LAB_RESULTADO = "laboratorio_ubicacion_resultado";
+  $("labBtnJalar").addEventListener("click", function(){
+    if (!ultimoResultado) return;
+    var payload = {
+      coords: ultimoResultado.coords,
+      aproximado: ultimoResultado.aproximado,
+      coberturaRow: seleccionCobertura || null,
+      filtroAvanzado: {
+        tipoZona: $("labTipoZona").value.trim(), nombreZona: $("labNombreZona").value.trim(),
+        tipoVia: $("labTipoVia").value.trim(), nombreVia: $("labNombreVia").value.trim(),
+        numero: $("labNumero").value.trim(), mz: $("labMz").value.trim(), lt: $("labLt").value.trim()
+      },
+      direccionLibre: $("labBusquedaLibre").value.trim(),
+      referencias: obtenerReferencias().concat([
+        $("labEtapa").value.trim() ? ("Etapa " + $("labEtapa").value.trim()) : "",
+        $("labSector").value.trim() ? ("Sector " + $("labSector").value.trim()) : "",
+        $("labCuadra").value.trim() ? ("Cuadra " + $("labCuadra").value.trim()) : "",
+        $("labPiso").value.trim() ? ("Piso " + $("labPiso").value.trim()) : "",
+        $("labInterior").value.trim() ? $("labInterior").value.trim() : "",
+        $("labCaracteristicas").value.trim()
+      ].filter(Boolean)),
+      ts: Date.now()
+    };
+    try{ localStorage.setItem(LS_LAB_RESULTADO, JSON.stringify(payload)); }catch(err){}
+    if (window.opener && !window.opener.closed){
+      try{ window.opener.postMessage({ tipo: "laboratorioUbicacionResultado", datos: payload }, location.origin); }catch(err){}
+    }
+    $("labAvisoEnviado").textContent = "✓ Enviado a la página principal. Ya puedes cerrar esta pestaña o seguir ajustando el punto.";
+  });
+
+  // ---- Precarga con lo que ya se había llenado en la pagina principal ----
+  var LS_LAB_INICIAL = "laboratorio_ubicacion_inicial";
+  (function precargar(){
+    var inicial = null;
+    try{ inicial = JSON.parse(localStorage.getItem(LS_LAB_INICIAL) || "null"); }catch(err){}
+    if (!inicial) return;
+    if (inicial.direccion) $("labBusquedaLibre").value = inicial.direccion;
+    if (inicial.distrito) $("labDistrito").value = inicial.distrito;
+    if (inicial.filtroAvanzado){
+      var fa = inicial.filtroAvanzado;
+      $("labTipoZona").value = fa.tipoZona || "";
+      $("labNombreZona").value = fa.nombreZona || "";
+      $("labTipoVia").value = fa.tipoVia || "";
+      $("labNombreVia").value = fa.nombreVia || "";
+      $("labNumero").value = fa.numero || "";
+      $("labMz").value = fa.mz || "";
+      $("labLt").value = fa.lt || "";
+      if (fa.tipoZona || fa.nombreZona || fa.tipoVia || fa.nombreVia) $("labBusquedaLibre").value = "";
+    }
+    if (inicial.referencias && inicial.referencias.length) restaurarReferencias(inicial.referencias);
+  })();
+})();
+</script>
+</body>
+</html>
