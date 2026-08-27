@@ -37,6 +37,7 @@
     font-size:14px; background:#fff;
   }
   input:focus, select:focus, textarea:focus{ outline:2px solid var(--azul-claro); outline-offset:1px; }
+  input:disabled{ background:var(--gris-bg); color:var(--gris); cursor:not-allowed; }
   .fila{ display:flex; gap:14px; flex-wrap:wrap; }
   .fila > .campo{ flex:1; min-width:200px; }
   .radios{ display:flex; gap:18px; align-items:center; padding-top:2px; }
@@ -3032,6 +3033,7 @@ if (location.protocol === "file:") {
     if (estado.filtroAvanzadoDireccion){
       $("chkFiltroAvanzadoDireccion").checked = true;
       $("filtroAvanzadoDireccion").classList.remove("oculto");
+      $("direccion").disabled = true;
     }
 
     if (estado.seleccionCobertura){
@@ -3200,6 +3202,7 @@ if (location.protocol === "file:") {
     $("plan").value = "";
     $("tipo").value = "";
     $("direccion").value = "";
+    $("direccion").disabled = false;
     $("chkFiltroAvanzadoDireccion").checked = false;
     $("filtroAvanzadoDireccion").classList.add("oculto");
     ["direccionTipoZona", "direccionNombreZona", "direccionTipoVia", "direccionNombreVia",
@@ -5095,6 +5098,10 @@ if (location.protocol === "file:") {
     configurarAutocompleteAbreviatura("direccionTipoVia", "lista-direccionTipoVia", OPCIONES_TIPO_VIA);
     $("chkFiltroAvanzadoDireccion").addEventListener("change", function(){
       $("filtroAvanzadoDireccion").classList.toggle("oculto", !this.checked);
+      // con el filtro avanzado activo, la direccion que se usa para los mapas es SOLO la
+      // armada con estos campos (actualizarDireccionEstructurada ya pisa #direccion) — se
+      // bloquea la busqueda basica para que no quede la duda de cual de las dos manda.
+      $("direccion").disabled = this.checked;
       if (this.checked){
         sincronizarDistritoDireccionAvanzada();
         actualizarDireccionEstructurada();
