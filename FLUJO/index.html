@@ -958,6 +958,10 @@ if (location.protocol === "file:") {
               <label for="direccionNombreVia">NOMBRE</label>
               <input type="text" id="direccionNombreVia" placeholder="Ej: Los Pinos">
             </div>
+            <div class="campo" style="max-width:90px;">
+              <label for="direccionNumero">NÚMERO</label>
+              <input type="text" id="direccionNumero" placeholder="Ej: 123">
+            </div>
             <div class="campo" style="max-width:80px;">
               <label for="direccionMz">MZ</label>
               <input type="text" id="direccionMz" placeholder="Mz">
@@ -2803,6 +2807,7 @@ if (location.protocol === "file:") {
       direccionNombreZona: $("direccionNombreZona").value,
       direccionTipoVia: $("direccionTipoVia").value,
       direccionNombreVia: $("direccionNombreVia").value,
+      direccionNumero: $("direccionNumero").value,
       direccionMz: $("direccionMz").value,
       direccionLt: $("direccionLt").value,
       creditoTipoGestion: $("creditoTipoGestion").value,
@@ -3036,6 +3041,7 @@ if (location.protocol === "file:") {
     $("direccionNombreZona").value = estado.direccionNombreZona || "";
     $("direccionTipoVia").value = estado.direccionTipoVia || "";
     $("direccionNombreVia").value = estado.direccionNombreVia || "";
+    $("direccionNumero").value = estado.direccionNumero || "";
     $("direccionMz").value = estado.direccionMz || "";
     $("direccionLt").value = estado.direccionLt || "";
     if (estado.filtroAvanzadoDireccion){
@@ -3214,7 +3220,7 @@ if (location.protocol === "file:") {
     $("chkFiltroAvanzadoDireccion").checked = false;
     $("filtroAvanzadoDireccion").classList.add("oculto");
     ["direccionTipoZona", "direccionNombreZona", "direccionTipoVia", "direccionNombreVia",
-      "direccionMz", "direccionLt", "direccionDistritoAuto"].forEach(function(id){ $(id).value = ""; });
+      "direccionNumero", "direccionMz", "direccionLt", "direccionDistritoAuto"].forEach(function(id){ $(id).value = ""; });
 
     $("cajaCobertura").classList.remove("visible");
     clearTimeout(geocodeTimer);
@@ -5024,8 +5030,8 @@ if (location.protocol === "file:") {
     if (!$("chkFiltroAvanzadoDireccion").checked) return;
     var zona = [$("direccionTipoZona").value.trim(), $("direccionNombreZona").value.trim()]
       .filter(Boolean).join(" ");
-    var via = [$("direccionTipoVia").value.trim(), $("direccionNombreVia").value.trim()]
-      .filter(Boolean).join(" ");
+    var via = [$("direccionTipoVia").value.trim(), $("direccionNombreVia").value.trim(),
+      $("direccionNumero").value.trim()].filter(Boolean).join(" ");
     var mz = $("direccionMz").value.trim();
     var lt = $("direccionLt").value.trim();
     var mzLt = [];
@@ -5127,7 +5133,7 @@ if (location.protocol === "file:") {
       }
     });
     ["direccionTipoZona", "direccionNombreZona", "direccionTipoVia", "direccionNombreVia",
-      "direccionMz", "direccionLt"].forEach(function(id){
+      "direccionNumero", "direccionMz", "direccionLt"].forEach(function(id){
       $(id).addEventListener("input", actualizarDireccionEstructurada);
     });
   }
