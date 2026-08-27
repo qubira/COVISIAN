@@ -242,9 +242,16 @@
     display:flex; align-items:center; justify-content:center; padding:0;
   }
   .btn-expandir-mapa:hover{ background:var(--azul); color:#fff; }
+  .btn-limpiar-avanzado{
+    border:1px solid var(--azul); background:#fff; color:var(--azul); border-radius:50%;
+    width:26px; height:26px; font-size:13px; cursor:pointer; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; padding:0;
+  }
+  .btn-limpiar-avanzado:hover{ background:var(--azul-bg); }
   .mapa-estado{ padding:16px 10px; font-size:12px; color:var(--gris); text-align:center; }
   .mapa-iframe{ width:100%; height:260px; border:0; display:block; }
   .mapa-iframe.oculto{ display:none; }
+  #mapaLeafletCont{ position:relative; z-index:0; }
   .modal-mapa-caja{ max-width:90vw; width:900px; padding:14px 16px; }
   .modal-mapa-caja #mapaGrandeContenedor{ width:100%; height:75vh; }
   .modal-mapa-caja #mapaGrandeContenedor iframe{ width:100%; height:100%; border:0; display:block; }
@@ -618,6 +625,7 @@
   body.tema-oscuro .btn.secundario,
   body.tema-oscuro .mapa-caja,
   body.tema-oscuro .btn-expandir-mapa,
+  body.tema-oscuro .btn-limpiar-avanzado,
   body.tema-oscuro .panel-comparar,
   body.tema-oscuro .btn-comparar-costo,
   body.tema-oscuro .tabla-costo-comp th,
@@ -944,7 +952,7 @@ if (location.protocol === "file:") {
             <span class="switch-track"><span class="switch-thumb"></span></span>
             <span class="switch-label">Filtro avanzado de dirección</span>
           </label>
-          <button type="button" class="btn-mini" id="btnLimpiarFiltroAvanzado">Limpiar</button>
+          <button type="button" class="btn-limpiar-avanzado" id="btnLimpiarFiltroAvanzado" title="Limpiar datos del filtro avanzado">🧹</button>
         </div>
         <div class="oculto" id="filtroAvanzadoDireccion" style="margin-top:8px;">
           <div class="fila">
