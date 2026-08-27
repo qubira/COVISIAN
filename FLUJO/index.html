@@ -40,6 +40,16 @@
   input:disabled{ background:var(--gris-bg); color:var(--gris); cursor:not-allowed; }
   .fila{ display:flex; gap:14px; flex-wrap:wrap; }
   .fila > .campo{ flex:1; min-width:200px; }
+  /* PLAN/TIPO/SUBTIPO siempre en la misma fila, incluso en pantallas chicas: pisa el
+     min-width:200px de arriba (que es justo lo que hacia que SUBTIPO se fuera a una fila
+     aparte en celular) y se angosta el padding/letra debajo de 480px para que las 3 quepan. */
+  .fila-plan-tipo{ flex-wrap:nowrap; }
+  .fila-plan-tipo > .campo{ min-width:0; }
+  @media (max-width:480px){
+    .fila-plan-tipo{ gap:6px; }
+    .fila-plan-tipo label{ font-size:10px; white-space:nowrap; }
+    .fila-plan-tipo input, .fila-plan-tipo select{ padding:7px 4px; font-size:11.5px; }
+  }
   .radios{ display:flex; gap:18px; align-items:center; padding-top:2px; flex-wrap:wrap; }
   .nota-delivery{ font-size:12px; color:var(--gris); margin:4px 0 0; }
   .radios label{ display:flex; align-items:center; gap:6px; font-weight:500; font-size:14px; cursor:pointer; }
@@ -953,7 +963,7 @@ if (location.protocol === "file:") {
     </li>
     <li>
       Plan y tipo de venta
-      <div class="fila" style="margin-top:8px;">
+      <div class="fila fila-plan-tipo" style="margin-top:8px;">
         <div class="campo autocomplete" id="ac-plan">
           <label for="plan">PLAN</label>
           <input type="text" id="plan" required placeholder="Ej: 39.9" autocomplete="off">
