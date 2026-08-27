@@ -659,6 +659,14 @@
     overflow:visible !important; white-space:normal !important;
   }
   .rvalor-con-icono span{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0; flex:1; }
+  /* TIPO/SUBTIPO editables directo desde el encabezado fijo, para no tener que bajar hasta
+     el guion y volver a subir — ver initTipoSubtipoEncabezado(). */
+  .rvalor-select{ padding:2px 4px !important; overflow:visible !important; }
+  .rvalor-select select{
+    width:100%; border:none; background:transparent; color:var(--texto); font-weight:700;
+    font-size:11.5px; font-family:inherit; padding:3px 2px; cursor:pointer;
+  }
+  .rvalor-select select:focus{ outline:2px solid var(--azul-claro); outline-offset:-1px; border-radius:3px; }
   .btn-info-region{
     border:1px solid var(--azul); background:#fff; color:var(--azul); border-radius:50%;
     width:15px; height:15px; font-size:10px; font-weight:700; line-height:1; cursor:pointer;
@@ -912,6 +920,22 @@ if (location.protocol === "file:") {
     <div class="rlabel">CLIENTE</div><div class="rvalor" id="rNombre">-</div>
     <div class="rlabel">TITULAR</div><div class="rvalor" id="rNombreTitular">-</div>
     <div class="rlabel">PLAN</div><div class="rvalor" id="rPlan">-</div>
+    <div class="rlabel">TIPO</div>
+    <div class="rvalor rvalor-select">
+      <select id="rTipo">
+        <option value="">-</option>
+        <option value="PREPAGO">PREPAGO</option>
+        <option value="POSTPAGO">POSTPAGO</option>
+        <option value="ESPECIALES">ESPECIALES</option>
+        <option value="OTROS">OTROS</option>
+      </select>
+    </div>
+    <div class="rlabel">SUBTIPO</div>
+    <div class="rvalor rvalor-select">
+      <select id="rSubtipo">
+        <option value="">-</option>
+      </select>
+    </div>
     <div class="rlabel">FINANC.</div>
     <div class="rvalor rvalor-con-icono" id="rCodFinCelda">
       <span id="rCodFin">-</span>
@@ -2301,7 +2325,7 @@ if (location.protocol === "file:") {
     // demas — sin esto, un solo error silencioso podia dejar sin usar, por ejemplo, el
     // buscador de EQUIPO (initAutocomplete) si algo antes de el en la lista fallaba.
     [initCodFinanciamiento, initPlanes, initAutocomplete, initComparar, initStockNacional,
-      initCosto, initSimuladorEquipos, initVerDetalleEquipo, initZoomEquipo, initExpandirMapas, initFiltroAvanzadoDireccion, initAgendarLlamada, initCasosAgendados, initAutoguardado, initEncabezadoColapsable, initCambiosHistoricos, initInvalidarValidacionesContrato, initContabilizarTiempo, initResaltarCamposLlenos, precargarCicloContrato, actualizarContrato, actualizarSimuladorFinanciamiento, actualizarEncabezado].forEach(function(fn){
+      initCosto, initSimuladorEquipos, initVerDetalleEquipo, initZoomEquipo, initExpandirMapas, initFiltroAvanzadoDireccion, initAgendarLlamada, initCasosAgendados, initAutoguardado, initEncabezadoColapsable, initCambiosHistoricos, initInvalidarValidacionesContrato, initContabilizarTiempo, initResaltarCamposLlenos, initTipoSubtipoEncabezado, precargarCicloContrato, actualizarContrato, actualizarSimuladorFinanciamiento, actualizarEncabezado].forEach(function(fn){
       try{ fn(); }catch(err){ console.error("Fallo al inicializar " + fn.name + ":", err); }
     });
   }).catch(function(err){
@@ -3343,6 +3367,8 @@ if (location.protocol === "file:") {
     if (estado.tipo){
       $("tipo").value = estado.tipo;
       poblarSubtipo(estado.tipo, estado.subtipo);
+      $("rTipo").value = estado.tipo;
+      poblarSubtipoEncabezado(estado.tipo, estado.subtipo);
     }
 
     $("equipoActualCliente").value = estado.equipoActualCliente || "";
@@ -3501,6 +3527,8 @@ if (location.protocol === "file:") {
     $("departamento").value = "";
     $("plan").value = "";
     $("tipo").value = "";
+    $("rTipo").value = "";
+    poblarSubtipoEncabezado("", "");
     $("direccion").value = "";
     $("direccion").disabled = false;
     $("chkFiltroAvanzadoDireccion").checked = false;
@@ -5621,6 +5649,53 @@ if (location.protocol === "file:") {
     document.addEventListener("change", function(e){ actualizarCampoLleno(e.target); }, true);
     setInterval(actualizarCamposLlenos, 800);
     actualizarCamposLlenos();
+  }
+
+  // TIPO/SUBTIPO tambien editables desde el encabezado fijo (#rTipo/#rSubtipo), sincronizados
+  // en los dos sentidos con los selects reales del guion (#tipo/#subtipo) — asi el agente no
+  // tiene que bajar hasta la pregunta 5 y volver a subir solo para cambiar el tipo de venta.
+  function poblarSubtipoEncabezado(tipo, subtipoSeleccionado){
+    var sel = $("rSubtipo");
+    sel.innerHTML = "";
+    var def = document.createElement("option");
+    def.value = "";
+    def.textContent = "-";
+    sel.appendChild(def);
+    (SUBTIPOS[tipo] || []).forEach(function(s){
+      var opt = document.createElement("option");
+      opt.value = s;
+      opt.textContent = s;
+      sel.appendChild(opt);
+    });
+    sel.value = subtipoSeleccionado || "";
+  }
+
+  function initTipoSubtipoEncabezado(){
+    // cambios hechos ABAJO (en el guion) se reflejan ARRIBA (encabezado)
+    $("tipo").addEventListener("change", function(){
+      $("rTipo").value = $("tipo").value;
+      poblarSubtipoEncabezado($("tipo").value, $("subtipo").value);
+    });
+    $("subtipo").addEventListener("change", function(){
+      $("rSubtipo").value = $("subtipo").value;
+    });
+
+    // cambios hechos ARRIBA (encabezado) se aplican ABAJO (guion), disparando el mismo evento
+    // "change" que si se hubiera elegido a mano ahi — asi corren poblarSubtipo/actualizarCosto
+    // y todo lo demas que ya esta enganchado al select real, sin duplicar esa logica aca.
+    $("rTipo").addEventListener("change", function(){
+      $("tipo").value = $("rTipo").value;
+      $("tipo").dispatchEvent(new Event("change", { bubbles: true }));
+      guardarProgreso();
+    });
+    $("rSubtipo").addEventListener("change", function(){
+      $("subtipo").value = $("rSubtipo").value;
+      $("subtipo").dispatchEvent(new Event("change", { bubbles: true }));
+      guardarProgreso();
+    });
+
+    $("rTipo").value = $("tipo").value;
+    poblarSubtipoEncabezado($("tipo").value, $("subtipo").value);
   }
 
   function initFiltroAvanzadoDireccion(){
