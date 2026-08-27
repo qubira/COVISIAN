@@ -5626,36 +5626,26 @@ if (location.protocol === "file:") {
     document.querySelectorAll(SELECTOR_CAMPOS_RESALTABLES).forEach(actualizarCampoLleno);
   }
 
-  // Un campo "no cuenta" para completar su pregunta si esta oculto (p.ej. NOMBRE DEL TITULAR
-  // solo aparece si se contesta NO en "es titular?" — si se contesto SI, ese input sigue vacio
-  // en el DOM pero no hace falta llenarlo). offsetParent === null es la forma barata de saber
-  // si un elemento esta con display:none (o dentro de un ancestro con display:none).
+  // Un campo "no cuenta" para su pregunta si esta oculto (p.ej. NOMBRE DEL TITULAR solo
+  // aparece si se contesta NO en "es titular?"). offsetParent === null es la forma barata de
+  // saber si un elemento esta con display:none (o dentro de un ancestro con display:none).
   function campoEsRelevante(el){ return el.offsetParent !== null; }
 
-  // Recuadra en verde cada pregunta del guion de apertura (cada <li>) en cuanto TODOS sus
-  // campos visibles ya tienen valor y, si tiene un grupo de radios (SI/NO), ya eligio uno.
-  // Las <li> sin ningun campo (p.ej. el boton de Negativa/Objecion) se dejan sin marcar.
+  // Recuadra en verde cada pregunta del guion de apertura (cada <li>) que tenga algun campo
+  // o grupo de radios para llenar — el recuadro esta SIEMPRE puesto desde que carga la
+  // pantalla (no aparece recien cuando se llena): marca "esto es obligatorio, hay que
+  // llenarlo para avanzar la gestion", no "esto ya esta listo". Las <li> sin ningun campo
+  // (p.ej. el boton de Negativa/Objecion) se dejan sin marcar.
   //
   // Los <li> que ya tienen adentro un .fila-3col (Plan/Tipo/Subtipo, Distrito/Provincia/
-  // Departamento) NO se evaluan como <li> completo: ese <li> en particular tambien carga
-  // dirección/mapas/filtro avanzado (contenido no relacionado con la pregunta puntual), asi
-  // que evaluar el <li> entero nunca marcaria el grupo chico como listo. Se evalua el propio
-  // .fila-3col en su lugar, que es la unidad correcta ahi.
+  // Departamento) NO se evaluan como <li>: ese <li> en particular tambien carga dirección/
+  // mapas/filtro avanzado (contenido no relacionado con la pregunta puntual), asi que se
+  // recuadra el propio .fila-3col en su lugar, que es la unidad correcta ahi.
   function actualizarUnGrupo(cont){
     var campos = Array.prototype.filter.call(
       cont.querySelectorAll(SELECTOR_CAMPOS_RESALTABLES), campoEsRelevante);
     var radios = Array.prototype.filter.call(cont.querySelectorAll('input[type=radio]'), campoEsRelevante);
-    if (!campos.length && !radios.length){ cont.classList.remove("grupo-completo"); return; }
-
-    var completo = campos.every(function(c){ return c.disabled || (c.value || "").toString().trim() !== ""; });
-    if (completo){
-      var nombresRadios = {};
-      radios.forEach(function(r){ nombresRadios[r.name] = true; });
-      completo = Object.keys(nombresRadios).every(function(n){
-        return cont.querySelector('input[name="' + n + '"]:checked');
-      });
-    }
-    cont.classList.toggle("grupo-completo", completo);
+    cont.classList.toggle("grupo-completo", campos.length > 0 || radios.length > 0);
   }
 
   function actualizarGruposCompletos(){
