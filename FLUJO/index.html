@@ -1002,6 +1002,11 @@ if (location.protocol === "file:") {
         <label for="direccion">DIRECCIÓN (BUSQUEDA BASICA)</label>
         <input type="text" id="direccion" placeholder="Ej: Av. Los Pinos 123, Urb. San Carlos">
         <div class="linea-coordenadas oculto" id="coordenadasResultado">📍 Coordenadas: <b id="coordenadasTexto">-</b></div>
+        <div style="margin-top:8px;">
+          <label style="display:block; font-size:11.5px; font-weight:700; color:var(--azul); margin-bottom:4px;">REFERENCIA</label>
+          <div id="direccionReferenciasCont"></div>
+          <button type="button" class="btn-agregar-referencia" id="btnAgregarReferencia">+ Agregar referencia</button>
+        </div>
         <div class="fila" style="align-items:center; justify-content:space-between; margin-top:8px; gap:8px;">
           <label class="switch-toggle" style="margin:0;">
             <input type="checkbox" id="chkFiltroAvanzadoDireccion">
@@ -1051,11 +1056,6 @@ if (location.protocol === "file:") {
               <label for="direccionDistritoAuto">DISTRITO</label>
               <input type="text" id="direccionDistritoAuto" readonly>
             </div>
-          </div>
-          <div style="margin-top:8px;">
-            <label style="display:block; font-size:11.5px; font-weight:700; color:var(--azul); margin-bottom:4px;">REFERENCIA</label>
-            <div id="direccionReferenciasCont"></div>
-            <button type="button" class="btn-agregar-referencia" id="btnAgregarReferencia">+ Agregar referencia</button>
           </div>
         </div>
       </div>
@@ -5381,10 +5381,11 @@ if (location.protocol === "file:") {
     });
     $("btnLimpiarFiltroAvanzado").addEventListener("click", function(){
       // limpia solo lo que escribio el agente — DISTRITO no, porque ese se toma solo de
-      // la cobertura ya elegida, no es un dato que se "escriba" aca.
+      // la cobertura ya elegida, no es un dato que se "escriba" aca. REFERENCIA tampoco: ya
+      // no es parte del filtro avanzado (ver mas abajo, ahora vive siempre visible arriba
+      // del switch), asi que este boton no la toca.
       ["direccionTipoZona", "direccionNombreZona", "direccionTipoVia", "direccionNombreVia",
         "direccionNumero", "direccionMz", "direccionLt"].forEach(function(id){ $(id).value = ""; });
-      restaurarReferencias([]);
       actualizarDireccionEstructurada();
       guardarProgreso();
     });
