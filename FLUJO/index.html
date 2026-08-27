@@ -384,21 +384,12 @@
   }
   .guion-preguntas li{ font-weight:600; margin-bottom:3px; }
   .guion-preguntas li:last-child{ margin-bottom:0; }
-  /* Recuadro verde que envuelve toda la pregunta (no solo cada campo suelto) cuando TODOS
-     sus campos/radios ya estan llenos — mismo look de "caja" que el guion-texto morado, pero
-     como estado dinamico. Margen negativo para compensar el padding nuevo y que el contenido
-     no se corra de lugar al aparecer/desaparecer el recuadro. */
-  /* Sin padding/margen-negativo a proposito: eso hacia que el recuadro se corriera para
-     arriba/afuera de la pregunta y se solapara con el numero de la lista o la pregunta de
-     arriba. Solo fondo + sombra interna, que no le cambian el tamaño a nada. */
-  .guion-preguntas li.grupo-completo{
-    background:#eafaf0; box-shadow:0 0 0 1.5px var(--verde) inset; border-radius:6px;
-  }
-  body.tema-oscuro .guion-preguntas li.grupo-completo{ background:#12301f; }
-  .fila-3col.grupo-completo{
-    background:#eafaf0; box-shadow:0 0 0 1.5px var(--verde) inset; border-radius:6px;
-  }
-  body.tema-oscuro .fila-3col.grupo-completo{ background:#12301f; }
+  /* Recuadra en verde estas preguntas puntuales (DNI, numero a evaluar, Plan/Tipo/Subtipo,
+     Distrito/Provincia/Departamento) para marcar que son obligatorias. Solo borde (box-shadow
+     inset), sin fondo de color ni padding/margen: eso no le cambia el tamaño a nada, asi que
+     no se puede solapar con la pregunta de arriba/abajo ni con el numero de la lista. */
+  .guion-preguntas li.grupo-completo{ box-shadow:0 0 0 1.5px var(--verde) inset; border-radius:6px; }
+  .fila-3col.grupo-completo{ box-shadow:0 0 0 1.5px var(--verde) inset; border-radius:6px; }
   .guion-input{
     display:block; width:100%; max-width:280px; margin-top:1px; font-weight:400;
   }
