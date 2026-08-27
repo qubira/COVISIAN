@@ -428,6 +428,22 @@
   .tabla-ciclos tr.fila-cambio-eliminado td{ background:#fdecea; color:#8a1c12; }
   .tabla-ciclos tr.fila-cambio-agregado td{ background:#e6f7ec; color:#1a6b3c; }
   .tabla-ciclos tr.fila-cambio-eliminado td.col-marca, .tabla-ciclos tr.fila-cambio-agregado td.col-marca{ font-weight:700; }
+  .tabla-ciclos td.col-zona{ font-weight:700; color:var(--gris); font-size:11px; white-space:nowrap; }
+  .resumen-zonas-cambios{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px; }
+  .chip-zona-cambio{
+    font-size:11px; font-weight:700; padding:4px 9px; border-radius:14px; background:var(--gris-bg);
+    border:1px solid var(--borde); color:var(--texto); cursor:pointer;
+  }
+  .chip-zona-cambio:hover{ border-color:var(--azul); }
+  .chip-zona-cambio .n-agregados{ color:var(--verde); }
+  .chip-zona-cambio .n-eliminados{ color:var(--rojo); }
+  .fila-filtro-zona{ display:flex; align-items:center; gap:8px; margin-bottom:10px; font-size:12.5px; }
+  .fila-filtro-zona select{
+    padding:6px 8px; border:1px solid var(--borde); border-radius:6px; font-size:12.5px;
+    background:#fff; color:var(--texto);
+  }
+  body.tema-oscuro .chip-zona-cambio{ background:#1c2029; }
+  body.tema-oscuro .fila-filtro-zona select{ background:#1c2029; }
   .tabla-planes tr.plan-actual td{ background:#e6f7ec; }
   .tabla-planes tr.plan-actual td.col-plan{ background:var(--verde); color:#fff; }
   .tabla-planes th, .tabla-planes td{ white-space:normal; font-size:11.5px; }
@@ -1759,10 +1775,16 @@ if (location.protocol === "file:") {
       <button type="button" class="btn-cerrar" id="btnCerrarCambiosHistoricos">✕</button>
     </div>
     <div id="cambiosHistoricosSinDatos" class="aviso info oculto"></div>
+    <div id="cambiosHistoricosResumenZonas" class="resumen-zonas-cambios oculto"></div>
+    <div class="fila-filtro-zona oculto" id="cambiosHistoricosFilaFiltro">
+      <label for="cambiosHistoricosFiltroZona">Filtrar por zona:</label>
+      <select id="cambiosHistoricosFiltroZona"><option value="">Todas las zonas</option></select>
+    </div>
     <div class="tabla-ciclos-wrap" id="cambiosHistoricosTablaWrap">
       <table class="tabla-ciclos">
         <thead>
           <tr>
+            <th>Zona</th>
             <th>Equipo</th>
             <th id="cambiosHistoricosColAnterior">Fecha anterior</th>
             <th id="cambiosHistoricosColActual">Fecha actual</th>
@@ -5465,9 +5487,12 @@ if (location.protocol === "file:") {
 
   // ============ CAMBIOS HISTORICOS DE STOCK (equipos/colores agregados o eliminados) ============
   // DATA.cambiosHistoricos viene de FLUJO/data/cambios_historicos.json, generado por
-  // extract_data.py: compara el "modelo" (equipo+color+capacidad) del stock nuevo contra
-  // el que habia antes de la ultima corrida del script. No es un chequeo en vivo — se
-  // actualiza solo cuando alguien corre extract_data.py con un Excel de DATA/COLOR nuevo.
+  // extract_data.py: compara (zona, modelo) del stock nuevo contra el que habia antes de la
+  // ultima corrida del script — zona porque el mismo equipo+color tiene stock INDEPENDIENTE
+  // por zona (LIMA, AREQUIPA, PROVINCIAS, etc. son pestañas separadas del Excel de
+  // DATA/COLOR), asi que un cambio en una sola zona no queda escondido por el hecho de que
+  // el modelo siga existiendo en alguna otra. No es un chequeo en vivo — se actualiza solo
+  // cuando alguien corre extract_data.py con un Excel de DATA/COLOR nuevo.
   function formatearFechaCambio(iso){
     if (!iso) return "Sin dato previo";
     var f = new Date(iso);
@@ -5487,18 +5512,67 @@ if (location.protocol === "file:") {
       badge.classList.remove("oculto");
     }
 
+    // Conteo de agregados/eliminados por zona, para los chips de resumen y para poblar el
+    // <select> de filtro — asi de un vistazo se ve en que zona hubo mas movimiento sin tener
+    // que leer las 70+ filas una por una.
+    var zonas = {};
+    function contar(item, tipo){
+      var z = item.zona || "SIN ZONA";
+      if (!zonas[z]) zonas[z] = { agregados: 0, eliminados: 0 };
+      zonas[z][tipo]++;
+    }
+    agregados.forEach(function(i){ contar(i, "agregados"); });
+    eliminados.forEach(function(i){ contar(i, "eliminados"); });
+    var listaZonas = Object.keys(zonas).sort();
+
+    var select = $("cambiosHistoricosFiltroZona");
+    select.innerHTML = '<option value="">Todas las zonas</option>';
+    listaZonas.forEach(function(z){
+      var opt = document.createElement("option");
+      opt.value = z;
+      opt.textContent = z + " (" + zonas[z].agregados + "+ / " + zonas[z].eliminados + "-)";
+      select.appendChild(opt);
+    });
+
+    var resumen = $("cambiosHistoricosResumenZonas");
+    resumen.innerHTML = "";
+    listaZonas.forEach(function(z){
+      var chip = document.createElement("span");
+      chip.className = "chip-zona-cambio";
+      chip.innerHTML = z + ": <span class=\"n-agregados\">+" + zonas[z].agregados + "</span> <span class=\"n-eliminados\">-" + zonas[z].eliminados + "</span>";
+      chip.addEventListener("click", function(){
+        select.value = select.value === z ? "" : z;
+        renderFilas(select.value);
+      });
+      resumen.appendChild(chip);
+    });
+
+    function renderFilas(zonaFiltro){
+      var tbody = $("cambiosHistoricosTbody");
+      tbody.innerHTML = "";
+      var elim = zonaFiltro ? eliminados.filter(function(i){ return i.zona === zonaFiltro; }) : eliminados;
+      var agr = zonaFiltro ? agregados.filter(function(i){ return i.zona === zonaFiltro; }) : agregados;
+      // eliminados primero (lo que ya no hay que ofrecer es lo mas urgente de ver), despues
+      // agregados; cada grupo ordenado por zona y despues por equipo.
+      elim.slice().sort(function(a, b){ return (a.zona + a.modelo).localeCompare(b.zona + b.modelo); })
+        .forEach(function(item){ tbody.appendChild(crearFilaCambioHistorico(item, true, false)); });
+      agr.slice().sort(function(a, b){ return (a.zona + a.modelo).localeCompare(b.zona + b.modelo); })
+        .forEach(function(item){ tbody.appendChild(crearFilaCambioHistorico(item, false, true)); });
+    }
+    select.addEventListener("change", function(){ renderFilas(select.value); });
+
     $("btnCambiosHistoricos").addEventListener("click", function(){
       $("cambiosHistoricosColAnterior").textContent = formatearFechaCambio(datos.fechaAnterior);
       $("cambiosHistoricosColActual").textContent = datos.fechaActual ? formatearFechaCambio(datos.fechaActual) : "Actual";
 
-      var tbody = $("cambiosHistoricosTbody");
-      tbody.innerHTML = "";
       var aviso = $("cambiosHistoricosSinDatos");
 
       if (!datos.fechaAnterior){
         aviso.textContent = "Todavía no hay una extracción anterior con la que comparar el stock actual — esto se llena solo la próxima vez que se actualice el Excel de DATA/COLOR.";
         aviso.classList.remove("oculto");
         $("cambiosHistoricosTablaWrap").classList.add("oculto");
+        $("cambiosHistoricosResumenZonas").classList.add("oculto");
+        $("cambiosHistoricosFilaFiltro").classList.add("oculto");
         $("modalCambiosHistoricos").classList.remove("oculto");
         return;
       }
@@ -5506,20 +5580,17 @@ if (location.protocol === "file:") {
         aviso.textContent = "No hubo equipos ni colores agregados o eliminados del stock desde la última actualización (" + formatearFechaCambio(datos.fechaAnterior) + ").";
         aviso.classList.remove("oculto");
         $("cambiosHistoricosTablaWrap").classList.add("oculto");
+        $("cambiosHistoricosResumenZonas").classList.add("oculto");
+        $("cambiosHistoricosFilaFiltro").classList.add("oculto");
         $("modalCambiosHistoricos").classList.remove("oculto");
         return;
       }
       aviso.classList.add("oculto");
       $("cambiosHistoricosTablaWrap").classList.remove("oculto");
-
-      // eliminados primero (lo que ya no hay que ofrecer es lo mas urgente de ver), despues
-      // agregados, cada grupo alfabetico.
-      eliminados.slice().sort().forEach(function(modelo){
-        tbody.appendChild(crearFilaCambioHistorico(modelo, true, false));
-      });
-      agregados.slice().sort().forEach(function(modelo){
-        tbody.appendChild(crearFilaCambioHistorico(modelo, false, true));
-      });
+      $("cambiosHistoricosResumenZonas").classList.remove("oculto");
+      $("cambiosHistoricosFilaFiltro").classList.remove("oculto");
+      select.value = "";
+      renderFilas("");
 
       $("modalCambiosHistoricos").classList.remove("oculto");
     });
@@ -5529,16 +5600,20 @@ if (location.protocol === "file:") {
     });
   }
 
-  function crearFilaCambioHistorico(modelo, estabaAntes, estaAhora){
+  function crearFilaCambioHistorico(item, estabaAntes, estaAhora){
     var tr = document.createElement("tr");
     tr.className = estabaAntes ? "fila-cambio-eliminado" : "fila-cambio-agregado";
+    var tdZona = document.createElement("td");
+    tdZona.className = "col-zona";
+    tdZona.textContent = item.zona || "-";
     var tdEquipo = document.createElement("td");
     tdEquipo.className = "col-equipo col-marca";
-    tdEquipo.textContent = modelo;
+    tdEquipo.textContent = item.modelo;
     var tdAntes = document.createElement("td");
     tdAntes.textContent = estabaAntes ? "✔" : "—";
     var tdAhora = document.createElement("td");
     tdAhora.textContent = estaAhora ? "✔" : "—";
+    tr.appendChild(tdZona);
     tr.appendChild(tdEquipo);
     tr.appendChild(tdAntes);
     tr.appendChild(tdAhora);

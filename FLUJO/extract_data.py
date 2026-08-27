@@ -611,10 +611,15 @@ def extract_equipos_imagenes():
 
 def generar_cambios_historicos(stock_nuevo):
     """
-    Compara los "modelo" (equipo+color+capacidad, tal como vienen del Excel de DATA/COLOR)
-    del stock recien extraido contra el stock.json que habia ANTES de esta corrida (osea la
-    extraccion anterior), para el boton "Cambios historicos" del formulario. Hay que llamarla
-    con el stock.json viejo todavia en disco, antes de que main() lo sobreescriba.
+    Compara el stock recien extraido contra el stock.json que habia ANTES de esta corrida
+    (osea la extraccion anterior), para el boton "Cambios historicos" del formulario. Hay que
+    llamarla con el stock.json viejo todavia en disco, antes de que main() lo sobreescriba.
+
+    La clave de comparacion es (zona, modelo) y NO solo modelo: el mismo equipo+color puede
+    existir en varias zonas (LIMA, AREQUIPA, PROVINCIAS, etc. — son las pestañas del Excel de
+    DATA/COLOR) con stock independiente en cada una. Comparar solo por modelo escondia el caso
+    real de "se fue de LIMA pero sigue en AREQUIPA" (no se veia como cambio porque el modelo
+    seguia existiendo en ALGUNA zona) — con (zona, modelo) cada zona se seria un cambio aparte.
 
     Si nunca hubo una extraccion anterior (primera vez que corre este script en la maquina)
     no hay con que comparar, asi que no se reporta ningun cambio (evita el falso positivo de
@@ -629,7 +634,7 @@ def generar_cambios_historicos(stock_nuevo):
                 "agregados": [], "eliminados": []}
 
     with open(ruta_stock_viejo, encoding="utf-8") as f:
-        modelos_viejos = set(row["modelo"] for row in json.load(f) if row.get("modelo"))
+        claves_viejas = set((row["zona"], row["modelo"]) for row in json.load(f) if row.get("modelo"))
 
     fecha_anterior = None
     if os.path.exists(ruta_meta_vieja):
@@ -639,9 +644,9 @@ def generar_cambios_historicos(stock_nuevo):
         except Exception:
             pass
 
-    modelos_nuevos = set(row["modelo"] for row in stock_nuevo if row.get("modelo"))
-    agregados = sorted(modelos_nuevos - modelos_viejos)
-    eliminados = sorted(modelos_viejos - modelos_nuevos)
+    claves_nuevas = set((row["zona"], row["modelo"]) for row in stock_nuevo if row.get("modelo"))
+    agregados = [{"zona": z, "modelo": m} for z, m in sorted(claves_nuevas - claves_viejas)]
+    eliminados = [{"zona": z, "modelo": m} for z, m in sorted(claves_viejas - claves_nuevas)]
 
     # Si esta corrida no trajo ningun cambio real de stock (el Excel de COLOR no cambio,
     # solo se re-corrio el script por otra fuente), se conserva el ultimo diff con cambios
