@@ -909,13 +909,17 @@ if (location.protocol === "file:") {
   <ol class="guion-preguntas">
     <li>
       ANI
-      <div class="fila-input-btn" style="max-width:280px;margin-top:4px;">
-        <input type="tel" id="guionAni" maxlength="20" placeholder="Número ANI">
-      </div>
-      <label for="guionAniReferencia" style="display:block;font-weight:600;margin-top:8px;">Número de referencia</label>
-      <div class="fila-input-btn" style="max-width:280px;margin-top:4px;">
-        <input type="tel" id="guionAniReferencia" maxlength="20" placeholder="Número alterno (opcional)">
-        <button type="button" class="btn-mini" id="btnAniRefIgual" title="Usar el mismo número que ANI">= ANI</button>
+      <div class="fila" style="margin-top:4px; gap:14px; align-items:flex-end;">
+        <div class="fila-input-btn" style="max-width:200px;">
+          <input type="tel" id="guionAni" maxlength="20" placeholder="Número ANI">
+        </div>
+        <div style="max-width:280px;">
+          <label for="guionAniReferencia" style="display:block;font-weight:600;font-size:12.5px;margin-bottom:4px;">Número de referencia</label>
+          <div class="fila-input-btn">
+            <input type="tel" id="guionAniReferencia" maxlength="20" placeholder="Número alterno (opcional)">
+            <button type="button" class="btn-mini" id="btnAniRefIgual" title="Usar el mismo número que ANI">= ANI</button>
+          </div>
+        </div>
       </div>
     </li>
     <li>
