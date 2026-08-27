@@ -1006,12 +1006,12 @@ if (location.protocol === "file:") {
       ANI
       <div class="fila" style="margin-top:4px; gap:14px; align-items:flex-end;">
         <div class="fila-input-btn" style="max-width:200px;">
-          <input type="tel" id="guionAni" maxlength="20" placeholder="Número ANI">
+          <input type="tel" id="guionAni" maxlength="20" placeholder="Número ANI" autocomplete="off">
         </div>
         <div style="max-width:280px;">
           <label for="guionAniReferencia" style="display:block;font-weight:600;font-size:12.5px;margin-bottom:4px;">Número de referencia</label>
           <div class="fila-input-btn">
-            <input type="tel" id="guionAniReferencia" maxlength="20" placeholder="Número alterno (opcional)">
+            <input type="tel" id="guionAniReferencia" maxlength="20" placeholder="Número alterno (opcional)" autocomplete="off">
             <button type="button" class="btn-mini" id="btnAniRefIgual" title="Usar el mismo número que ANI">= ANI</button>
           </div>
         </div>
@@ -1019,7 +1019,7 @@ if (location.protocol === "file:") {
     </li>
     <li>
       Por favor, bríndame tu DNI
-      <input type="text" id="guionDni" class="guion-input" maxlength="8" inputmode="numeric" placeholder="DNI">
+      <input type="text" id="guionDni" class="guion-input" maxlength="8" inputmode="numeric" placeholder="DNI" autocomplete="off">
     </li>
     <li>
       ¿Usted es el titular?
@@ -1041,7 +1041,7 @@ if (location.protocol === "file:") {
     <li>
       Bríndame tu número para evaluarte
       <div class="fila-input-btn" style="max-width:280px;margin-top:4px;">
-        <input type="tel" id="guionNumero" maxlength="20" placeholder="Número">
+        <input type="tel" id="guionNumero" maxlength="20" placeholder="Número" autocomplete="off">
         <button type="button" class="btn-mini" id="btnNumeroIgualAni" title="Usar el mismo número que ANI">= ANI</button>
       </div>
     </li>
@@ -1208,7 +1208,7 @@ if (location.protocol === "file:") {
 
     <div class="campo oculto" id="campoZondeoNumeroPedidoPendiente">
       <label for="zondeoNumeroPedidoPendiente">Pida otro número móvil para evaluar (reemplaza al número a evaluar)</label>
-      <input type="tel" id="zondeoNumeroPedidoPendiente" maxlength="20" placeholder="Otro número">
+      <input type="tel" id="zondeoNumeroPedidoPendiente" maxlength="20" placeholder="Otro número" autocomplete="off">
     </div>
 
     <div class="campo">
@@ -1227,7 +1227,7 @@ if (location.protocol === "file:") {
 
     <div class="campo oculto" id="campoZondeoNuevoNumero">
       <label for="zondeoNuevoNumero">Nuevo número para renovar (reemplaza al número a evaluar)</label>
-      <input type="tel" id="zondeoNuevoNumero" maxlength="20" placeholder="Nuevo número">
+      <input type="tel" id="zondeoNuevoNumero" maxlength="20" placeholder="Nuevo número" autocomplete="off">
     </div>
 
     <div class="fila" style="align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:14px;">
@@ -1531,14 +1531,14 @@ if (location.protocol === "file:") {
         <div class="campo" style="margin-top:12px;">
           <label>¿Por favor me brinda un teléfono adicional de referencia? (Móvil o fijo)</label>
           <div class="fila-input-btn" style="max-width:280px;margin-top:4px;">
-            <input type="tel" id="contratoTelRef1" placeholder="Número de referencia">
+            <input type="tel" id="contratoTelRef1" placeholder="Número de referencia" autocomplete="off">
             <button type="button" class="btn-mini" id="btnContratoTelRef1Igual" title="Usar el número de referencia indicado al inicio">= Núm Ref</button>
           </div>
         </div>
         <div class="campo">
           <label>¿Por favor me brindas otro teléfono de contacto? (Móvil o fijo)</label>
           <div class="fila-input-btn" style="max-width:280px;margin-top:4px;">
-            <input type="tel" id="contratoTelRef2" placeholder="Número de referencia">
+            <input type="tel" id="contratoTelRef2" placeholder="Número de referencia" autocomplete="off">
             <button type="button" class="btn-mini" id="btnContratoTelRef2Igual" title="Usar el número de referencia indicado al inicio">= Núm Ref</button>
           </div>
         </div>
