@@ -935,7 +935,67 @@ if (location.protocol === "file:") {
           <span class="switch-track"><span class="switch-thumb"></span></span>
           <span class="switch-label">Filtro avanzado de dirección</span>
         </label>
-        <div class="oculto" id="filtroAvanzadoDireccion" style="margin-top:8px;"></div>
+        <div class="oculto" id="filtroAvanzadoDireccion" style="margin-top:8px;">
+          <div class="fila">
+            <div class="campo" style="min-width:140px;">
+              <label for="direccionTipoZona">TIPO DE ZONA</label>
+              <input type="text" id="direccionTipoZona" list="listaDireccionTipoZona" placeholder="Ej: AAHH" autocomplete="off">
+              <datalist id="listaDireccionTipoZona">
+                <option value="AAHH">
+                <option value="AH">
+                <option value="ARB">
+                <option value="UR">
+                <option value="PPJJ">
+                <option value="ASOC">
+                <option value="CP">
+                <option value="COOP">
+                <option value="S COOP">
+                <option value="LTDA">
+                <option value="BO">
+                <option value="RES">
+                <option value="COND">
+                <option value="SECT">
+                <option value="SEC">
+              </datalist>
+            </div>
+            <div class="campo">
+              <label for="direccionNombreZona">NOMBRE</label>
+              <input type="text" id="direccionNombreZona" placeholder="Ej: Las Flores">
+            </div>
+          </div>
+          <div class="fila" style="margin-top:8px;">
+            <div class="campo" style="min-width:120px;">
+              <label for="direccionTipoVia">TIPO DE VÍA</label>
+              <input type="text" id="direccionTipoVia" list="listaDireccionTipoVia" placeholder="Ej: JR" autocomplete="off">
+              <datalist id="listaDireccionTipoVia">
+                <option value="CL">
+                <option value="C/">
+                <option value="JR">
+                <option value="AV">
+                <option value="AVD">
+                <option value="PROL">
+                <option value="ALAM">
+                <option value="AL">
+              </datalist>
+            </div>
+            <div class="campo">
+              <label for="direccionNombreVia">NOMBRE</label>
+              <input type="text" id="direccionNombreVia" placeholder="Ej: Los Pinos">
+            </div>
+            <div class="campo" style="max-width:80px;">
+              <label for="direccionMz">MZ</label>
+              <input type="text" id="direccionMz" placeholder="Mz">
+            </div>
+            <div class="campo" style="max-width:80px;">
+              <label for="direccionLt">LT</label>
+              <input type="text" id="direccionLt" placeholder="Lt">
+            </div>
+            <div class="campo">
+              <label for="direccionDistritoAuto">DISTRITO</label>
+              <input type="text" id="direccionDistritoAuto" readonly>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="mapa-aviso-aprox oculto" id="mapaAviso">
         📍 No se encontró la dirección exacta en el mapa — se muestra el centro del distrito como referencia aproximada.
@@ -2754,6 +2814,13 @@ if (location.protocol === "file:") {
       plan: $("plan").value,
       seleccionCobertura: seleccionCobertura,
       direccion: $("direccion").value,
+      filtroAvanzadoDireccion: $("chkFiltroAvanzadoDireccion").checked,
+      direccionTipoZona: $("direccionTipoZona").value,
+      direccionNombreZona: $("direccionNombreZona").value,
+      direccionTipoVia: $("direccionTipoVia").value,
+      direccionNombreVia: $("direccionNombreVia").value,
+      direccionMz: $("direccionMz").value,
+      direccionLt: $("direccionLt").value,
       creditoTipoGestion: $("creditoTipoGestion").value,
       creditoCuotas: $("creditoCuotas").value,
       creditoAplicaEspecial: $("creditoAplicaEspecial").value,
@@ -2978,6 +3045,20 @@ if (location.protocol === "file:") {
     // se restaura antes de aplicarCobertura para que la geocodificacion del mapa la use ya
     $("direccion").value = estado.direccion || "";
 
+    // igual, se restauran antes de aplicarCobertura: si el filtro avanzado estaba activo,
+    // aplicarCobertura ya recalcula el campo DIRECCION solo a partir de estos, pisando lo
+    // de la linea de arriba (que sirve para cuando el filtro NO estaba activo).
+    $("direccionTipoZona").value = estado.direccionTipoZona || "";
+    $("direccionNombreZona").value = estado.direccionNombreZona || "";
+    $("direccionTipoVia").value = estado.direccionTipoVia || "";
+    $("direccionNombreVia").value = estado.direccionNombreVia || "";
+    $("direccionMz").value = estado.direccionMz || "";
+    $("direccionLt").value = estado.direccionLt || "";
+    if (estado.filtroAvanzadoDireccion){
+      $("chkFiltroAvanzadoDireccion").checked = true;
+      $("filtroAvanzadoDireccion").classList.remove("oculto");
+    }
+
     if (estado.seleccionCobertura){
       aplicarCobertura(estado.seleccionCobertura);
     }
@@ -3144,6 +3225,10 @@ if (location.protocol === "file:") {
     $("plan").value = "";
     $("tipo").value = "";
     $("direccion").value = "";
+    $("chkFiltroAvanzadoDireccion").checked = false;
+    $("filtroAvanzadoDireccion").classList.add("oculto");
+    ["direccionTipoZona", "direccionNombreZona", "direccionTipoVia", "direccionNombreVia",
+      "direccionMz", "direccionLt", "direccionDistritoAuto"].forEach(function(id){ $(id).value = ""; });
 
     $("cajaCobertura").classList.remove("visible");
     clearTimeout(geocodeTimer);
@@ -3973,6 +4058,8 @@ if (location.protocol === "file:") {
     // si ya habia un equipo elegido, refresca colores/stock/pack para la nueva ubicacion
     if (equipoActual) mostrarFichaEquipo(equipoActual);
     buscarEquiposSimulador(); // re-filtra la lista de la seccion 4 por el nuevo departamento
+    sincronizarDistritoDireccionAvanzada();
+    actualizarDireccionEstructurada();
     geocodificarYMostrarMapas();
     guardarProgreso();
   }
@@ -4933,9 +5020,46 @@ if (location.protocol === "file:") {
 
   // Filtro avanzado de direccion: por ahora solo el checkbox/panel colapsable, el contenido
   // se agrega despues.
+  // Arma "TIPO_ZONA NOMBRE_ZONA Mz. X Lt. Y, TIPO_VIA NOMBRE_VIA, DISTRITO" (formato tipico
+  // de direccion peruana informal) y lo escribe en el campo DIRECCION de siempre — asi
+  // reutiliza tal cual todo el pipeline de geocodificacion/mapas que ya existe, sin duplicar
+  // logica. El DISTRITO se toma del que ya se eligio en cobertura, no se vuelve a pedir.
+  function actualizarDireccionEstructurada(){
+    if (!$("chkFiltroAvanzadoDireccion").checked) return;
+    var zona = [$("direccionTipoZona").value.trim(), $("direccionNombreZona").value.trim()]
+      .filter(Boolean).join(" ");
+    var via = [$("direccionTipoVia").value.trim(), $("direccionNombreVia").value.trim()]
+      .filter(Boolean).join(" ");
+    var mz = $("direccionMz").value.trim();
+    var lt = $("direccionLt").value.trim();
+    var mzLt = [];
+    if (mz) mzLt.push("Mz. " + mz);
+    if (lt) mzLt.push("Lt. " + lt);
+
+    var partes = [];
+    var zonaConMzLt = [zona, mzLt.join(" ")].filter(Boolean).join(" ");
+    if (zonaConMzLt) partes.push(zonaConMzLt);
+    if (via) partes.push(via);
+
+    $("direccion").value = partes.join(", ");
+    $("direccion").dispatchEvent(new Event("input", { bubbles: true }));
+  }
+
+  function sincronizarDistritoDireccionAvanzada(){
+    $("direccionDistritoAuto").value = (seleccionCobertura && seleccionCobertura.distrito) || "";
+  }
+
   function initFiltroAvanzadoDireccion(){
     $("chkFiltroAvanzadoDireccion").addEventListener("change", function(){
       $("filtroAvanzadoDireccion").classList.toggle("oculto", !this.checked);
+      if (this.checked){
+        sincronizarDistritoDireccionAvanzada();
+        actualizarDireccionEstructurada();
+      }
+    });
+    ["direccionTipoZona", "direccionNombreZona", "direccionTipoVia", "direccionNombreVia",
+      "direccionMz", "direccionLt"].forEach(function(id){
+      $(id).addEventListener("input", actualizarDireccionEstructurada);
     });
   }
 
