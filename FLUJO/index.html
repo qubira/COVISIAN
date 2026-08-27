@@ -419,6 +419,10 @@
   .tabla-ciclos th{ background:var(--azul-bg); color:var(--azul); font-size:11px; }
   .tabla-ciclos tr.ciclo-destacado td{ background:#fff7e0; font-weight:700; }
   .tabla-ciclos tr.ciclo-recomendado td{ background:#e6f7ec; font-weight:700; color:var(--verde); }
+  .tabla-ciclos td.col-equipo{ text-align:left; white-space:normal; }
+  .tabla-ciclos tr.fila-cambio-eliminado td{ background:#fdecea; color:#8a1c12; }
+  .tabla-ciclos tr.fila-cambio-agregado td{ background:#e6f7ec; color:#1a6b3c; }
+  .tabla-ciclos tr.fila-cambio-eliminado td.col-marca, .tabla-ciclos tr.fila-cambio-agregado td.col-marca{ font-weight:700; }
   .tabla-planes tr.plan-actual td{ background:#e6f7ec; }
   .tabla-planes tr.plan-actual td.col-plan{ background:var(--verde); color:#fff; }
   .tabla-planes th, .tabla-planes td{ white-space:normal; font-size:11.5px; }
@@ -688,6 +692,7 @@
   body.tema-oscuro .tabla-planes tr.plan-actual td,
   body.tema-oscuro .btn-concretado-item,
   body.tema-oscuro .entrega-si,
+  body.tema-oscuro .tabla-ciclos tr.fila-cambio-agregado td,
   body.tema-oscuro .rlabel-activo, body.tema-oscuro .rvalor-activo{
     background:#12301f !important; border-color:#2d6b45;
   }
@@ -696,13 +701,18 @@
   body.tema-oscuro .entrega-no,
   body.tema-oscuro .entrega-aviso-prohibido,
   body.tema-oscuro .btn-no-quiere,
+  body.tema-oscuro .tabla-ciclos tr.fila-cambio-eliminado td,
   body.tema-oscuro .rlabel-inactivo, body.tema-oscuro .rvalor-inactivo{
     background:#3a1512 !important; border-color:#7a3a34;
   }
   body.tema-oscuro .banner-sin-drive,
   body.tema-oscuro .entrega-aviso-prohibido,
-  body.tema-oscuro .color-chip.sin-cobertura-express{
+  body.tema-oscuro .color-chip.sin-cobertura-express,
+  body.tema-oscuro .tabla-ciclos tr.fila-cambio-eliminado td{
     color:#ff8a7d;
+  }
+  body.tema-oscuro .tabla-ciclos tr.fila-cambio-agregado td{
+    color:#5fd88a;
   }
   body.tema-oscuro .pack-aviso,
   body.tema-oscuro .mapa-aviso-aprox,
@@ -786,6 +796,7 @@ if (location.protocol === "file:") {
       <button type="button" class="btn-agendar" id="btnCondicionesEntrega" title="Condiciones de Entrega">🚚 <span>Entrega</span></button>
       <button type="button" class="btn-agendar" id="btnMovistarTotal" title="Movistar Total">📡 <span>MT</span></button>
       <button type="button" class="btn-agendar" id="btnDatosGuion" title="Preguntas del guion sobre el equipo del cliente">📱 <span>Datos</span></button>
+      <button type="button" class="btn-agendar" id="btnCambiosHistoricos" title="Equipos y colores agregados o eliminados del stock">🕓 <span>Cambios</span> <span class="badge-casos oculto" id="badgeCambiosHistoricos">0</span></button>
       <button type="button" class="btn-agendar oculto" id="btnBitacoraRebate" title="Bitácora de objeciones de este cliente">📋 <span>Bitácora</span></button>
     </div>
     <div style="display:flex; gap:5px; flex-shrink:0;">
@@ -1725,6 +1736,28 @@ if (location.protocol === "file:") {
   </div>
 </div>
 
+<div class="modal-overlay oculto" id="modalCambiosHistoricos">
+  <div class="modal-caja modal-ancho modal-planes">
+    <div class="modal-header">
+      <b>Cambios en stock (equipos y colores)</b>
+      <button type="button" class="btn-cerrar" id="btnCerrarCambiosHistoricos">✕</button>
+    </div>
+    <div id="cambiosHistoricosSinDatos" class="aviso info oculto"></div>
+    <div class="tabla-ciclos-wrap" id="cambiosHistoricosTablaWrap">
+      <table class="tabla-ciclos">
+        <thead>
+          <tr>
+            <th>Equipo</th>
+            <th id="cambiosHistoricosColAnterior">Fecha anterior</th>
+            <th id="cambiosHistoricosColActual">Fecha actual</th>
+          </tr>
+        </thead>
+        <tbody id="cambiosHistoricosTbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay oculto" id="modalEntrega">
   <div class="modal-caja modal-ancho">
     <div class="modal-header">
@@ -1982,7 +2015,7 @@ if (location.protocol === "file:") {
   // Pega aquí la URL del Web App de Google Apps Script (ver GUIA_APPS_SCRIPT.md)
   var GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzXtTACG2tyOQ675d18Xc5nZDPeUfHGkdnzXcD_pN2HcfQSv55PDHa2P8hgLr3cTcEV/exec";
 
-  var DATA = { cobertura: [], specs: [], equiposPlanes: [], codFinanciamiento: [], stock: [], packs: [], planes: [], equiposTipoventa: {}, precios: {}, objeciones: [], regiones: [], gamaFinanciamiento: {}, equiposImagenes: [] };
+  var DATA = { cobertura: [], specs: [], equiposPlanes: [], codFinanciamiento: [], stock: [], packs: [], planes: [], equiposTipoventa: {}, precios: {}, objeciones: [], regiones: [], gamaFinanciamiento: {}, equiposImagenes: [], cambiosHistoricos: { agregados: [], eliminados: [] } };
 
   var SUBTIPOS = {
     PREPAGO: ["PREPAGO"],
@@ -2048,7 +2081,8 @@ if (location.protocol === "file:") {
     fetch("data/objeciones.json").then(function(r){ return r.json(); }),
     fetch("data/regiones.json").then(function(r){ return r.json(); }),
     fetch("data/gama_financiamiento.json").then(function(r){ return r.json(); }),
-    fetch("data/equipos_imagenes.json").then(function(r){ return r.json(); })
+    fetch("data/equipos_imagenes.json").then(function(r){ return r.json(); }),
+    fetch("data/cambios_historicos.json").then(function(r){ return r.json(); })
   ]).then(function(res){
     DATA.cobertura = res[0];
     DATA.specs = res[1];
@@ -2063,12 +2097,13 @@ if (location.protocol === "file:") {
     DATA.regiones = res[10];
     DATA.gamaFinanciamiento = res[11];
     DATA.equiposImagenes = res[12];
+    DATA.cambiosHistoricos = res[13];
 
     // Cada init() es independiente: si uno falla (dato raro, etc.) no debe tumbar a los
     // demas — sin esto, un solo error silencioso podia dejar sin usar, por ejemplo, el
     // buscador de EQUIPO (initAutocomplete) si algo antes de el en la lista fallaba.
     [initCodFinanciamiento, initPlanes, initAutocomplete, initComparar, initStockNacional,
-      initCosto, initSimuladorEquipos, initVerDetalleEquipo, initZoomEquipo, initExpandirMapas, initFiltroAvanzadoDireccion, initAgendarLlamada, initCasosAgendados, initAutoguardado, initEncabezadoColapsable, precargarCicloContrato, actualizarContrato, actualizarSimuladorFinanciamiento, actualizarEncabezado].forEach(function(fn){
+      initCosto, initSimuladorEquipos, initVerDetalleEquipo, initZoomEquipo, initExpandirMapas, initFiltroAvanzadoDireccion, initAgendarLlamada, initCasosAgendados, initAutoguardado, initEncabezadoColapsable, initCambiosHistoricos, precargarCicloContrato, actualizarContrato, actualizarSimuladorFinanciamiento, actualizarEncabezado].forEach(function(fn){
       try{ fn(); }catch(err){ console.error("Fallo al inicializar " + fn.name + ":", err); }
     });
   }).catch(function(err){
@@ -5315,6 +5350,88 @@ if (location.protocol === "file:") {
       actualizarDireccionEstructurada();
       guardarProgreso();
     });
+  }
+
+  // ============ CAMBIOS HISTORICOS DE STOCK (equipos/colores agregados o eliminados) ============
+  // DATA.cambiosHistoricos viene de FLUJO/data/cambios_historicos.json, generado por
+  // extract_data.py: compara el "modelo" (equipo+color+capacidad) del stock nuevo contra
+  // el que habia antes de la ultima corrida del script. No es un chequeo en vivo — se
+  // actualiza solo cuando alguien corre extract_data.py con un Excel de DATA/COLOR nuevo.
+  function formatearFechaCambio(iso){
+    if (!iso) return "Sin dato previo";
+    var f = new Date(iso);
+    if (isNaN(f.getTime())) return "Sin dato previo";
+    return f.toLocaleDateString("es-PE", { day: "2-digit", month: "2-digit", year: "numeric" });
+  }
+
+  function initCambiosHistoricos(){
+    var datos = DATA.cambiosHistoricos || {};
+    var agregados = datos.agregados || [];
+    var eliminados = datos.eliminados || [];
+    var total = agregados.length + eliminados.length;
+
+    var badge = $("badgeCambiosHistoricos");
+    if (total > 0){
+      badge.textContent = total;
+      badge.classList.remove("oculto");
+    }
+
+    $("btnCambiosHistoricos").addEventListener("click", function(){
+      $("cambiosHistoricosColAnterior").textContent = formatearFechaCambio(datos.fechaAnterior);
+      $("cambiosHistoricosColActual").textContent = datos.fechaActual ? formatearFechaCambio(datos.fechaActual) : "Actual";
+
+      var tbody = $("cambiosHistoricosTbody");
+      tbody.innerHTML = "";
+      var aviso = $("cambiosHistoricosSinDatos");
+
+      if (!datos.fechaAnterior){
+        aviso.textContent = "Todavía no hay una extracción anterior con la que comparar el stock actual — esto se llena solo la próxima vez que se actualice el Excel de DATA/COLOR.";
+        aviso.classList.remove("oculto");
+        $("cambiosHistoricosTablaWrap").classList.add("oculto");
+        $("modalCambiosHistoricos").classList.remove("oculto");
+        return;
+      }
+      if (total === 0){
+        aviso.textContent = "No hubo equipos ni colores agregados o eliminados del stock desde la última actualización (" + formatearFechaCambio(datos.fechaAnterior) + ").";
+        aviso.classList.remove("oculto");
+        $("cambiosHistoricosTablaWrap").classList.add("oculto");
+        $("modalCambiosHistoricos").classList.remove("oculto");
+        return;
+      }
+      aviso.classList.add("oculto");
+      $("cambiosHistoricosTablaWrap").classList.remove("oculto");
+
+      // eliminados primero (lo que ya no hay que ofrecer es lo mas urgente de ver), despues
+      // agregados, cada grupo alfabetico.
+      eliminados.slice().sort().forEach(function(modelo){
+        tbody.appendChild(crearFilaCambioHistorico(modelo, true, false));
+      });
+      agregados.slice().sort().forEach(function(modelo){
+        tbody.appendChild(crearFilaCambioHistorico(modelo, false, true));
+      });
+
+      $("modalCambiosHistoricos").classList.remove("oculto");
+    });
+
+    $("btnCerrarCambiosHistoricos").addEventListener("click", function(){
+      $("modalCambiosHistoricos").classList.add("oculto");
+    });
+  }
+
+  function crearFilaCambioHistorico(modelo, estabaAntes, estaAhora){
+    var tr = document.createElement("tr");
+    tr.className = estabaAntes ? "fila-cambio-eliminado" : "fila-cambio-agregado";
+    var tdEquipo = document.createElement("td");
+    tdEquipo.className = "col-equipo col-marca";
+    tdEquipo.textContent = modelo;
+    var tdAntes = document.createElement("td");
+    tdAntes.textContent = estabaAntes ? "✔" : "—";
+    var tdAhora = document.createElement("td");
+    tdAhora.textContent = estaAhora ? "✔" : "—";
+    tr.appendChild(tdEquipo);
+    tr.appendChild(tdAntes);
+    tr.appendChild(tdAhora);
+    return tr;
   }
 
   // ============ COMPARAR EQUIPOS ============

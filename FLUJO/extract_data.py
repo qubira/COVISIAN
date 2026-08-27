@@ -609,6 +609,62 @@ def extract_equipos_imagenes():
     return manifest
 
 
+def generar_cambios_historicos(stock_nuevo):
+    """
+    Compara los "modelo" (equipo+color+capacidad, tal como vienen del Excel de DATA/COLOR)
+    del stock recien extraido contra el stock.json que habia ANTES de esta corrida (osea la
+    extraccion anterior), para el boton "Cambios historicos" del formulario. Hay que llamarla
+    con el stock.json viejo todavia en disco, antes de que main() lo sobreescriba.
+
+    Si nunca hubo una extraccion anterior (primera vez que corre este script en la maquina)
+    no hay con que comparar, asi que no se reporta ningun cambio (evita el falso positivo de
+    marcar TODO el stock como "agregado").
+    """
+    ruta_stock_viejo = OUT_DIR + r"\stock.json"
+    ruta_meta_vieja = OUT_DIR + META_PATH_REL
+    ruta_cambios = OUT_DIR + r"\cambios_historicos.json"
+
+    if not os.path.exists(ruta_stock_viejo):
+        return {"fechaAnterior": None, "fechaActual": datetime.datetime.now().isoformat(timespec="seconds"),
+                "agregados": [], "eliminados": []}
+
+    with open(ruta_stock_viejo, encoding="utf-8") as f:
+        modelos_viejos = set(row["modelo"] for row in json.load(f) if row.get("modelo"))
+
+    fecha_anterior = None
+    if os.path.exists(ruta_meta_vieja):
+        try:
+            with open(ruta_meta_vieja, encoding="utf-8") as f:
+                fecha_anterior = json.load(f).get("generadoEn")
+        except Exception:
+            pass
+
+    modelos_nuevos = set(row["modelo"] for row in stock_nuevo if row.get("modelo"))
+    agregados = sorted(modelos_nuevos - modelos_viejos)
+    eliminados = sorted(modelos_viejos - modelos_nuevos)
+
+    # Si esta corrida no trajo ningun cambio real de stock (el Excel de COLOR no cambio,
+    # solo se re-corrio el script por otra fuente), se conserva el ultimo diff con cambios
+    # reales que haya en disco, en vez de pisarlo con un diff vacio — asi el boton siempre
+    # muestra la ultima actualizacion real de stock, no "sin cambios" por casualidad de cuando
+    # se corrio el script.
+    if not agregados and not eliminados and os.path.exists(ruta_cambios):
+        try:
+            with open(ruta_cambios, encoding="utf-8") as f:
+                anterior = json.load(f)
+            if anterior.get("agregados") or anterior.get("eliminados"):
+                return anterior
+        except Exception:
+            pass
+
+    return {
+        "fechaAnterior": fecha_anterior,
+        "fechaActual": datetime.datetime.now().isoformat(timespec="seconds"),
+        "agregados": agregados,
+        "eliminados": eliminados,
+    }
+
+
 def main():
     import os
     os.makedirs(OUT_DIR, exist_ok=True)
@@ -619,6 +675,7 @@ def main():
     cod_fin = extract_cod_financiamiento()
     gama_fin = extract_gama_financiamiento()
     stock = extract_stock()
+    cambios_historicos = generar_cambios_historicos(stock)
     packs = extract_packs()
     planes = extract_planes()
     equipos_tipoventa = extract_equipos_tipoventa()
@@ -647,6 +704,8 @@ def main():
         json.dump(precios, f, ensure_ascii=False, indent=0)
     with open(OUT_DIR + r"\equipos_imagenes.json", "w", encoding="utf-8") as f:
         json.dump(equipos_imagenes, f, ensure_ascii=False, indent=0)
+    with open(OUT_DIR + r"\cambios_historicos.json", "w", encoding="utf-8") as f:
+        json.dump(cambios_historicos, f, ensure_ascii=False, indent=0)
 
     _escribir_meta()
 
@@ -661,6 +720,8 @@ def main():
     print("packs:", len(packs), "combos con accesorio")
     print("precios:", len(precios), "combinaciones TIPO|SUBTIPO con tabla de precios")
     print("equipos_imagenes:", len(equipos_imagenes), "fotos de equipos copiadas a FLUJO/img/equipos")
+    print("cambios_historicos:", len(cambios_historicos["agregados"]), "agregados,",
+          len(cambios_historicos["eliminados"]), "eliminados desde", cambios_historicos["fechaAnterior"])
 
 
 if __name__ == "__main__":
