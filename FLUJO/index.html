@@ -56,6 +56,19 @@
   .radios label{ display:flex; align-items:center; gap:6px; font-weight:500; font-size:14px; cursor:pointer; }
   .radios input{ width:auto; }
 
+  /* Radios estilo "chip": el input de cada opcion queda invisible pero sigue siendo el mismo
+     radio funcional de siempre (misma consulta querySelector('input:checked') en todo el JS),
+     solo se le cambia el look al <label> que lo envuelve. */
+  .radios-chip{ gap:8px; }
+  .radios-chip label{
+    border:1.5px solid var(--borde); border-radius:20px; padding:6px 16px; gap:0;
+    font-weight:700; font-size:13px; color:var(--gris); transition:background .15s,border-color .15s,color .15s;
+  }
+  .radios-chip label input{ position:absolute; opacity:0; width:0; height:0; }
+  .radios-chip label:hover{ border-color:var(--azul); color:var(--azul); }
+  .radios-chip label:has(input:checked){ background:var(--azul); border-color:var(--azul); color:#fff; }
+  body.tema-oscuro .radios-chip label{ background:#1c2029; }
+
   .campo-checkbox{
     background:var(--azul-bg); border:1px solid #c7d7f5; border-radius:8px; padding:10px 12px;
   }
@@ -945,7 +958,7 @@ if (location.protocol === "file:") {
           <label for="guionNombreCliente">NOMBRE DEL CLIENTE</label>
           <input type="text" id="guionNombreCliente" placeholder="Nombre completo">
         </div>
-        <div class="radios guion-radios" style="flex:0 0 auto;">
+        <div class="radios guion-radios radios-chip" style="flex:0 0 auto;">
           <label><input type="radio" name="guionEsTitular" value="SI"> SI</label>
           <label><input type="radio" name="guionEsTitular" value="NO"> NO</label>
         </div>
