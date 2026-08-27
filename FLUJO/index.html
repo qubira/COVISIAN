@@ -38,6 +38,12 @@
   }
   input:focus, select:focus, textarea:focus{ outline:2px solid var(--azul-claro); outline-offset:1px; }
   input:disabled{ background:var(--gris-bg); color:var(--gris); cursor:not-allowed; }
+  /* Resalta en verde cualquier campo (input/select/textarea) en cuanto tiene un valor — igual
+     que el cuadro morado de los guiones, pero como estado dinamico de "esto ya esta lleno" en
+     vez de un bloque de texto fijo. Ver actualizarCamposLlenos() (marca la clase, aplicado a
+     TODOS los campos del formulario, no uno por uno). */
+  .campo-lleno{ border-color:var(--verde) !important; background:#eafaf0 !important; }
+  body.tema-oscuro .campo-lleno{ border-color:var(--verde) !important; background:#12301f !important; }
   .fila{ display:flex; gap:14px; flex-wrap:wrap; }
   .fila > .campo{ flex:1; min-width:200px; }
   /* Filas de 3 campos que deben quedar SIEMPRE en la misma linea, incluso en pantallas
@@ -2295,7 +2301,7 @@ if (location.protocol === "file:") {
     // demas — sin esto, un solo error silencioso podia dejar sin usar, por ejemplo, el
     // buscador de EQUIPO (initAutocomplete) si algo antes de el en la lista fallaba.
     [initCodFinanciamiento, initPlanes, initAutocomplete, initComparar, initStockNacional,
-      initCosto, initSimuladorEquipos, initVerDetalleEquipo, initZoomEquipo, initExpandirMapas, initFiltroAvanzadoDireccion, initAgendarLlamada, initCasosAgendados, initAutoguardado, initEncabezadoColapsable, initCambiosHistoricos, initInvalidarValidacionesContrato, initContabilizarTiempo, precargarCicloContrato, actualizarContrato, actualizarSimuladorFinanciamiento, actualizarEncabezado].forEach(function(fn){
+      initCosto, initSimuladorEquipos, initVerDetalleEquipo, initZoomEquipo, initExpandirMapas, initFiltroAvanzadoDireccion, initAgendarLlamada, initCasosAgendados, initAutoguardado, initEncabezadoColapsable, initCambiosHistoricos, initInvalidarValidacionesContrato, initContabilizarTiempo, initResaltarCamposLlenos, precargarCicloContrato, actualizarContrato, actualizarSimuladorFinanciamiento, actualizarEncabezado].forEach(function(fn){
       try{ fn(); }catch(err){ console.error("Fallo al inicializar " + fn.name + ":", err); }
     });
   }).catch(function(err){
@@ -5582,6 +5588,39 @@ if (location.protocol === "file:") {
     desmarcarSiCambia("contratoFechaNacimiento", "contratoValidFechaNac", "input");
     desmarcarSiCambia("contratoNombrePadreMadre", "contratoValidPadreMadre", "input");
     desmarcarSiCambia("contratoCorreo", "contratoValidCorreo", "input");
+  }
+
+  // ============ RESALTAR EN VERDE LOS CAMPOS LLENOS ============
+  // Aplica a TODOS los campos del formulario (texto/tel/numero/email/fecha/hora + selects +
+  // textareas), no a uno por uno: se recorren con querySelectorAll en vez de engancharse
+  // campo por campo, asi cubre tambien los campos que se agregan dinamicamente despues
+  // (referencias, filas de rebate, etc.) sin tener que acordarse de sumarlos aca cada vez.
+  var SELECTOR_CAMPOS_RESALTABLES =
+    "input[type=text], input[type=tel], input[type=number], input[type=email], " +
+    "input[type=date], input[type=time], select, textarea";
+
+  function actualizarCampoLleno(el){
+    if (!el) return;
+    // un campo deshabilitado (p.ej. #direccion cuando el filtro avanzado esta activo) no se
+    // resalta aunque conserve un valor — si no, se queda "verde" para siempre porque el
+    // barrido periodico lo saltaba en vez de sacarle la clase.
+    var lleno = !el.disabled && (el.value || "").toString().trim() !== "";
+    if (el.classList.contains("campo-lleno") !== lleno) el.classList.toggle("campo-lleno", lleno);
+  }
+
+  function actualizarCamposLlenos(){
+    document.querySelectorAll(SELECTOR_CAMPOS_RESALTABLES).forEach(actualizarCampoLleno);
+  }
+
+  function initResaltarCamposLlenos(){
+    // input/change cubren la escritura normal del agente (feedback instantaneo); el barrido
+    // periodico de abajo es la red de seguridad para cuando un valor se pone por JS (restaurar
+    // borrador, aplicar cobertura, el resultado del Laboratorio de Ubicacion, etc.) sin
+    // disparar esos eventos.
+    document.addEventListener("input", function(e){ actualizarCampoLleno(e.target); }, true);
+    document.addEventListener("change", function(e){ actualizarCampoLleno(e.target); }, true);
+    setInterval(actualizarCamposLlenos, 800);
+    actualizarCamposLlenos();
   }
 
   function initFiltroAvanzadoDireccion(){
