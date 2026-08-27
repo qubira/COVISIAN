@@ -1001,7 +1001,6 @@ if (location.protocol === "file:") {
       <div class="campo" id="campoDireccion" style="margin-top:8px;">
         <label for="direccion">DIRECCIÓN (BUSQUEDA BASICA)</label>
         <input type="text" id="direccion" placeholder="Ej: Av. Los Pinos 123, Urb. San Carlos">
-        <div class="linea-coordenadas oculto" id="coordenadasResultado">📍 Coordenadas: <b id="coordenadasTexto">-</b></div>
         <div style="margin-top:8px;">
           <label style="display:block; font-size:11.5px; font-weight:700; color:var(--azul); margin-bottom:4px;">REFERENCIA</label>
           <div id="direccionReferenciasCont"></div>
@@ -1058,6 +1057,7 @@ if (location.protocol === "file:") {
             </div>
           </div>
         </div>
+        <div class="linea-coordenadas oculto" id="coordenadasResultado">📍 Coordenadas: <b id="coordenadasTexto">-</b></div>
       </div>
       <div class="mapa-caja" id="cajaGoogleMaps" style="margin-top:10px;">
         <div class="mapa-titulo">
