@@ -40,7 +40,8 @@
   input:disabled{ background:var(--gris-bg); color:var(--gris); cursor:not-allowed; }
   .fila{ display:flex; gap:14px; flex-wrap:wrap; }
   .fila > .campo{ flex:1; min-width:200px; }
-  .radios{ display:flex; gap:18px; align-items:center; padding-top:2px; }
+  .radios{ display:flex; gap:18px; align-items:center; padding-top:2px; flex-wrap:wrap; }
+  .nota-delivery{ font-size:12px; color:var(--gris); margin:4px 0 0; }
   .radios label{ display:flex; align-items:center; gap:6px; font-weight:500; font-size:14px; cursor:pointer; }
   .radios input{ width:auto; }
 
@@ -1001,6 +1002,7 @@ if (location.protocol === "file:") {
       <div class="caja-resultado" id="cajaCobertura">
         <div class="linea"><span><b>EXPRESS:</b> <span id="covExpress">-</span></span><span id="covHasta">-</span></div>
         <div class="linea"><span><b>REGULAR:</b> <span id="covRango">-</span></span><span id="covDia">-</span></div>
+        <button type="button" class="btn-mini" id="btnInfoDelivery" title="Reglas de Delivery Express / Regular" style="margin-top:6px; padding:4px 10px;">ℹ ¿Qué significa Express/Regular?</button>
       </div>
       <div class="campo" id="campoDireccion" style="margin-top:8px;">
         <label for="direccion">DIRECCIÓN (BUSQUEDA BASICA)</label>
@@ -1009,6 +1011,7 @@ if (location.protocol === "file:") {
           <label style="display:block; font-size:11.5px; font-weight:700; color:var(--azul); margin-bottom:4px;">REFERENCIA</label>
           <div id="direccionReferenciasCont"></div>
           <button type="button" class="btn-agregar-referencia" id="btnAgregarReferencia">+ Agregar referencia</button>
+          <p class="nota-delivery">Para el Delivery se piden 3 referencias exactas (avenidas, calles, colegios, hospitales) dentro de un rango máximo de 5 cuadras.</p>
         </div>
         <div class="fila" style="align-items:center; justify-content:space-between; margin-top:8px; gap:8px;">
           <label class="switch-toggle" style="margin:0;">
@@ -1483,7 +1486,9 @@ if (location.protocol === "file:") {
       <div class="radios" id="contratoRadiosEntrega" style="margin-top:6px;">
         <label><input type="radio" name="contratoTipoEntrega" value="EXPRESS"> 4.1. EXPRESS</label>
         <label><input type="radio" name="contratoTipoEntrega" value="REGULAR"> 4.2. REGULAR</label>
+        <button type="button" class="btn-mini" id="btnInfoDelivery2" title="Reglas de Delivery Express / Regular">ℹ Reglas</button>
       </div>
+      <p class="nota-delivery">EXPRESS es el N°1 en prioridad de ofrecimiento — garantiza <b>90% de posibilidades de activación</b>.</p>
       <div class="guion-texto" id="contratoDeliveryScript" style="margin-top:8px;"></div>
 
       <div class="campo" style="margin-top:10px;">
@@ -1768,6 +1773,87 @@ if (location.protocol === "file:") {
       • El producto móvil en su primer recibo es <b>proporcional</b>. A partir del segundo recibo se cobra el
       total del cargo fijo contratado.<br>
       • Los beneficios se renuevan todos los días de <b>"Inicio de Facturación"</b> de cada mes.
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay oculto" id="modalDeliveryInfo">
+  <div class="modal-caja modal-ancho">
+    <div class="modal-header">
+      <b>Delivery Express / Regular</b>
+      <button type="button" class="btn-cerrar" id="btnCerrarInfoDelivery">✕</button>
+    </div>
+
+    <div class="aviso info" style="margin-bottom:10px;">
+      <b>EXPRESS</b> es el tipo de delivery más recomendable y el N°1 en prioridad de ofrecimiento:
+      garantiza la venta en <b>90% de posibilidades</b> de activación. Plazo de entrega:
+      <b>3 horas desde que termina la venta</b>.
+    </div>
+    <div class="tabla-ciclos-wrap">
+      <table class="tabla-ciclos">
+        <thead><tr><th>Zona</th><th>Días</th><th>Horario límite</th></tr></thead>
+        <tbody>
+          <tr><td>LIMA</td><td>Lun a Sáb</td><td>Hasta las 4:30 o 5:30 pm</td></tr>
+          <tr><td>PROVINCIAS*</td><td>Lun a Sáb</td><td>Hasta las 4:30 pm</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="ciclos-nota">
+      *En provincia solo se ofrece Express en 4 ciudades: <b>Arequipa, Chiclayo, Trujillo y Piura</b>.
+    </div>
+
+    <div class="ciclos-nota" style="margin-top:14px; font-weight:700; color:var(--azul);">
+      Ejemplos de ventana Express (orientativos)
+    </div>
+    <div class="tabla-ciclos-wrap">
+      <table class="tabla-ciclos">
+        <thead><tr><th>Termina la venta</th><th>Espera al cliente desde</th></tr></thead>
+        <tbody>
+          <tr><td>1:30</td><td>2:00 a 5:00 pm</td></tr>
+          <tr><td>10:15</td><td>11:00 a 2:00 pm</td></tr>
+          <tr><td>9:20</td><td>10:00 am a 1:00 pm</td></tr>
+          <tr><td>3:45</td><td>4:00 a 7:00 pm</td></tr>
+          <tr><td>2:56</td><td>3:30 a 6:30 pm</td></tr>
+          <tr><td>2:40</td><td>3:00 a 6:00 pm</td></tr>
+          <tr><td>Cliente avisa que recién llegará a las 5 pm</td><td>5:30 a 8:30 pm</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="ciclos-nota">
+      • Estos son ejemplos orientativos de la capacitación — la app no calcula la ventana sola,
+      úsalos como referencia para armar el rango con el cliente.
+    </div>
+
+    <div class="ciclos-nota" style="margin-top:14px; font-weight:700; color:var(--azul);">REGULAR</div>
+    <div class="ciclos-nota">
+      Se ofrece <b>solo si no hay entrega Express</b> por zona, horario o día. Plazo: 24, 48 o 72
+      horas según la ciudad y el tipo de producto.
+    </div>
+    <div class="tabla-ciclos-wrap">
+      <table class="tabla-ciclos">
+        <thead><tr><th>Zona</th><th>Días</th><th>Plazo</th></tr></thead>
+        <tbody>
+          <tr><td>LIMA</td><td>Diario</td><td>24 hrs</td></tr>
+          <tr><td>PROVINCIAS*</td><td>Lun a Sáb</td><td>24 / 48 hrs</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="ciclos-nota">
+      *Provincia solo tiene reparto de lunes a sábado — domingo no hay atención.<br>
+      Rangos horarios: <b>Rango 1:</b> 8:00 a 11:59 am · <b>Rango 2:</b> 12:00 a 2:59 pm ·
+      <b>Rango 3:</b> 3:00 a 6:59 pm.<br>
+      Estas provincias solo tienen delivery regular a partir del Rango 2: <b>Ayacucho, Cusco,
+      Chincha, Huánuco, Junín, Pisco</b>.
+    </div>
+
+    <div class="ciclos-nota" style="margin-top:14px; font-weight:700; color:var(--azul);">Consideraciones (Express y Regular)</div>
+    <div class="ciclos-nota">
+      1. El cliente debe esperar al Delivery en el rango pactado, con su DNI en <b>FÍSICO</b>, y pasar
+      la validación biométrica.<br>
+      2. La dirección de entrega debe ser exacta y brindada por el cliente: Calle o Avenida, Número
+      o Mz. y Lt., y <b>3 referencias exactas</b>.<br>
+      3. Las referencias deben estar en un rango máximo de <b>5 cuadras</b> y pueden ser avenidas,
+      calles, colegios, hospitales, etc. (visibles en Maps).
     </div>
   </div>
 </div>
@@ -3932,6 +4018,16 @@ if (location.protocol === "file:") {
     $("modalCiclo").classList.add("oculto");
   });
 
+  $("btnInfoDelivery").addEventListener("click", function(){
+    $("modalDeliveryInfo").classList.remove("oculto");
+  });
+  $("btnInfoDelivery2").addEventListener("click", function(){
+    $("modalDeliveryInfo").classList.remove("oculto");
+  });
+  $("btnCerrarInfoDelivery").addEventListener("click", function(){
+    $("modalDeliveryInfo").classList.add("oculto");
+  });
+
   // Referencia de condiciones de entrega (informacion estatica, no depende de DATA)
   $("btnCondicionesEntrega").addEventListener("click", function(){
     $("modalEntrega").classList.remove("oculto");
@@ -4205,11 +4301,13 @@ if (location.protocol === "file:") {
 
   // ============ CONTRATO (guion de cierre, 10 secciones) ============
   var TEXTO_DELIVERY_EXPRESS =
-    "El día de hoy dentro de las próximas 4 horas, nuestro Delivery te visitará en la dirección coordinada. Es " +
+    "El día de hoy dentro de las próximas 3 horas, nuestro Delivery te visitará en la dirección coordinada. Es " +
     "importante que estés esperando DURANTE TODO EL RANGO HORARIO hasta que llegue el Delivery, toma en cuenta " +
     "que el motorizado no realiza una coordinación previa, se comunicará contigo cuando esté en la dirección de " +
     "entrega y es importante que estés atento a tu teléfono ya que puede ser por llamada, mensaje y/o WhatsApp. " +
-    "También debes tener tu DNI a la mano, de igual forma pasarás un control biométrico.";
+    "También debes tener tu DNI a la mano, de igual forma pasarás un control biométrico. Recuerda coordinar una " +
+    "dirección de entrega exacta (calle o avenida, número o Mz. y Lt.) con 3 referencias exactas dentro de un " +
+    "rango máximo de 5 cuadras.";
 
   function actualizarContrato(){
     // --- 1. Validacion de datos personales ---
@@ -4250,7 +4348,8 @@ if (location.protocol === "file:") {
         "hasta que llegue el Delivery, toma en cuenta que el motorizado no realiza una coordinación previa, se " +
         "comunicará contigo cuando esté en la dirección de entrega y es importante que estés atento a tu " +
         "teléfono ya que puede ser por llamada, mensaje y/o WhatsApp. También debes tener tu DNI a la mano, de " +
-        "igual forma pasarás un control biométrico.";
+        "igual forma pasarás un control biométrico. Recuerda coordinar una dirección de entrega exacta (calle o " +
+        "avenida, número o Mz. y Lt.) con 3 referencias exactas dentro de un rango máximo de 5 cuadras.";
     } else {
       $("contratoDeliveryScript").innerHTML = '<span style="color:var(--gris);">Seleccione EXPRESS o REGULAR.</span>';
     }
