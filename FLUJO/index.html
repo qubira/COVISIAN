@@ -1007,7 +1007,7 @@ if (location.protocol === "file:") {
         </div>
       </div>
     </li>
-    <li>
+    <li class="li-requerido">
       Por favor, bríndame tu DNI
       <input type="text" id="guionDni" class="guion-input" maxlength="8" inputmode="numeric" placeholder="DNI">
     </li>
@@ -1028,7 +1028,7 @@ if (location.protocol === "file:") {
         <input type="text" id="guionNombreTitular" class="guion-input" placeholder="Nombre completo del titular">
       </div>
     </li>
-    <li>
+    <li class="li-requerido">
       Bríndame tu número para evaluarte
       <div class="fila-input-btn" style="max-width:280px;margin-top:4px;">
         <input type="tel" id="guionNumero" maxlength="20" placeholder="Número">
@@ -5631,16 +5631,11 @@ if (location.protocol === "file:") {
   // saber si un elemento esta con display:none (o dentro de un ancestro con display:none).
   function campoEsRelevante(el){ return el.offsetParent !== null; }
 
-  // Recuadra en verde cada pregunta del guion de apertura (cada <li>) que tenga algun campo
-  // o grupo de radios para llenar — el recuadro esta SIEMPRE puesto desde que carga la
-  // pantalla (no aparece recien cuando se llena): marca "esto es obligatorio, hay que
-  // llenarlo para avanzar la gestion", no "esto ya esta listo". Las <li> sin ningun campo
-  // (p.ej. el boton de Negativa/Objecion) se dejan sin marcar.
-  //
-  // Los <li> que ya tienen adentro un .fila-3col (Plan/Tipo/Subtipo, Distrito/Provincia/
-  // Departamento) NO se evaluan como <li>: ese <li> en particular tambien carga dirección/
-  // mapas/filtro avanzado (contenido no relacionado con la pregunta puntual), asi que se
-  // recuadra el propio .fila-3col en su lugar, que es la unidad correcta ahi.
+  // Recuadra en verde SOLO estos 4 grupos puntuales — no todas las preguntas del guion —
+  // marcados a mano con la clase .li-requerido (DNI, "bríndame tu número") o ya identificables
+  // por .fila-3col (Plan/Tipo/Subtipo, Distrito/Provincia/Departamento). El recuadro esta
+  // SIEMPRE puesto desde que carga la pantalla (no aparece recien cuando se llena): marca
+  // "esto es obligatorio, hay que llenarlo para avanzar la gestion", no "esto ya esta listo".
   function actualizarUnGrupo(cont){
     var campos = Array.prototype.filter.call(
       cont.querySelectorAll(SELECTOR_CAMPOS_RESALTABLES), campoEsRelevante);
@@ -5649,11 +5644,7 @@ if (location.protocol === "file:") {
   }
 
   function actualizarGruposCompletos(){
-    document.querySelectorAll(".fila-3col").forEach(actualizarUnGrupo);
-    document.querySelectorAll(".guion-preguntas > li").forEach(function(li){
-      if (li.querySelector(".fila-3col")){ li.classList.remove("grupo-completo"); return; }
-      actualizarUnGrupo(li);
-    });
+    document.querySelectorAll(".fila-3col, .li-requerido").forEach(actualizarUnGrupo);
   }
 
   function initResaltarCamposLlenos(){
