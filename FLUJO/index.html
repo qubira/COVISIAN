@@ -116,6 +116,19 @@
   #filtroAvanzadoDireccion input[type=text]{ padding:6px 8px; font-size:13px; }
   #filtroAvanzadoDireccion .fila{ gap:10px; }
   #filtroAvanzadoDireccion .fila + .fila{ margin-top:4px !important; }
+  .fila-referencia{ display:flex; gap:6px; margin-bottom:6px; align-items:center; }
+  .fila-referencia input{ flex:1; padding:6px 8px; font-size:13px; }
+  .btn-quitar-referencia{
+    border:1px solid var(--borde); background:#fff; color:var(--gris); border-radius:5px;
+    width:26px; height:26px; font-size:12px; cursor:pointer; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; padding:0;
+  }
+  .btn-quitar-referencia:hover{ border-color:var(--rojo); color:var(--rojo); }
+  .btn-agregar-referencia{
+    border:1px dashed var(--azul); background:#fff; color:var(--azul); border-radius:6px;
+    padding:5px 12px; font-size:12px; font-weight:700; cursor:pointer;
+  }
+  .btn-agregar-referencia:hover{ background:var(--azul-bg); }
   #fs-credito .simulador-seccion p{ margin:2px 0 0; }
   #fs-credito .simulador-lista-equipos{ margin-top:6px; height:160px; }
   #fs-credito .simulador-lista-item{ padding:5px 10px; }
@@ -627,6 +640,8 @@
   body.tema-oscuro .mapa-caja,
   body.tema-oscuro .btn-expandir-mapa,
   body.tema-oscuro .btn-limpiar-avanzado,
+  body.tema-oscuro .btn-quitar-referencia,
+  body.tema-oscuro .btn-agregar-referencia,
   body.tema-oscuro .panel-comparar,
   body.tema-oscuro .btn-comparar-costo,
   body.tema-oscuro .tabla-costo-comp th,
@@ -993,6 +1008,11 @@ if (location.protocol === "file:") {
               <label for="direccionDistritoAuto">DISTRITO</label>
               <input type="text" id="direccionDistritoAuto" readonly>
             </div>
+          </div>
+          <div style="margin-top:8px;">
+            <label style="display:block; font-size:11.5px; font-weight:700; color:var(--azul); margin-bottom:4px;">REFERENCIA</label>
+            <div id="direccionReferenciasCont"></div>
+            <button type="button" class="btn-agregar-referencia" id="btnAgregarReferencia">+ Agregar referencia</button>
           </div>
         </div>
       </div>
@@ -2833,6 +2853,7 @@ if (location.protocol === "file:") {
       direccionNumero: $("direccionNumero").value,
       direccionMz: $("direccionMz").value,
       direccionLt: $("direccionLt").value,
+      direccionReferencias: obtenerReferencias(),
       creditoTipoGestion: $("creditoTipoGestion").value,
       creditoCuotas: $("creditoCuotas").value,
       creditoAplicaEspecial: $("creditoAplicaEspecial").value,
@@ -3067,6 +3088,7 @@ if (location.protocol === "file:") {
     $("direccionNumero").value = estado.direccionNumero || "";
     $("direccionMz").value = estado.direccionMz || "";
     $("direccionLt").value = estado.direccionLt || "";
+    restaurarReferencias(estado.direccionReferencias);
     if (estado.filtroAvanzadoDireccion){
       $("chkFiltroAvanzadoDireccion").checked = true;
       $("filtroAvanzadoDireccion").classList.remove("oculto");
@@ -3244,6 +3266,7 @@ if (location.protocol === "file:") {
     $("filtroAvanzadoDireccion").classList.add("oculto");
     ["direccionTipoZona", "direccionNombreZona", "direccionTipoVia", "direccionNombreVia",
       "direccionNumero", "direccionMz", "direccionLt", "direccionDistritoAuto"].forEach(function(id){ $(id).value = ""; });
+    restaurarReferencias([]);
 
     $("cajaCobertura").classList.remove("visible");
     clearTimeout(geocodeTimer);
@@ -5214,9 +5237,60 @@ if (location.protocol === "file:") {
     });
   }
 
+  // El cliente puede dar mas de una referencia ("frente al parque", "casa de rejas verdes",
+  // etc.) — se manejan como una lista de filas en vez de un solo input porque no hay un
+  // tope fijo de cuantas puede dar. Siempre queda al menos una fila visible (vacia si no
+  // hay ninguna referencia todavia), asi el agente no tiene que darle a "+" para la primera.
+  function crearFilaReferencia(valor){
+    var fila = document.createElement("div");
+    fila.className = "fila-referencia";
+    var input = document.createElement("input");
+    input.type = "text";
+    input.className = "input-referencia";
+    input.placeholder = "Ej: Frente al parque, casa de rejas verdes";
+    input.value = valor || "";
+    input.addEventListener("input", guardarProgreso);
+    var btnQuitar = document.createElement("button");
+    btnQuitar.type = "button";
+    btnQuitar.className = "btn-quitar-referencia";
+    btnQuitar.title = "Quitar esta referencia";
+    btnQuitar.textContent = "✕";
+    btnQuitar.addEventListener("click", function(){
+      fila.remove();
+      if (!$("direccionReferenciasCont").children.length) agregarFilaReferencia();
+      guardarProgreso();
+    });
+    fila.appendChild(input);
+    fila.appendChild(btnQuitar);
+    return fila;
+  }
+
+  function agregarFilaReferencia(valor){
+    $("direccionReferenciasCont").appendChild(crearFilaReferencia(valor));
+  }
+
+  function obtenerReferencias(){
+    return Array.prototype.map.call(document.querySelectorAll("#direccionReferenciasCont .input-referencia"),
+      function(inp){ return inp.value.trim(); }).filter(Boolean);
+  }
+
+  function restaurarReferencias(lista){
+    $("direccionReferenciasCont").innerHTML = "";
+    if (lista && lista.length){
+      lista.forEach(function(v){ agregarFilaReferencia(v); });
+    } else {
+      agregarFilaReferencia();
+    }
+  }
+
   function initFiltroAvanzadoDireccion(){
     configurarAutocompleteAbreviatura("direccionTipoZona", "lista-direccionTipoZona", OPCIONES_TIPO_ZONA);
     configurarAutocompleteAbreviatura("direccionTipoVia", "lista-direccionTipoVia", OPCIONES_TIPO_VIA);
+    if (!$("direccionReferenciasCont").children.length) agregarFilaReferencia();
+    $("btnAgregarReferencia").addEventListener("click", function(){
+      agregarFilaReferencia();
+      guardarProgreso();
+    });
     $("chkFiltroAvanzadoDireccion").addEventListener("change", function(){
       $("filtroAvanzadoDireccion").classList.toggle("oculto", !this.checked);
       // con el filtro avanzado activo, la direccion que se usa para los mapas es SOLO la
@@ -5237,6 +5311,7 @@ if (location.protocol === "file:") {
       // la cobertura ya elegida, no es un dato que se "escriba" aca.
       ["direccionTipoZona", "direccionNombreZona", "direccionTipoVia", "direccionNombreVia",
         "direccionNumero", "direccionMz", "direccionLt"].forEach(function(id){ $(id).value = ""; });
+      restaurarReferencias([]);
       actualizarDireccionEstructurada();
       guardarProgreso();
     });
@@ -5750,6 +5825,7 @@ if (location.protocol === "file:") {
       provincia: $("provincia").value.trim(),
       departamento: $("departamento").value.trim(),
       direccion: $("direccion").value.trim(),
+      direccionReferencia: obtenerReferencias().join(" | "),
       express: seleccionCobertura ? seleccionCobertura.express : "",
       expressHasta: seleccionCobertura ? (seleccionCobertura.hasta || "") : "",
       regularRango: seleccionCobertura ? (seleccionCobertura.rango || "") : "",
