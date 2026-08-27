@@ -534,6 +534,7 @@
   $("labBtnJalar").addEventListener("click", function(){
     if (!ultimoResultado) return;
     var payload = {
+      sesionId: sesionIdRecibida,
       coords: ultimoResultado.coords,
       aproximado: ultimoResultado.aproximado,
       coberturaRow: seleccionCobertura || null,
@@ -562,10 +563,16 @@
 
   // ---- Precarga con lo que ya se había llenado en la pagina principal ----
   var LS_LAB_INICIAL = "laboratorio_ubicacion_inicial";
+  // Id de la pestaña de index.html que abrió este laboratorio — se devuelve tal cual en el
+  // resultado, así esa pestaña (y solo esa) puede reconocer que el resultado es suyo cuando
+  // le llega el evento "storage" (localStorage es compartido por TODAS las pestañas del mismo
+  // origen, no solo por la que abrió esta ventana).
+  var sesionIdRecibida = null;
   (function precargar(){
     var inicial = null;
     try{ inicial = JSON.parse(localStorage.getItem(LS_LAB_INICIAL) || "null"); }catch(err){}
     if (!inicial) return;
+    sesionIdRecibida = inicial.sesionId || null;
     if (inicial.direccion) $("labBusquedaLibre").value = inicial.direccion;
     if (inicial.distrito) $("labDistrito").value = inicial.distrito;
     if (inicial.filtroAvanzado){

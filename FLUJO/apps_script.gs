@@ -174,9 +174,15 @@ function buscarFilaPorDraftId(hoja, draftId) {
 }
 
 // "distrito"/"provincia"/"departamento" del borrador viajan dentro de seleccionCobertura.
+// "direccionReferencia" tampoco viaja tal cual: el frontend manda "direccionReferencias"
+// (en plural, un array) porque asi lo necesita para poder restaurar el borrador — se une con
+// " | " igual que en el registro final de "venta", si no esta columna queda siempre vacia.
 function valorBorrador(datos, campo) {
   if (campo === "distrito" || campo === "provincia" || campo === "departamento") {
     return datos.seleccionCobertura ? (datos.seleccionCobertura[campo] || "") : "";
+  }
+  if (campo === "direccionReferencia") {
+    return Array.isArray(datos.direccionReferencias) ? datos.direccionReferencias.join(" | ") : "";
   }
   return datos[campo] !== undefined ? datos[campo] : "";
 }

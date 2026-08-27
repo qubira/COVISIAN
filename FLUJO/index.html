@@ -2141,7 +2141,7 @@ if (location.protocol === "file:") {
     // demas — sin esto, un solo error silencioso podia dejar sin usar, por ejemplo, el
     // buscador de EQUIPO (initAutocomplete) si algo antes de el en la lista fallaba.
     [initCodFinanciamiento, initPlanes, initAutocomplete, initComparar, initStockNacional,
-      initCosto, initSimuladorEquipos, initVerDetalleEquipo, initZoomEquipo, initExpandirMapas, initFiltroAvanzadoDireccion, initAgendarLlamada, initCasosAgendados, initAutoguardado, initEncabezadoColapsable, initCambiosHistoricos, precargarCicloContrato, actualizarContrato, actualizarSimuladorFinanciamiento, actualizarEncabezado].forEach(function(fn){
+      initCosto, initSimuladorEquipos, initVerDetalleEquipo, initZoomEquipo, initExpandirMapas, initFiltroAvanzadoDireccion, initAgendarLlamada, initCasosAgendados, initAutoguardado, initEncabezadoColapsable, initCambiosHistoricos, initInvalidarValidacionesContrato, precargarCicloContrato, actualizarContrato, actualizarSimuladorFinanciamiento, actualizarEncabezado].forEach(function(fn){
       try{ fn(); }catch(err){ console.error("Fallo al inicializar " + fn.name + ":", err); }
     });
   }).catch(function(err){
@@ -3117,6 +3117,12 @@ if (location.protocol === "file:") {
 
   function restaurarBorrador(estado){
     restaurandoBorrador = true;
+    // Si cualquiera de los pasos de abajo tira una excepcion (borrador viejo/con forma
+    // inesperada, campo que ya no existe, etc.), sin este try/finally restaurandoBorrador se
+    // queda en true PARA SIEMPRE — guardarProgreso() lo revisa al principio y no hace nada si
+    // esta en true, asi que el autoguardado completo (local Y remoto) quedaria apagado en
+    // silencio por el resto de la llamada, sin ningun aviso visible para el agente.
+    try{
     draftId = estado.draftId || draftId;
 
     $("guionAni").value = estado.guionAni || "";
@@ -3295,9 +3301,10 @@ if (location.protocol === "file:") {
     }
     actualizarBitacoraBoton();
     actualizarBotonNegativa();
-
-    restaurandoBorrador = false;
-    actualizarEncabezado();
+    } finally {
+      restaurandoBorrador = false;
+      actualizarEncabezado();
+    }
   }
 
   function cerrarBorradorRemoto(idParaCerrar){
@@ -4318,6 +4325,12 @@ if (location.protocol === "file:") {
   var GEOCODE_CACHE = {};
   var geocodeTimer = null;
   var GOOGLE_MAP_MID = "1wBsUrIlARzqGFDmorbChCKTP0wMplDc";
+  // Cuando se aplica un resultado del Laboratorio de Ubicacion que ya trae coordenadas
+  // exactas, hay que evitar que el geocodificado automatico (disparado por aplicarCobertura()
+  // y por el evento "input" que actualizarDireccionEstructurada()/el llenado de #direccion
+  // disparan) pise esas coordenadas con una geocodificacion aproximada por distrito que
+  // resuelve despues, en segundo plano. Ver aplicarResultadoLaboratorio().
+  var saltarGeocodificacionAuto = false;
 
   // sinDireccion=true arma la query solo con distrito/provincia/departamento (para el
   // respaldo cuando la dirección exacta no se puede ubicar: las direcciones informales
@@ -4410,6 +4423,7 @@ if (location.protocol === "file:") {
   }
 
   function geocodificarYMostrarMapas(){
+    if (saltarGeocodificacionAuto) return;
     var queryCompleta = construirQueryUbicacion(false);
     var queryDistrito = construirQueryUbicacion(true);
     if (!queryCompleta){ marcarEstadoMapas("Seleccione ubicación para ver el mapa"); return; }
@@ -4443,8 +4457,14 @@ if (location.protocol === "file:") {
   $("direccion").addEventListener("input", programarGeocodificacion);
 
   // ============ AUTOCOMPLETE EQUIPO (búsqueda + ficha técnica) ============
-  // Ruido a ignorar al comparar nombres (prefijos comerciales / códigos de modelo / capacidad)
-  var STOPWORDS = ["GXY", "PACK", "CAMP", "C/P", "C/PACK"];
+  // Ruido a ignorar al comparar nombres (prefijos comerciales / códigos de modelo / capacidad).
+  // C/C, C/CAMP, C/PROM, C/SW, DLV, BAND, AUDIFONO, KLIPXTREME, FIFA, TWS son tags de
+  // campaña/bundle de accesorio que aparecen SOLO del lado del stock (nunca en el nombre del
+  // catalogo) — se confirmaron revisando data/stock.json completo: sin ellos aca, inflaban el
+  // conteo de tokens del lado del stock y filasStockEnZona() (comparacion por cantidad exacta
+  // de tokens) rechazaba equipos que si tenian stock real.
+  var STOPWORDS = ["GXY", "PACK", "CAMP", "C/P", "C/PACK", "C/C", "C/CAMP", "C/PROM", "C/SW",
+    "DLV", "BAND", "AUDIFONO", "KLIPXTREME", "FIFA", "TWS"];
 
   function tokensEquipo(nombre){
     var s = norm(nombre)
@@ -4479,8 +4499,12 @@ if (location.protocol === "file:") {
   // LIMA cubre departamento LIMA (incluye CALLAO como provincia); los 4 departamentos con
   // hoja propia usan su hoja; el resto de departamentos cae en "PROVINCIAS".
   var ZONAS_PROPIAS = ["AREQUIPA", "LA LIBERTAD", "LAMBAYEQUE", "PIURA"];
+  // NGRO/NEGR/CELEST son truncamientos reales que trae el Excel de stock (columna angosta);
+  // ROSADO y ARANDANO/VINO son variantes/colores que no estaban cubiertos — mismo motivo que
+  // el comentario de STOPWORDS de arriba: cualquiera de estos sin listar rompia el cruce.
   var COLORES_CONOCIDOS = ["NEGRO", "AZUL", "DORADO", "GRIS", "VERDE", "PLATA", "BLANCO",
-    "MORADO", "ROSA", "TITANIO", "NARANJA", "ORO", "CELESTE", "CAFE", "ESMERALDA"];
+    "MORADO", "ROSA", "TITANIO", "NARANJA", "ORO", "CELESTE", "CAFE", "ESMERALDA",
+    "NGRO", "NEGR", "CELEST", "ROSADO", "ARANDANO", "VINO"];
 
   function zonaStock(departamento){
     var d = norm(departamento);
@@ -5129,6 +5153,15 @@ if (location.protocol === "file:") {
   function expandirMapa(elId, titulo){
     var el = $(elId);
     if (el.classList.contains("oculto")) return;
+    // Si ya habia otro mapa expandido (posible via teclado: el modal no bloquea el foco, asi
+    // que Tab podia llegar a otro boton "expandir" detras del overlay y activarlo con
+    // Enter/Espacio), hay que devolverlo a su lugar PRIMERO — si no, mapaExpandidoInfo se
+    // pisa y ese mapa anterior queda huerfano dentro del contenedor del modal (oculto,
+    // display:none) y su casilla original en la grilla se queda vacia hasta recargar la
+    // pagina.
+    if (mapaExpandidoInfo && mapaExpandidoInfo.el !== el){
+      cerrarMapaGrande();
+    }
     mapaExpandidoInfo = { el: el, padre: el.parentNode, siguiente: el.nextSibling, alturaOriginal: el.style.height };
     // en su lugar normal el mapa tiene una altura fija chica (embed en la grilla de dos
     // columnas); dentro del modal debe llenar los 75vh del contenedor grande, si no se pisa
@@ -5356,6 +5389,33 @@ if (location.protocol === "file:") {
     }
   }
 
+  // Los checkboxes de "validado" de CONTRATO (nombre/DNI/fecha nac./padre-madre/correo) no
+  // tenian ninguna atadura al dato que certifican: si el agente ya habia tildado "Nombre
+  // Completo validado" y el cliente corregia el nombre despues (mal escuchado, etc.), el
+  // checkbox se quedaba marcado apuntando a un dato que ya no es el que se reviso — y eso es
+  // justo lo que se manda al Sheet como "validado". Se destilda solo si el dato que certifica
+  // cambia despues de haber sido marcado.
+  function initInvalidarValidacionesContrato(){
+    function desmarcarSiCambia(idCampoFuente, idCheckbox, eventoDom){
+      $(idCampoFuente).addEventListener(eventoDom, function(){
+        var chk = $(idCheckbox);
+        if (chk.checked) chk.checked = false;
+      });
+    }
+    desmarcarSiCambia("guionNombreCliente", "contratoValidNombre", "input");
+    desmarcarSiCambia("guionNombreTitular", "contratoValidNombre", "input");
+    document.querySelectorAll('input[name=guionEsTitular]').forEach(function(r){
+      r.addEventListener("change", function(){
+        var chk = $("contratoValidNombre");
+        if (chk.checked) chk.checked = false;
+      });
+    });
+    desmarcarSiCambia("guionDni", "contratoValidDni", "input");
+    desmarcarSiCambia("contratoFechaNacimiento", "contratoValidFechaNac", "input");
+    desmarcarSiCambia("contratoNombrePadreMadre", "contratoValidPadreMadre", "input");
+    desmarcarSiCambia("contratoCorreo", "contratoValidCorreo", "input");
+  }
+
   function initFiltroAvanzadoDireccion(){
     configurarAutocompleteAbreviatura("direccionTipoZona", "lista-direccionTipoZona", OPCIONES_TIPO_ZONA);
     configurarAutocompleteAbreviatura("direccionTipoVia", "lista-direccionTipoVia", OPCIONES_TIPO_VIA);
@@ -5372,7 +5432,17 @@ if (location.protocol === "file:") {
       $("direccion").disabled = this.checked;
       if (this.checked){
         sincronizarDistritoDireccionAvanzada();
-        actualizarDireccionEstructurada();
+        // Si ya habia texto tipeado en la busqueda basica y los campos estructurados estan
+        // todavia vacios (caso normal: recien se prendio el switch), NO reconstruir la
+        // direccion — actualizarDireccionEstructurada() armaria un string vacio y borraria
+        // lo que el agente ya habia escrito. Solo se reconstruye si ya hay algun campo
+        // estructurado con datos (p.ej. se habia llenado antes, se apago el switch sin
+        // limpiar, y se vuelve a prender).
+        var yaHayDatoEstructurado = ["direccionTipoZona", "direccionNombreZona", "direccionTipoVia",
+          "direccionNombreVia", "direccionNumero", "direccionMz", "direccionLt"].some(function(id){
+          return $(id).value.trim();
+        });
+        if (yaHayDatoEstructurado) actualizarDireccionEstructurada();
       }
     });
     ["direccionTipoZona", "direccionNombreZona", "direccionTipoVia", "direccionNombreVia",
@@ -5406,9 +5476,19 @@ if (location.protocol === "file:") {
   var LS_LAB_INICIAL = "laboratorio_ubicacion_inicial";
   var LS_LAB_RESULTADO = "laboratorio_ubicacion_resultado";
 
+  // Id unico generado cada vez que ESTA pestaña abre el laboratorio — se manda en el payload
+  // inicial, el laboratorio lo devuelve tal cual en el resultado, y el listener de "storage"
+  // solo aplica el resultado si el id coincide. Sin esto, como localStorage es compartido por
+  // TODAS las pestañas del mismo origen, el evento "storage" le llega a CUALQUIER pestaña de
+  // index.html que este abierta (no solo a la que abrio el laboratorio) y le pisaria sus datos
+  // con los de otra llamada — postMessage ya iba dirigido solo al opener, pero storage no.
+  var labSesionAbierta = null;
+
   function initLaboratorioUbicacion(){
     $("btnLaboratorioUbicacion").addEventListener("click", function(){
+      labSesionAbierta = Date.now() + "_" + Math.random().toString(36).slice(2);
       var inicial = {
+        sesionId: labSesionAbierta,
         direccion: $("direccion").value,
         distrito: seleccionCobertura ? seleccionCobertura.distrito : "",
         provincia: seleccionCobertura ? seleccionCobertura.provincia : "",
@@ -5441,32 +5521,45 @@ if (location.protocol === "file:") {
 
   function aplicarResultadoLaboratorio(datos){
     if (!datos) return;
-    if (datos.coberturaRow){
-      aplicarCobertura(datos.coberturaRow);
+    // Mientras se aplican cobertura/direccion, aplicarCobertura() y el evento "input" que se
+    // dispara mas abajo disparan su propia geocodificacion automatica (una inmediata, otra
+    // debounced 1s despues) — si el laboratorio ya trajo coordenadas exactas (GPS del cliente,
+    // o ya geocodificadas alla), esa geocodificacion automatica terminaria pisandolas con un
+    // punto aproximado por distrito que resuelve despues, en segundo plano. Se suprime
+    // mientras se aplica todo esto, y se cancela cualquier geocodificacion que haya quedado
+    // programada antes de mostrar las coordenadas reales del laboratorio.
+    saltarGeocodificacionAuto = true;
+    try{
+      if (datos.coberturaRow){
+        aplicarCobertura(datos.coberturaRow);
+      }
+      var fa = datos.filtroAvanzado;
+      var hayFiltroAvanzado = fa && (fa.tipoZona || fa.nombreZona || fa.tipoVia || fa.nombreVia || fa.numero || fa.mz || fa.lt);
+      if (hayFiltroAvanzado){
+        $("chkFiltroAvanzadoDireccion").checked = true;
+        $("filtroAvanzadoDireccion").classList.remove("oculto");
+        $("direccion").disabled = true;
+        $("direccionTipoZona").value = fa.tipoZona || "";
+        $("direccionNombreZona").value = fa.nombreZona || "";
+        $("direccionTipoVia").value = fa.tipoVia || "";
+        $("direccionNombreVia").value = fa.nombreVia || "";
+        $("direccionNumero").value = fa.numero || "";
+        $("direccionMz").value = fa.mz || "";
+        $("direccionLt").value = fa.lt || "";
+        sincronizarDistritoDireccionAvanzada();
+        actualizarDireccionEstructurada();
+      } else if (datos.direccionLibre){
+        $("chkFiltroAvanzadoDireccion").checked = false;
+        $("filtroAvanzadoDireccion").classList.add("oculto");
+        $("direccion").disabled = false;
+        $("direccion").value = datos.direccionLibre;
+        $("direccion").dispatchEvent(new Event("input", { bubbles: true }));
+      }
+      if (datos.referencias && datos.referencias.length) restaurarReferencias(datos.referencias);
+    } finally {
+      saltarGeocodificacionAuto = false;
     }
-    var fa = datos.filtroAvanzado;
-    var hayFiltroAvanzado = fa && (fa.tipoZona || fa.nombreZona || fa.tipoVia || fa.nombreVia || fa.numero || fa.mz || fa.lt);
-    if (hayFiltroAvanzado){
-      $("chkFiltroAvanzadoDireccion").checked = true;
-      $("filtroAvanzadoDireccion").classList.remove("oculto");
-      $("direccion").disabled = true;
-      $("direccionTipoZona").value = fa.tipoZona || "";
-      $("direccionNombreZona").value = fa.nombreZona || "";
-      $("direccionTipoVia").value = fa.tipoVia || "";
-      $("direccionNombreVia").value = fa.nombreVia || "";
-      $("direccionNumero").value = fa.numero || "";
-      $("direccionMz").value = fa.mz || "";
-      $("direccionLt").value = fa.lt || "";
-      sincronizarDistritoDireccionAvanzada();
-      actualizarDireccionEstructurada();
-    } else if (datos.direccionLibre){
-      $("chkFiltroAvanzadoDireccion").checked = false;
-      $("filtroAvanzadoDireccion").classList.add("oculto");
-      $("direccion").disabled = false;
-      $("direccion").value = datos.direccionLibre;
-      $("direccion").dispatchEvent(new Event("input", { bubbles: true }));
-    }
-    if (datos.referencias && datos.referencias.length) restaurarReferencias(datos.referencias);
+    clearTimeout(geocodeTimer);
     if (datos.coords) mostrarMapasEnCoordenada(datos.coords, !!datos.aproximado);
     guardarProgreso();
     var campo = $("campoDireccion");
@@ -5475,9 +5568,17 @@ if (location.protocol === "file:") {
   }
 
   window.addEventListener("storage", function(e){
-    if (e.key === LS_LAB_RESULTADO && e.newValue){
-      try{ aplicarResultadoLaboratorio(JSON.parse(e.newValue)); }catch(err){}
-    }
+    if (e.key !== LS_LAB_RESULTADO || !e.newValue) return;
+    try{
+      var datos = JSON.parse(e.newValue);
+      // localStorage es compartido por todas las pestañas del mismo origen: sin este chequeo,
+      // CUALQUIER otra pestaña de index.html abierta (otra llamada, otro caso agendado) tambien
+      // recibe este evento y le aplicaria encima los datos de ubicacion de una llamada ajena.
+      // Solo se aplica si esta es la pestaña que realmente abrio ese laboratorio.
+      if (!labSesionAbierta || datos.sesionId !== labSesionAbierta) return;
+      labSesionAbierta = null;
+      aplicarResultadoLaboratorio(datos);
+    }catch(err){}
   });
   window.addEventListener("message", function(e){
     if (e.origin !== location.origin) return;
