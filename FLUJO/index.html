@@ -937,25 +937,10 @@ if (location.protocol === "file:") {
         </label>
         <div class="oculto" id="filtroAvanzadoDireccion" style="margin-top:8px;">
           <div class="fila">
-            <div class="campo" style="min-width:140px;">
+            <div class="campo autocomplete" id="ac-direccionTipoZona" style="min-width:140px;">
               <label for="direccionTipoZona">TIPO DE ZONA</label>
-              <input type="text" id="direccionTipoZona" list="listaDireccionTipoZona" placeholder="Ej: AAHH" autocomplete="off">
-              <datalist id="listaDireccionTipoZona">
-                <option value="AAHH">Asentamiento Humano
-                <option value="AH">Asentamiento Humano
-                <option value="UR">Urbanización
-                <option value="URB">Urbanización
-                <option value="PPJJ">Pueblo Joven
-                <option value="ASOC">Asociación
-                <option value="CP">Centro Poblacional
-                <option value="COOP">Cooperativa
-                <option value="S COOP">Cooperativa
-                <option value="BO">Barrio
-                <option value="RES">Residencia / Residencial
-                <option value="COND">Condominio
-                <option value="SECT">Sector
-                <option value="SEC">Sector
-              </datalist>
+              <input type="text" id="direccionTipoZona" placeholder="Ej: AAHH" autocomplete="off">
+              <div class="lista" id="lista-direccionTipoZona"></div>
             </div>
             <div class="campo">
               <label for="direccionNombreZona">NOMBRE</label>
@@ -963,19 +948,10 @@ if (location.protocol === "file:") {
             </div>
           </div>
           <div class="fila" style="margin-top:8px;">
-            <div class="campo" style="min-width:120px;">
+            <div class="campo autocomplete" id="ac-direccionTipoVia" style="min-width:120px;">
               <label for="direccionTipoVia">TIPO DE VÍA</label>
-              <input type="text" id="direccionTipoVia" list="listaDireccionTipoVia" placeholder="Ej: JR" autocomplete="off">
-              <datalist id="listaDireccionTipoVia">
-                <option value="CL">Calle
-                <option value="C/">Calle
-                <option value="JR">Jirón
-                <option value="AV">Avenida
-                <option value="AVD">Avenida
-                <option value="PROL">Prolongación
-                <option value="ALAM">Alameda
-                <option value="AL">Alameda
-              </datalist>
+              <input type="text" id="direccionTipoVia" placeholder="Ej: JR" autocomplete="off">
+              <div class="lista" id="lista-direccionTipoVia"></div>
             </div>
             <div class="campo">
               <label for="direccionNombreVia">NOMBRE</label>
@@ -5017,8 +4993,7 @@ if (location.protocol === "file:") {
     $("btnCerrarMapaGrande").addEventListener("click", cerrarMapaGrande);
   }
 
-  // Filtro avanzado de direccion: por ahora solo el checkbox/panel colapsable, el contenido
-  // se agrega despues.
+  // Filtro avanzado de direccion.
   // Arma "TIPO_ZONA NOMBRE_ZONA Mz. X Lt. Y, TIPO_VIA NOMBRE_VIA, DISTRITO" (formato tipico
   // de direccion peruana informal) y lo escribe en el campo DIRECCION de siempre — asi
   // reutiliza tal cual todo el pipeline de geocodificacion/mapas que ya existe, sin duplicar
@@ -5048,7 +5023,76 @@ if (location.protocol === "file:") {
     $("direccionDistritoAuto").value = (seleccionCobertura && seleccionCobertura.distrito) || "";
   }
 
+  // TIPO DE ZONA / TIPO DE VÍA: autocomplete propio (mismo look & feel que el resto de la
+  // app) en vez de <datalist>, que trae el desplegable nativo del navegador y no se puede
+  // estilar — rompía con el diseño del resto del formulario.
+  var OPCIONES_TIPO_ZONA = [
+    { value: "AAHH", label: "Asentamiento Humano" },
+    { value: "AH", label: "Asentamiento Humano" },
+    { value: "UR", label: "Urbanización" },
+    { value: "URB", label: "Urbanización" },
+    { value: "PPJJ", label: "Pueblo Joven" },
+    { value: "ASOC", label: "Asociación" },
+    { value: "CP", label: "Centro Poblacional" },
+    { value: "COOP", label: "Cooperativa" },
+    { value: "S COOP", label: "Cooperativa" },
+    { value: "BO", label: "Barrio" },
+    { value: "RES", label: "Residencia / Residencial" },
+    { value: "COND", label: "Condominio" },
+    { value: "SECT", label: "Sector" },
+    { value: "SEC", label: "Sector" }
+  ];
+  var OPCIONES_TIPO_VIA = [
+    { value: "CL", label: "Calle" },
+    { value: "C/", label: "Calle" },
+    { value: "JR", label: "Jirón" },
+    { value: "AV", label: "Avenida" },
+    { value: "AVD", label: "Avenida" },
+    { value: "PROL", label: "Prolongación" },
+    { value: "ALAM", label: "Alameda" },
+    { value: "AL", label: "Alameda" }
+  ];
+
+  function configurarAutocompleteAbreviatura(inputId, listaId, opciones){
+    var input = $(inputId);
+    var lista = $(listaId);
+
+    function render(filtro){
+      lista.innerHTML = "";
+      var q = norm(filtro);
+      var coincidencias = opciones.filter(function(o){
+        return norm(o.value).indexOf(q) !== -1 || norm(o.label).indexOf(q) !== -1;
+      });
+      coincidencias.forEach(function(o){
+        var div = document.createElement("div");
+        div.className = "opcion";
+        div.innerHTML = "<b>" + o.value + "</b><small>" + o.label + "</small>";
+        // mousedown (no click) + preventDefault: evita que el input pierda el foco antes de
+        // que el click llegue a procesarse — ver nota igual en configurarAutocompletePlan.
+        div.addEventListener("mousedown", function(e){
+          e.preventDefault();
+          input.value = o.value;
+          // dispara "input" (asi actualizarDireccionEstructurada corre) y RECIEN DESPUES
+          // fuerza la lista cerrada — si no, el propio listener de "input" de esta funcion
+          // vuelve a renderizar y reabre la lista porque "UR" sigue matcheando UR y URB.
+          input.dispatchEvent(new Event("input", { bubbles: true }));
+          lista.classList.remove("abierta");
+        });
+        lista.appendChild(div);
+      });
+      lista.classList.toggle("abierta", coincidencias.length > 0);
+    }
+
+    input.addEventListener("focus", function(){ render(input.value); });
+    input.addEventListener("input", function(){ render(input.value); });
+    input.addEventListener("blur", function(){
+      setTimeout(function(){ lista.classList.remove("abierta"); }, 150);
+    });
+  }
+
   function initFiltroAvanzadoDireccion(){
+    configurarAutocompleteAbreviatura("direccionTipoZona", "lista-direccionTipoZona", OPCIONES_TIPO_ZONA);
+    configurarAutocompleteAbreviatura("direccionTipoVia", "lista-direccionTipoVia", OPCIONES_TIPO_VIA);
     $("chkFiltroAvanzadoDireccion").addEventListener("change", function(){
       $("filtroAvanzadoDireccion").classList.toggle("oculto", !this.checked);
       if (this.checked){
