@@ -5,15 +5,31 @@ que consume el formulario en FLUJO/index.html.
 Ejecutar de nuevo cada vez que se actualicen los Excel de origen:
     python extract_data.py
 """
+import glob
 import json
+import os
 import datetime
 import openpyxl
 import pyxlsb
 
 ROOT = __file__.rsplit("\\", 2)[0] if "\\" in __file__ else __file__.rsplit("/", 2)[0]
-COBERTURERO_PATH = ROOT + r"\DATA\COBERTURERO\COBERTURERO - EQUIPOS AGO 13 V2.xlsx"
-VISOR_PATH = ROOT + r"\DATA\PLANES\Visor.xlsb"
-STOCK_PATH = ROOT + r"\DATA\COLOR\INTSAP52_FINAL_20260822_094009.xlsx"
+
+
+def _ultimo_archivo(carpeta, patron):
+    """Elige el archivo mas reciente (por fecha de modificacion) que matchee el patron
+    dentro de la carpeta — asi cuando alguien pega un Excel nuevo (con nombre distinto,
+    por ejemplo con la fecha en el nombre como los export de SAP) no hace falta tocar este
+    script ni renombrar nada: el mas nuevo gana solo. Si hay varios, los viejos se pueden
+    dejar ahi sin problema (no se leen), pero conviene borrarlos para no confundirse."""
+    candidatos = glob.glob(os.path.join(carpeta, patron))
+    if not candidatos:
+        raise FileNotFoundError("No se encontro ningun archivo '%s' en %s" % (patron, carpeta))
+    return max(candidatos, key=os.path.getmtime)
+
+
+COBERTURERO_PATH = _ultimo_archivo(ROOT + r"\DATA\COBERTURERO", "*.xlsx")
+VISOR_PATH = _ultimo_archivo(ROOT + r"\DATA\PLANES", "*.xlsb")
+STOCK_PATH = _ultimo_archivo(ROOT + r"\DATA\COLOR", "*.xlsx")
 OUT_DIR = ROOT + r"\FLUJO\data"
 EQUIPOS_IMG_DIR = ROOT + r"\DATA\EQUIPOS"
 IMG_OUT_DIR = ROOT + r"\FLUJO\img\equipos"

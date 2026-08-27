@@ -81,7 +81,11 @@
 "CAEQ/MIGRA",
 "PORTA"
 ],
-"canal": []
+"canal": [
+"ESP_POST_ONLINE",
+"ESP_POST_PHOENIX",
+"ESP_POST_RETENCION"
+]
 },
 "ZTE BLADE A35 64GB LTE": {
 "tipoVenta": [
@@ -147,7 +151,11 @@
 "CAEQ/MIGRA",
 "PORTA"
 ],
-"canal": []
+"canal": [
+"ESP_POST_ONLINE",
+"ESP_POST_PHOENIX",
+"ESP_POST_RETENCION"
+]
 },
 "HONOR 200 ELI-NX9 512GB 5G": {
 "tipoVenta": [
@@ -254,13 +262,6 @@
 ],
 "canal": []
 },
-"PACK - OPPO RENO 12F": {
-"tipoVenta": [
-"CAEQ/MIGRA",
-"PORTA"
-],
-"canal": []
-},
 "PACK - MOTOROLA G54": {
 "tipoVenta": [
 "CAEQ/MIGRA",
@@ -290,13 +291,6 @@
 "canal": []
 },
 "PACK - ZTE BLADE V70": {
-"tipoVenta": [
-"CAEQ/MIGRA",
-"PORTA"
-],
-"canal": []
-},
-"SAMSUNG GXY S23 ULTRA 256GB SM-S918B 5G": {
 "tipoVenta": [
 "CAEQ/MIGRA",
 "PORTA"
@@ -345,27 +339,6 @@
 ],
 "canal": []
 },
-"OPPO RENO 10 256GB 5G": {
-"tipoVenta": [
-"CAEQ/MIGRA",
-"PORTA"
-],
-"canal": []
-},
-"OPPO A38 128GB LTE": {
-"tipoVenta": [
-"CAEQ/MIGRA",
-"PORTA"
-],
-"canal": []
-},
-"OPPO A58 128GB LTE": {
-"tipoVenta": [
-"CAEQ/MIGRA",
-"PORTA"
-],
-"canal": []
-},
 "MOTOROLA G84 XT2347 256GB 5G": {
 "tipoVenta": [
 "CAEQ/MIGRA",
@@ -385,7 +358,10 @@
 "CAEQ/MIGRA",
 "PORTA"
 ],
-"canal": []
+"canal": [
+"ESP_POST_ONLINE",
+"ESP_POST_PHOENIX"
+]
 },
 "IPHONE 15 PRO MAX 256GB": {
 "tipoVenta": [
@@ -485,13 +461,6 @@
 ],
 "canal": []
 },
-"SAMSUNG GXY S24 ULTRA 512GB SM-S928B 5G": {
-"tipoVenta": [
-"CAEQ/MIGRA",
-"PORTA"
-],
-"canal": []
-},
 "XIAOMI REDMI NOTE 13 256GB LTE": {
 "tipoVenta": [
 "CAEQ/MIGRA",
@@ -583,20 +552,6 @@
 ],
 "canal": []
 },
-"OPPO RENO 11F 256GB 5G": {
-"tipoVenta": [
-"CAEQ/MIGRA",
-"PORTA"
-],
-"canal": []
-},
-"IPHONE 11 128GB LTE": {
-"tipoVenta": [
-"CAEQ/MIGRA",
-"PORTA"
-],
-"canal": []
-},
 "ZTE NUBIA FOCUS PRO 256GB 5G": {
 "tipoVenta": [
 "CAEQ/MIGRA",
@@ -630,18 +585,18 @@
 "CAEQ/MIGRA",
 "PORTA"
 ],
-"canal": [
-"ESP_POST_ONLINE",
-"ESP_POST_PHOENIX",
-"ESP_POST_RETENCION"
-]
+"canal": []
 },
 "IPHONE 16 PRO MAX 256GB": {
 "tipoVenta": [
 "CAEQ/MIGRA",
 "PORTA"
 ],
-"canal": []
+"canal": [
+"ESP_POST_ONLINE",
+"ESP_POST_PHOENIX",
+"ESP_POST_RETENCION"
+]
 },
 "SAMSUNG GXY S24 FE SM-S721B 256GB 5G": {
 "tipoVenta": [
@@ -655,7 +610,11 @@
 "CAEQ/MIGRA",
 "PORTA"
 ],
-"canal": []
+"canal": [
+"ESP_POST_ONLINE",
+"ESP_POST_PHOENIX",
+"ESP_POST_RETENCION"
+]
 },
 "SAMSUNG GXY A16 SM-A166M 128GB 5G": {
 "tipoVenta": [
@@ -922,7 +881,11 @@
 "CAEQ/MIGRA",
 "PORTA"
 ],
-"canal": []
+"canal": [
+"ESP_POST_ONLINE",
+"ESP_POST_PHOENIX",
+"ESP_POST_RETENCION"
+]
 },
 "PACK-HONOR X8C 256GB": {
 "tipoVenta": [
@@ -936,14 +899,20 @@
 "CAEQ/MIGRA",
 "PORTA"
 ],
-"canal": []
+"canal": [
+"ESP_POST_ONLINE",
+"ESP_POST_PHOENIX"
+]
 },
 "IPHONE 17 PRO 256GB": {
 "tipoVenta": [
 "CAEQ/MIGRA",
 "PORTA"
 ],
-"canal": []
+"canal": [
+"ESP_POST_ONLINE",
+"ESP_POST_PHOENIX"
+]
 },
 "IPHONE 17 PRO MAX 256GB": {
 "tipoVenta": [
@@ -1165,11 +1134,7 @@
 "CAEQ/MIGRA",
 "PORTA"
 ],
-"canal": [
-"ESP_POST_ONLINE",
-"ESP_POST_PHOENIX",
-"ESP_POST_RETENCION"
-]
+"canal": []
 },
 "SAMSUNG GXY A37 SM-A376B 256GB 5G": {
 "tipoVenta": [
@@ -1183,7 +1148,11 @@
 "CAEQ/MIGRA",
 "PORTA"
 ],
-"canal": []
+"canal": [
+"ESP_POST_ONLINE",
+"ESP_POST_PHOENIX",
+"ESP_POST_RETENCION"
+]
 },
 "MOTOROLA EDGE 70 FUSION 256GB 5G": {
 "tipoVenta": [
@@ -1376,25 +1345,27 @@
 "CAEQ/MIGRA",
 "PORTA"
 ],
-"canal": []
+"canal": [
+"ESP_POST_ONLINE",
+"ESP_POST_PHOENIX"
+]
 },
 "CAMP - IPHONE 16 128GB": {
 "tipoVenta": [
 "CAEQ/MIGRA",
 "PORTA"
 ],
-"canal": [
-"ESP_POST_ONLINE",
-"ESP_POST_PHOENIX",
-"ESP_POST_RETENCION"
-]
+"canal": []
 },
 "CAMP - IPHONE 17 256GB": {
 "tipoVenta": [
 "CAEQ/MIGRA",
 "PORTA"
 ],
-"canal": []
+"canal": [
+"ESP_POST_ONLINE",
+"ESP_POST_PHOENIX"
+]
 },
 "CAMP - IPHONE 17 PRO MAX 256GB": {
 "tipoVenta": [
@@ -1452,21 +1423,31 @@
 ],
 "canal": []
 },
-"HONOR X8A CRT-LX3 LTE": {
+"HONOR X7E LAB-LX3 256GB LTE": {
 "tipoVenta": [
-"CAEQ/MIGRA"
+"CAEQ/MIGRA",
+"PORTA"
 ],
 "canal": []
 },
-"OPPO A57 128GB LTE": {
+"IPHONE 16E 128GB": {
 "tipoVenta": [
-"CAEQ/MIGRA"
+"CAEQ/MIGRA",
+"PORTA"
 ],
 "canal": []
 },
-"OPPO RENO 7 LTE": {
+"ZTE NUBIA NEO 5 MAX 512GB 5G": {
 "tipoVenta": [
-"CAEQ/MIGRA"
+"CAEQ/MIGRA",
+"PORTA"
+],
+"canal": []
+},
+"MOTOROLA RAZR 70 XT2657 512GB 5G": {
+"tipoVenta": [
+"CAEQ/MIGRA",
+"PORTA"
 ],
 "canal": []
 },
