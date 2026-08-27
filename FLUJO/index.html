@@ -986,11 +986,11 @@ if (location.protocol === "file:") {
       </div>
       <div class="mapa-caja" id="cajaGoogleMaps" style="margin-top:10px;">
         <div class="mapa-titulo">
-          Google Maps
+          Mapa interactivo (arrastra el pin para ajustar el punto)
           <button type="button" class="btn-expandir-mapa" id="btnExpandirGoogleMaps" title="Ver mapa más grande">⛶</button>
         </div>
         <div class="mapa-estado" id="mapaEstado3">Seleccione ubicación para ver el mapa</div>
-        <iframe id="iframeGoogleMaps" class="mapa-iframe oculto" style="height:300px;" loading="lazy"></iframe>
+        <div id="mapaLeafletCont" class="mapa-iframe oculto" style="height:300px;"></div>
       </div>
       <div class="mapa-aviso-aprox oculto" id="mapaAviso">
         📍 No se encontró la dirección exacta en el mapa — se muestra el centro del distrito como referencia aproximada.
@@ -1937,6 +1937,10 @@ if (location.protocol === "file:") {
     <p class="comparar-vacio oculto" id="stockNacionalVacio">Ningún equipo coincide con el filtro.</p>
   </div>
 </div>
+
+<!-- Leaflet (mapa interactivo con pin arrastrable): gratis, sin API key, tiles de OpenStreetMap -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
 (function(){
@@ -3235,7 +3239,6 @@ if (location.protocol === "file:") {
     cerrarMapaGrande(); // por si el mapa quedo movido dentro del modal de zoom
     $("iframeGeodir").src = "";
     $("iframeGoogleMyMaps").src = "";
-    $("iframeGoogleMaps").src = "";
     marcarEstadoMapas("Seleccione ubicación para ver el mapa");
     $("mapaAviso").classList.add("oculto");
     $("detalleEquipo").classList.remove("visible", "expandido");
@@ -4243,8 +4246,40 @@ if (location.protocol === "file:") {
     $("mapaEstado3").classList.remove("oculto");
     $("iframeGeodir").classList.add("oculto");
     $("iframeGoogleMyMaps").classList.add("oculto");
-    $("iframeGoogleMaps").classList.add("oculto");
+    $("mapaLeafletCont").classList.add("oculto");
     $("coordenadasResultado").classList.add("oculto");
+  }
+
+  // Mapa interactivo (Leaflet + tiles de OpenStreetMap, gratis y sin API key): el pin se
+  // puede arrastrar a mano, y al soltarlo (dragend) ese punto nuevo se manda al mismo
+  // mostrarMapasEnCoordenada() que usa la geocodificacion por texto — asi Geodir Maps y
+  // Mapa de Cobertura quedan sincronizados con el punto que se movio a mano.
+  var mapaLeaflet = null;
+  var marcadorLeaflet = null;
+  var actualizandoMapaLeaflet = false; // evita que setLatLng() (llamado desde afuera) dispare dragend
+
+  function mostrarMapaLeaflet(coords, zoom){
+    if (!window.L) return; // si el CDN de Leaflet no cargo (sin internet), no rompe el resto
+    if (!mapaLeaflet){
+      mapaLeaflet = L.map("mapaLeafletCont").setView([coords.lat, coords.lon], zoom);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "© OpenStreetMap contributors", maxZoom: 19
+      }).addTo(mapaLeaflet);
+      marcadorLeaflet = L.marker([coords.lat, coords.lon], { draggable: true }).addTo(mapaLeaflet);
+      marcadorLeaflet.on("dragend", function(){
+        if (actualizandoMapaLeaflet) return;
+        var pos = marcadorLeaflet.getLatLng();
+        mostrarMapasEnCoordenada({ lat: pos.lat, lon: pos.lng }, false);
+      });
+    } else {
+      actualizandoMapaLeaflet = true;
+      mapaLeaflet.setView([coords.lat, coords.lon], zoom);
+      marcadorLeaflet.setLatLng([coords.lat, coords.lon]);
+      actualizandoMapaLeaflet = false;
+    }
+    // el contenedor puede haber estado oculto (display:none) mientras Leaflet calculaba su
+    // tamaño la primera vez — sin esto el mapa queda cortado a la izquierda hasta hacer zoom.
+    setTimeout(function(){ if (mapaLeaflet) mapaLeaflet.invalidateSize(); }, 50);
   }
 
   function mostrarMapasEnCoordenada(coords, aproximado){
@@ -4254,14 +4289,13 @@ if (location.protocol === "file:") {
       coords.lat + "/" + coords.lon + "/" + zoom;
     $("iframeGoogleMyMaps").src = "https://www.google.com/maps/d/embed?mid=" + GOOGLE_MAP_MID +
       "&ll=" + coords.lat + "," + coords.lon + "&z=" + zoom;
-    $("iframeGoogleMaps").src = "https://www.google.com/maps?q=" + coords.lat + "," + coords.lon +
-      "&z=" + zoom + "&output=embed";
     $("mapaEstado1").classList.add("oculto");
     $("mapaEstado2").classList.add("oculto");
     $("mapaEstado3").classList.add("oculto");
     $("iframeGeodir").classList.remove("oculto");
     $("iframeGoogleMyMaps").classList.remove("oculto");
-    $("iframeGoogleMaps").classList.remove("oculto");
+    $("mapaLeafletCont").classList.remove("oculto");
+    mostrarMapaLeaflet(coords, zoom);
     $("coordenadasTexto").textContent = coords.lat.toFixed(6) + ", " + coords.lon.toFixed(6);
     $("coordenadasResultado").classList.remove("oculto");
     $("mapaAviso").classList.toggle("oculto", !aproximado);
@@ -4998,18 +5032,27 @@ if (location.protocol === "file:") {
   // lugar original en la grilla de dos columnas.
   var mapaExpandidoInfo = null;
 
-  function expandirMapa(iframeId, titulo){
-    var iframe = $(iframeId);
-    if (iframe.classList.contains("oculto") || !iframe.src) return;
-    mapaExpandidoInfo = { iframe: iframe, padre: iframe.parentNode, siguiente: iframe.nextSibling };
+  function expandirMapa(elId, titulo){
+    var el = $(elId);
+    if (el.classList.contains("oculto")) return;
+    mapaExpandidoInfo = { el: el, padre: el.parentNode, siguiente: el.nextSibling };
     $("modalMapaGrandeTitulo").textContent = titulo;
-    $("mapaGrandeContenedor").appendChild(iframe);
+    $("mapaGrandeContenedor").appendChild(el);
     $("modalMapaGrande").classList.remove("oculto");
+    // el mapa Leaflet calcula su tamaño en base al contenedor: si no se le avisa despues de
+    // moverlo (y de que el modal termine de mostrarse), se queda con el tamaño viejo y se ve
+    // recortado/mal centrado.
+    if (elId === "mapaLeafletCont" && mapaLeaflet){
+      setTimeout(function(){ mapaLeaflet.invalidateSize(); }, 50);
+    }
   }
 
   function cerrarMapaGrande(){
     if (mapaExpandidoInfo){
-      mapaExpandidoInfo.padre.insertBefore(mapaExpandidoInfo.iframe, mapaExpandidoInfo.siguiente);
+      mapaExpandidoInfo.padre.insertBefore(mapaExpandidoInfo.el, mapaExpandidoInfo.siguiente);
+      if (mapaExpandidoInfo.el.id === "mapaLeafletCont" && mapaLeaflet){
+        setTimeout(function(){ mapaLeaflet.invalidateSize(); }, 50);
+      }
       mapaExpandidoInfo = null;
     }
     $("modalMapaGrande").classList.add("oculto");
@@ -5023,7 +5066,7 @@ if (location.protocol === "file:") {
       expandirMapa("iframeGoogleMyMaps", "Mapa de Cobertura");
     });
     $("btnExpandirGoogleMaps").addEventListener("click", function(){
-      expandirMapa("iframeGoogleMaps", "Google Maps");
+      expandirMapa("mapaLeafletCont", "Mapa interactivo (arrastra el pin para ajustar el punto)");
     });
     $("btnCerrarMapaGrande").addEventListener("click", cerrarMapaGrande);
   }
