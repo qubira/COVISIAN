@@ -5086,9 +5086,9 @@ if (location.protocol === "file:") {
     if (lt) mzLt.push("Lt. " + lt);
 
     var partes = [];
-    var zonaConMzLt = [zona, mzLt.join(" ")].filter(Boolean).join(" ");
-    if (zonaConMzLt) partes.push(zonaConMzLt);
+    if (zona) partes.push(zona);
     if (via) partes.push(via);
+    if (mzLt.length) partes.push(mzLt.join(" "));
 
     $("direccion").value = partes.join(", ");
     $("direccion").dispatchEvent(new Event("input", { bubbles: true }));
