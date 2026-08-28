@@ -1088,7 +1088,7 @@ if (location.protocol === "file:") {
           <select id="tipo">
             <option value="">Seleccione...</option>
             <option value="PREPAGO">PREPAGO</option>
-            <option value="POSTPAGO">POSTPAGO</option>
+            <option value="POSTPAGO" selected>POSTPAGO</option>
             <option value="ESPECIALES">ESPECIALES</option>
             <option value="OTROS">OTROS</option>
           </select>
@@ -3603,9 +3603,11 @@ if (location.protocol === "file:") {
     $("departamento").value = "";
     $("plan").value = "";
     $("rPlan").value = "";
-    $("tipo").value = "";
-    $("rTipo").value = "";
-    poblarSubtipoEncabezado("", "");
+    // TIPO/SUBTIPO vuelven al default POSTPAGO/CAEQ (el mas usado) en vez de quedar en blanco —
+    // ver el mismo default en initAutoguardado() para la primera carga de la pagina.
+    $("tipo").value = "POSTPAGO";
+    $("rTipo").value = "POSTPAGO";
+    poblarSubtipoEncabezado("POSTPAGO", "CAEQ");
     $("direccion").value = "";
     $("direccion").disabled = false;
     $("chkFiltroAvanzadoDireccion").checked = false;
@@ -3633,7 +3635,7 @@ if (location.protocol === "file:") {
     $("packAviso").innerHTML = "";
     $("campoMotivo").classList.add("oculto");
     $("campoMotivoOtro").classList.add("oculto");
-    poblarSubtipo("", "");
+    poblarSubtipo("POSTPAGO", "CAEQ");
     $("mensajeEnvio").innerHTML = "";
     $("bannerRestaurado").classList.add("oculto");
     renderComparar();
@@ -3719,6 +3721,11 @@ if (location.protocol === "file:") {
       marcarEstadoAutoguardado("local", "Formulario restaurado · última actualización " + horaCorta());
     } else {
       draftId = generarDraftId();
+      // TIPO ya arranca en POSTPAGO (option "selected" en el HTML) porque es el mas usado;
+      // SUBTIPO se arma con JS (sus opciones dependen del TIPO), asi que necesita este
+      // llamado aparte para que tambien arranque en CAEQ en vez de vacio. Se puede cambiar
+      // libremente despues, esto solo evita tener que elegirlo a mano en cada llamada nueva.
+      poblarSubtipo("POSTPAGO", "CAEQ");
     }
 
     $("btnDescartarBorrador").addEventListener("click", function(){
