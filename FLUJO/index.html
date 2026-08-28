@@ -3380,6 +3380,10 @@ if (location.protocol === "file:") {
     // para que la lista ya se vea filtrada igual que antes de recargar (si no, al refrescar la
     // pagina el cuadro de busqueda y la lista quedaban vacios aunque el equipo si seguia elegido).
     $("simEquipoBuscar").value = estado.simEquipoBuscar || "";
+    // repuebla las opciones ANTES de asignarles el valor guardado (con los filtros todavia
+    // vacios, asi el <option> que hace falta para el valor restaurado ya existe) — si no, el
+    // navegador ignora un .value que no matchea ningun <option> presente.
+    actualizarOpcionesFiltrosSimulador();
     $("filtroSimRam").value = estado.filtroSimRam || "";
     $("filtroSimRom").value = estado.filtroSimRom || "";
     $("filtroSimGama").value = estado.filtroSimGama || "";
@@ -3578,6 +3582,7 @@ if (location.protocol === "file:") {
     $("codFinanciamiento").value = "1";
     $("simEquipoBuscar").value = "";
     ["filtroSimRam", "filtroSimRom", "filtroSimGama", "filtroSimCamara", "filtroSimBateria"].forEach(function(id){ $(id).value = ""; });
+    actualizarOpcionesFiltrosSimulador();
     $("simListaEquipos").innerHTML = '<div class="simulador-lista-vacio">Escriba, filtre, o presione "Filtrar todo" para ver el catálogo completo.</div>';
     $("simTipoAlta").value = "";
     $("simPlanDestino").value = "";
@@ -5146,29 +5151,80 @@ if (location.protocol === "file:") {
     });
   }
 
-  function initFiltrosSimuladorEquipo(){
-    var rams = {}, roms = {}, gamas = {}, camaras = {}, baterias = {};
-    DATA.specs.forEach(function(s){
-      if (s.ram != null && s.ram !== "") rams[String(s.ram)] = true;
-      if (s.memoria != null && s.memoria !== "") roms[String(s.memoria)] = true;
-      if (s.gama) gamas[s.gama] = true;
-      if (s.camaraPrincipal != null && s.camaraPrincipal !== "") camaras[String(s.camaraPrincipal)] = true;
-      if (s.bateria != null && s.bateria !== "") baterias[String(s.bateria)] = true;
-    });
-    var numerico = function(a, b){ return parseFloat(a) - parseFloat(b); };
-    poblarSelectOrdenado("filtroSimRam", Object.keys(rams), " GB", numerico);
-    poblarSelectOrdenado("filtroSimRom", Object.keys(roms), " GB", numerico);
-    poblarSelectOrdenado("filtroSimGama", Object.keys(gamas), "", function(a, b){
+  // Cada filtro solo ofrece valores que TODAVIA dan al menos un resultado, cruzados con zona/
+  // TIPO/SUBTIPO/texto y con los OTROS filtros ya elegidos (cascada, tipo filtro de e-commerce)
+  // — antes el <select> se llenaba una sola vez con TODOS los valores que existen en el
+  // catalogo entero (equipos_specs.json completo), sin importar si ese equipo puntual tenia
+  // stock en la zona o coincidia con TIPO/SUBTIPO: se podia elegir una RAM real pero de un
+  // equipo que no aplicaba nada aca, y la lista quedaba vacia sin ninguna pista de por que.
+  var CAMPOS_FILTRO_SIMULADOR = [
+    { id: "filtroSimRam", specsKey: "ram", sufijo: " GB", comparador: comparadorNumerico },
+    { id: "filtroSimRom", specsKey: "memoria", sufijo: " GB", comparador: comparadorNumerico },
+    { id: "filtroSimGama", specsKey: "gama", sufijo: "", comparador: function(a, b){
       return ORDEN_GAMA.indexOf(a) - ORDEN_GAMA.indexOf(b);
+    } },
+    { id: "filtroSimCamara", specsKey: "camaraPrincipal", sufijo: " MP", comparador: comparadorNumerico },
+    { id: "filtroSimBateria", specsKey: "bateria", sufijo: " mAh", comparador: comparadorNumerico }
+  ];
+
+  function comparadorNumerico(a, b){ return parseFloat(a) - parseFloat(b); }
+
+  // Lista de equipos que cumplen texto + zona + TIPO/SUBTIPO + todos los filtros YA elegidos
+  // EXCEPTO el que se pasa en idFiltroExcluido — es la base para calcular que opciones tiene
+  // sentido ofrecerle a ESE filtro puntual (si se incluyera a si mismo, nunca ofreceria mas
+  // que su propio valor actual).
+  function equiposBaseParaFiltroSimulador(idFiltroExcluido){
+    var q = normBusqueda($("simEquipoBuscar").value);
+    var valores = {};
+    CAMPOS_FILTRO_SIMULADOR.forEach(function(f){
+      valores[f.id] = f.id === idFiltroExcluido ? "" : $(f.id).value;
     });
-    poblarSelectOrdenado("filtroSimCamara", Object.keys(camaras), " MP", numerico);
-    poblarSelectOrdenado("filtroSimBateria", Object.keys(baterias), " mAh", numerico);
+    return DATA.equiposPlanes.filter(function(nombre){
+      if (q){
+        var n = norm(nombre);
+        if (!q.split(" ").every(function(tok){ return tok && n.indexOf(tok) !== -1; })) return false;
+      }
+      if (!equipoTieneStockEnZona(nombre)) return false;
+      if (!equipoCoincideTipoSubtipo(nombre)) return false;
+      var hayFiltroActivo = CAMPOS_FILTRO_SIMULADOR.some(function(f){ return valores[f.id]; });
+      if (hayFiltroActivo){
+        var specs = mejorMatchSpecs(nombre);
+        if (!specs) return false;
+        for (var i = 0; i < CAMPOS_FILTRO_SIMULADOR.length; i++){
+          var f = CAMPOS_FILTRO_SIMULADOR[i];
+          if (valores[f.id] && String(specs[f.specsKey]) !== valores[f.id]) return false;
+        }
+      }
+      return true;
+    });
+  }
+
+  function actualizarOpcionesFiltrosSimulador(){
+    CAMPOS_FILTRO_SIMULADOR.forEach(function(f){
+      var base = equiposBaseParaFiltroSimulador(f.id);
+      var disponibles = {};
+      base.forEach(function(nombre){
+        var specs = mejorMatchSpecs(nombre);
+        if (!specs) return;
+        var v = specs[f.specsKey];
+        if (v != null && v !== "") disponibles[String(v)] = true;
+      });
+      var sel = $(f.id);
+      var actual = sel.value;
+      sel.innerHTML = '<option value="">Todas</option>';
+      poblarSelectOrdenado(f.id, Object.keys(disponibles), f.sufijo, f.comparador);
+      // conserva la seleccion si sigue siendo valida; si ya no da ningun resultado en este
+      // contexto, se resetea sola en vez de quedar elegida apuntando a una lista vacia.
+      sel.value = disponibles[actual] ? actual : "";
+    });
   }
 
   // forzarTodo=true (boton "Filtrar todo"): ignora que no haya texto/filtros y lista TODO
   // el catalogo disponible para el departamento (ubicacion del guion de apertura) y el
   // TIPO/SUBTIPO elegidos, igual que "Buscar" con el cuadro vacio en el simulador real.
   function buscarEquiposSimulador(forzarTodo){
+    actualizarOpcionesFiltrosSimulador();
+
     var q = normBusqueda($("simEquipoBuscar").value);
     var ram = $("filtroSimRam").value;
     var rom = $("filtroSimRom").value;
@@ -5227,7 +5283,7 @@ if (location.protocol === "file:") {
   }
 
   function initSimuladorEquipos(){
-    initFiltrosSimuladorEquipo();
+    actualizarOpcionesFiltrosSimulador();
     // ojo: nunca pasar buscarEquiposSimulador directo como handler de evento — el navegador
     // le inyectaria el objeto Event como primer argumento (forzarTodo), que es "truthy" y
     // rompe el chequeo de "sin filtro" (paso ya vivido y corregido aca mismo).
