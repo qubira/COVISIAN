@@ -4683,11 +4683,11 @@ if (location.protocol === "file:") {
     if (forzarExoneracion7 || forzarCobro7 || !isNaN(mesesPerm)){
       var exonera7 = forzarExoneracion7 || (!forzarCobro7 && mesesPerm >= 6);
       $("contratoPenalidadScript").innerHTML = exonera7
-        ? ('<span style="color:var(--rojo);"><b>7.1. EXONERAR PENALIDAD</b> (permanencia mayor o igual a 6 meses ' +
+        ? ('<span style="color:var(--rojo);"><b style="color:var(--rojo);">7.1. EXONERAR PENALIDAD</b> (permanencia mayor o igual a 6 meses ' +
            '+ 1 día): Aplica para cualquier cliente en planta móvil SA y MT a partir del mes 6 + 1 día (180 días ' +
            'antes de fin de permanencia), puede exonerarse la penalidad.</span> Te recordamos que estaremos ' +
            'anulando el cobro de <b>S/ ' + monto7 + '</b> por penalidad vigente de su contrato anterior.')
-        : ('<span style="color:var(--rojo);"><b>7.2. SIN EXONERACIÓN DE PENALIDAD</b> (permanencia menor a 6 ' +
+        : ('<span style="color:var(--rojo);"><b style="color:var(--rojo);">7.2. SIN EXONERACIÓN DE PENALIDAD</b> (permanencia menor a 6 ' +
            'meses):</span> Recordarle que en su próxima facturación se le cobrará el monto de <b>S/ ' + monto7 +
            '</b> por concepto de Penalidad por su anterior equipo.');
     } else {
