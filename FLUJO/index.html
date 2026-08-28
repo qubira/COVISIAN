@@ -2325,7 +2325,7 @@ if (location.protocol === "file:") {
     // demas — sin esto, un solo error silencioso podia dejar sin usar, por ejemplo, el
     // buscador de EQUIPO (initAutocomplete) si algo antes de el en la lista fallaba.
     [initCodFinanciamiento, initPlanes, initAutocomplete, initComparar, initStockNacional,
-      initCosto, initSimuladorEquipos, initVerDetalleEquipo, initZoomEquipo, initExpandirMapas, initFiltroAvanzadoDireccion, initAgendarLlamada, initCasosAgendados, initAutoguardado, initEncabezadoColapsable, initCambiosHistoricos, initInvalidarValidacionesContrato, initContabilizarTiempo, initResaltarCamposLlenos, initTipoSubtipoEncabezado, precargarCicloContrato, actualizarContrato, actualizarSimuladorFinanciamiento, actualizarEncabezado].forEach(function(fn){
+      initCosto, initSimuladorEquipos, initVerDetalleEquipo, initZoomEquipo, initExpandirMapas, initFiltroAvanzadoDireccion, initAgendarLlamada, initCasosAgendados, initAutoguardado, initEncabezadoColapsable, initCambiosHistoricos, initInvalidarValidacionesContrato, initContabilizarTiempo, initResaltarCamposLlenos, initTipoSubtipoEncabezado, initSuprimirAutocompletePago, precargarCicloContrato, actualizarContrato, actualizarSimuladorFinanciamiento, actualizarEncabezado].forEach(function(fn){
       try{ fn(); }catch(err){ console.error("Fallo al inicializar " + fn.name + ":", err); }
     });
   }).catch(function(err){
@@ -3509,6 +3509,10 @@ if (location.protocol === "file:") {
     detenerYReiniciarTiempoGestion();
 
     document.getElementById("ficha").reset();
+    // form.reset() no restaura el atributo readonly (solo valores/checked) — sin esto, un
+    // campo que ya se toco en ESTA llamada quedaria editable de una para la SIGUIENTE, sin el
+    // blindaje anti-sugerencia-de-pago de Chrome.
+    IDS_BLINDAR_AUTOCOMPLETE_PAGO.forEach(blindarCampoDeAutocompletePago);
     seleccionCobertura = null;
     equipoActual = null;
     equiposAComparar = [];
@@ -5696,6 +5700,29 @@ if (location.protocol === "file:") {
 
     $("rTipo").value = $("tipo").value;
     poblarSubtipoEncabezado($("tipo").value, $("subtipo").value);
+  }
+
+  // Chrome a veces sugiere "métodos de pago" (chip de Google Pay) encima de campos de
+  // numero/telefono vacios, IGNORANDO autocomplete="off" — eso es un comportamiento especial
+  // de Chrome para ese tipo de sugerencia, no algo que la pagina pueda desactivar por atributo.
+  // El truco que si funciona de forma confiable: marcar el campo como readonly hasta que el
+  // agente lo toca, y sacarle el readonly justo al enfocarlo (antes de que llegue la primera
+  // tecla) — un campo readonly no entra en la evaluacion de Chrome para esa sugerencia.
+  var IDS_BLINDAR_AUTOCOMPLETE_PAGO = ["guionAni", "guionAniReferencia", "guionDni", "guionNumero",
+    "zondeoNumeroPedidoPendiente", "zondeoNuevoNumero", "contratoTelRef1", "contratoTelRef2"];
+
+  function blindarCampoDeAutocompletePago(id){
+    var el = $(id);
+    if (!el) return;
+    el.setAttribute("readonly", "readonly");
+    el.addEventListener("focus", function quitarReadonly(){
+      el.removeAttribute("readonly");
+      el.removeEventListener("focus", quitarReadonly);
+    });
+  }
+
+  function initSuprimirAutocompletePago(){
+    IDS_BLINDAR_AUTOCOMPLETE_PAGO.forEach(blindarCampoDeAutocompletePago);
   }
 
   function initFiltroAvanzadoDireccion(){
