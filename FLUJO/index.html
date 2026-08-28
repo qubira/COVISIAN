@@ -4500,9 +4500,10 @@ if (location.protocol === "file:") {
     "importante que estés esperando DURANTE TODO EL RANGO HORARIO hasta que llegue el Delivery, toma en cuenta " +
     "que el motorizado no realiza una coordinación previa, se comunicará contigo cuando esté en la dirección de " +
     "entrega y es importante que estés atento a tu teléfono ya que puede ser por llamada, mensaje y/o WhatsApp. " +
-    "También debes tener tu DNI a la mano, de igual forma pasarás un control biométrico. Recuerda coordinar una " +
-    "dirección de entrega exacta (calle o avenida, número o Mz. y Lt.) con 3 referencias exactas dentro de un " +
-    "rango máximo de 5 cuadras.";
+    "También debes tener tu DNI a la mano, de igual forma pasarás un control biométrico. " +
+    "<span style=\"color:var(--rojo);font-weight:700;\">Recuerda coordinar una dirección de entrega exacta " +
+    "(calle o avenida, número o Mz. y Lt.) con 3 referencias exactas dentro de un rango máximo de 5 " +
+    "cuadras.</span>";
 
   function actualizarContrato(){
     // --- 1. Validacion de datos personales ---
@@ -4543,8 +4544,10 @@ if (location.protocol === "file:") {
         "hasta que llegue el Delivery, toma en cuenta que el motorizado no realiza una coordinación previa, se " +
         "comunicará contigo cuando esté en la dirección de entrega y es importante que estés atento a tu " +
         "teléfono ya que puede ser por llamada, mensaje y/o WhatsApp. También debes tener tu DNI a la mano, de " +
-        "igual forma pasarás un control biométrico. Recuerda coordinar una dirección de entrega exacta (calle o " +
-        "avenida, número o Mz. y Lt.) con 3 referencias exactas dentro de un rango máximo de 5 cuadras.";
+        "igual forma pasarás un control biométrico. " +
+        "<span style=\"color:var(--rojo);font-weight:700;\">Recuerda coordinar una dirección de entrega exacta " +
+        "(calle o avenida, número o Mz. y Lt.) con 3 referencias exactas dentro de un rango máximo de 5 " +
+        "cuadras.</span>";
     } else {
       $("contratoDeliveryScript").innerHTML = '<span style="color:var(--gris);">Seleccione EXPRESS o REGULAR.</span>';
     }
