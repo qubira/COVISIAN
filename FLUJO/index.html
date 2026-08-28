@@ -1711,7 +1711,7 @@ if (location.protocol === "file:") {
     </div>
 
     <!-- 7. En caso de penalidad -->
-    <div class="campo">
+    <div class="campo" id="seccionContratoPenalidad">
       <label class="contrato-titulo">7. En caso de Penalidad</label>
       <div class="fila oculto" id="filaContratoPenalidadManual" style="margin-top:6px;">
         <div class="campo" style="margin:0;">
@@ -3659,6 +3659,7 @@ if (location.protocol === "file:") {
     $("contratoBiometriaAviso").classList.add("oculto");
     $("contratoPenalidadScript").innerHTML = "";
     $("filaContratoPenalidadManual").classList.remove("oculto");
+    $("seccionContratoPenalidad").classList.remove("oculto");
     $("contratoEquipoScript").innerHTML = "";
     $("contratoFidelizacionScript").innerHTML = "";
     $("contratoCasaChecklist").classList.add("oculto");
@@ -4680,18 +4681,27 @@ if (location.protocol === "file:") {
     // cliente va a pagarla sin importar la permanencia.
     var libreEl7 = document.querySelector('input[name=zondeoNumeroLibrePenalidad]:checked');
     var forzarCobro7 = !!(libreEl7 && libreEl7.value === "ASUME_DEUDA");
-    if (forzarCobro7 || !isNaN(mesesPerm)){
-      var exonera7 = !forzarCobro7 && mesesPerm >= 6;
-      $("contratoPenalidadScript").innerHTML = exonera7
-        ? ('<span style="color:var(--rojo);"><b style="color:var(--rojo);">7.1. EXONERAR PENALIDAD</b> (permanencia mayor o igual a 6 meses ' +
-           '+ 1 día): Aplica para cualquier cliente en planta móvil SA y MT a partir del mes 6 + 1 día (180 días ' +
-           'antes de fin de permanencia), puede exonerarse la penalidad.</span> Te recordamos que estaremos ' +
-           'anulando el cobro de <b>S/ ' + monto7 + '</b> por penalidad vigente de su contrato anterior.')
-        : ('<span style="color:var(--rojo);"><b style="color:var(--rojo);">7.2. SIN EXONERACIÓN DE PENALIDAD</b> (permanencia menor a 6 ' +
-           'meses):</span> Recordarle que en su próxima facturación se le cobrará el monto de <b>S/ ' + monto7 +
-           '</b> por concepto de Penalidad por su anterior equipo.');
+    // si en "¿El numero esta libre de penalidad?" el agente confirmo que SI, ya no hay ninguna
+    // deuda vieja que informar (se va a renovar con un numero limpio) — se saca el paso 7
+    // completo del guion en vez de mostrar 7.1/7.2, que ya no aplicarian a nada.
+    var numeroLibreConfirmado7 = !!(libreEl7 && libreEl7.value === "SI");
+    if (numeroLibreConfirmado7){
+      $("seccionContratoPenalidad").classList.add("oculto");
     } else {
-      $("contratoPenalidadScript").innerHTML = '<span style="color:var(--gris);">Ingrese la permanencia del contrato anterior para saber si aplica exoneración.</span>';
+      $("seccionContratoPenalidad").classList.remove("oculto");
+      if (forzarCobro7 || !isNaN(mesesPerm)){
+        var exonera7 = !forzarCobro7 && mesesPerm >= 6;
+        $("contratoPenalidadScript").innerHTML = exonera7
+          ? ('<span style="color:var(--rojo);"><b style="color:var(--rojo);">7.1. EXONERAR PENALIDAD</b> (permanencia mayor o igual a 6 meses ' +
+             '+ 1 día): Aplica para cualquier cliente en planta móvil SA y MT a partir del mes 6 + 1 día (180 días ' +
+             'antes de fin de permanencia), puede exonerarse la penalidad.</span> Te recordamos que estaremos ' +
+             'anulando el cobro de <b>S/ ' + monto7 + '</b> por penalidad vigente de su contrato anterior.')
+          : ('<span style="color:var(--rojo);"><b style="color:var(--rojo);">7.2. SIN EXONERACIÓN DE PENALIDAD</b> (permanencia menor a 6 ' +
+             'meses):</span> Recordarle que en su próxima facturación se le cobrará el monto de <b>S/ ' + monto7 +
+             '</b> por concepto de Penalidad por su anterior equipo.');
+      } else {
+        $("contratoPenalidadScript").innerHTML = '<span style="color:var(--gris);">Ingrese la permanencia del contrato anterior para saber si aplica exoneración.</span>';
+      }
     }
 
     // --- 8. Equipo (contado / financiado), usando lo ya calculado en COSTO ---
