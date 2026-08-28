@@ -4673,15 +4673,15 @@ if (location.protocol === "file:") {
 
     var mesesPerm = parseFloat($("contratoPermanenciaMeses").value);
     var monto7 = $("contratoMontoPenalidad").value.trim() || "XXX";
-    // el resultado de "¿El numero esta libre de penalidad?" en SONDEO ya responde esto
-    // directamente, sin depender de la permanencia calculada: SI (libre) fuerza 7.1
-    // EXONERAR; "Cliente asume deuda" (el cliente va a pagarla) fuerza 7.2 SIN EXONERAR.
-    // NO (bloqueado) o sin contestar cae al chequeo normal de permanencia >= 6 meses.
+    // 7.1 EXONERAR solo sale cuando la permanencia calculada (a partir de la fecha que pidio
+    // SONDEO) realmente ya exonera (>= 6 meses + 1 dia) — SI/NO de "¿El numero esta libre de
+    // penalidad?" no cambian esto, esa pregunta es sobre si desbloquear el SIMULADOR, no sobre
+    // si la deuda vieja se exonera. "Cliente asume deuda" si fuerza 7.2 directamente: el
+    // cliente va a pagarla sin importar la permanencia.
     var libreEl7 = document.querySelector('input[name=zondeoNumeroLibrePenalidad]:checked');
-    var forzarExoneracion7 = !!(libreEl7 && libreEl7.value === "SI");
     var forzarCobro7 = !!(libreEl7 && libreEl7.value === "ASUME_DEUDA");
-    if (forzarExoneracion7 || forzarCobro7 || !isNaN(mesesPerm)){
-      var exonera7 = forzarExoneracion7 || (!forzarCobro7 && mesesPerm >= 6);
+    if (forzarCobro7 || !isNaN(mesesPerm)){
+      var exonera7 = !forzarCobro7 && mesesPerm >= 6;
       $("contratoPenalidadScript").innerHTML = exonera7
         ? ('<span style="color:var(--rojo);"><b style="color:var(--rojo);">7.1. EXONERAR PENALIDAD</b> (permanencia mayor o igual a 6 meses ' +
            '+ 1 día): Aplica para cualquier cliente en planta móvil SA y MT a partir del mes 6 + 1 día (180 días ' +
