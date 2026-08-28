@@ -1229,7 +1229,10 @@ if (location.protocol === "file:") {
 
     <div class="campo oculto" id="campoZondeoNumeroPedidoPendiente">
       <label for="zondeoNumeroPedidoPendiente">Pida otro número móvil para evaluar (reemplaza al número a evaluar)</label>
-      <input type="tel" id="zondeoNumeroPedidoPendiente" maxlength="20" placeholder="Otro número" autocomplete="off">
+      <div class="fila-input-btn">
+        <input type="tel" id="zondeoNumeroPedidoPendiente" maxlength="20" placeholder="Otro número" autocomplete="off">
+        <button type="button" class="btn-mini" id="btnZondeoNumeroPedidoNuevoNumero" title="Usar este número como número a evaluar (también en CONTRATO)">Nuevo número a evaluar</button>
+      </div>
     </div>
 
     <div class="campo">
@@ -1248,7 +1251,10 @@ if (location.protocol === "file:") {
 
     <div class="campo oculto" id="campoZondeoNuevoNumero">
       <label for="zondeoNuevoNumero">Nuevo número para renovar (reemplaza al número a evaluar)</label>
-      <input type="tel" id="zondeoNuevoNumero" maxlength="20" placeholder="Nuevo número" autocomplete="off">
+      <div class="fila-input-btn">
+        <input type="tel" id="zondeoNuevoNumero" maxlength="20" placeholder="Nuevo número" autocomplete="off">
+        <button type="button" class="btn-mini" id="btnZondeoNuevoNumeroNuevoNumero" title="Usar este número como número a evaluar (también en CONTRATO)">Nuevo número a evaluar</button>
+      </div>
     </div>
 
     <div class="fila" style="align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:14px;">
@@ -3806,9 +3812,12 @@ if (location.protocol === "file:") {
       actualizarHabilitacionPostCobertura();
     });
   });
-  $("zondeoNumeroPedidoPendiente").addEventListener("input", function(){
-    if (!this.value.trim()) return;
-    $("guionNumero").value = this.value;
+  // reemplaza el "numero para evaluar" del guion (y por lo tanto lo que lee CONTRATO) con un
+  // clic deliberado — antes se actualizaba solo en cada tecla mientras el agente escribia,
+  // asi que CONTRATO se veia con el numero a medio escribir (ej: "9", despues "92"...).
+  $("btnZondeoNumeroPedidoNuevoNumero").addEventListener("click", function(){
+    if (!$("zondeoNumeroPedidoPendiente").value.trim()) return;
+    $("guionNumero").value = $("zondeoNumeroPedidoPendiente").value;
     $("guionNumero").dispatchEvent(new Event("input", { bubbles: true }));
   });
 
@@ -3859,13 +3868,24 @@ if (location.protocol === "file:") {
       $("campoZondeoNuevoNumero").classList.remove("oculto");
     }
   }
-  $("zondeoFechaPenalidad").addEventListener("input", calcularZondeoPenalidad);
+  // auto-inserta las "/" mientras se escribe (10 -> 10/, 1002 -> 10/02/, etc.) — el agente
+  // solo tipea los 8 numeros de corrido, no hace falta que el mismo escriba las barras.
+  function formatearFechaConBarras(valor){
+    var digitos = valor.replace(/\D/g, "").slice(0, 8);
+    var out = digitos.slice(0, 2);
+    if (digitos.length >= 2) out += "/" + digitos.slice(2, 4);
+    if (digitos.length >= 4) out += "/" + digitos.slice(4, 8);
+    return out;
+  }
+  $("zondeoFechaPenalidad").addEventListener("input", function(){
+    this.value = formatearFechaConBarras(this.value);
+    calcularZondeoPenalidad();
+  });
 
-  // el numero nuevo reemplaza al "numero para evaluar" del guion — dispara el mismo evento
-  // "input" que btnNumeroIgualAni, asi CONTRATO (que lee guionNumero) se actualiza solo.
-  $("zondeoNuevoNumero").addEventListener("input", function(){
-    if (!this.value.trim()) return;
-    $("guionNumero").value = this.value;
+  // mismo botón explícito que arriba, para el numero nuevo de penalidad.
+  $("btnZondeoNuevoNumeroNuevoNumero").addEventListener("click", function(){
+    if (!$("zondeoNuevoNumero").value.trim()) return;
+    $("guionNumero").value = $("zondeoNuevoNumero").value;
     $("guionNumero").dispatchEvent(new Event("input", { bubbles: true }));
   });
 
