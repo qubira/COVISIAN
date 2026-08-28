@@ -1257,11 +1257,25 @@ if (location.protocol === "file:") {
       <div id="zondeoResultado" style="margin-top:8px;"></div>
     </div>
 
+    <div class="guion-texto oculto" id="zondeoScriptMontoPendiente" style="margin-top:8px;"></div>
+
     <div class="campo oculto" id="campoZondeoNuevoNumero">
       <label for="zondeoNuevoNumero">Nuevo número para renovar (reemplaza al número a evaluar)</label>
       <div class="fila-input-btn">
         <input type="tel" id="zondeoNuevoNumero" maxlength="20" placeholder="Nuevo número" autocomplete="off">
         <button type="button" class="btn-mini" id="btnZondeoNuevoNumeroNuevoNumero" title="Usar este número como número a evaluar (también en CONTRATO)">Nuevo número a evaluar</button>
+      </div>
+    </div>
+
+    <div class="campo oculto" id="campoZondeoLibrePenalidad">
+      <label>¿El número está libre de penalidad?</label>
+      <div class="radios">
+        <label><input type="radio" name="zondeoNumeroLibrePenalidad" value="SI"> SI</label>
+        <label><input type="radio" name="zondeoNumeroLibrePenalidad" value="NO"> NO</label>
+        <label><input type="radio" name="zondeoNumeroLibrePenalidad" value="ASUME_DEUDA"> Cliente asume deuda</label>
+      </div>
+      <div class="aviso err oculto" id="zondeoLibrePenalidadBloqueo" style="margin-top:8px;">
+        🔒 El SIMULADOR DE TERMINALES queda bloqueado hasta resolver la penalidad de este número (o que el cliente asuma la deuda).
       </div>
     </div>
 
@@ -3134,6 +3148,7 @@ if (location.protocol === "file:") {
       zondeoPenalidadActiva: (document.querySelector('input[name=zondeoPenalidadActiva]:checked') || {}).value || "",
       zondeoFechaPenalidad: $("zondeoFechaPenalidad").value,
       zondeoNuevoNumero: $("zondeoNuevoNumero").value,
+      zondeoNumeroLibrePenalidad: (document.querySelector('input[name=zondeoNumeroLibrePenalidad]:checked') || {}).value || "",
       plan: $("plan").value,
       seleccionCobertura: seleccionCobertura,
       direccion: $("direccion").value,
@@ -3369,6 +3384,11 @@ if (location.protocol === "file:") {
     $("zondeoFechaPenalidad").value = estado.zondeoFechaPenalidad || "";
     $("zondeoNuevoNumero").value = estado.zondeoNuevoNumero || "";
     calcularZondeoPenalidad();
+    if (estado.zondeoNumeroLibrePenalidad){
+      var rZondeoLibre = document.querySelector('input[name=zondeoNumeroLibrePenalidad][value="' + estado.zondeoNumeroLibrePenalidad + '"]');
+      if (rZondeoLibre) rZondeoLibre.checked = true;
+      $("zondeoLibrePenalidadBloqueo").classList.toggle("oculto", estado.zondeoNumeroLibrePenalidad !== "NO");
+    }
 
     $("plan").value = estado.plan || "";
     $("rPlan").value = estado.plan || "";
@@ -3651,6 +3671,9 @@ if (location.protocol === "file:") {
     $("campoZondeoNuevoNumero").classList.add("oculto");
     $("campoZondeoNumeroPedidoPendiente").classList.add("oculto");
     $("zondeoResultado").innerHTML = "";
+    $("zondeoScriptMontoPendiente").classList.add("oculto");
+    $("campoZondeoLibrePenalidad").classList.add("oculto");
+    $("zondeoLibrePenalidadBloqueo").classList.add("oculto");
 
     casoAgendadoActivoId = null;
 
@@ -3709,6 +3732,8 @@ if (location.protocol === "file:") {
     // armando el equipo mientras termina de conversar esos otros datos con el cliente.
     if (seleccionCobertura && sondeoRespondido()){
       habilitar("fs-credito");
+    } else {
+      deshabilitar("fs-credito");
     }
     if (seleccionCobertura && datosCompletos()){
       habilitar("fs-resumen");
@@ -3720,7 +3745,15 @@ if (location.protocol === "file:") {
   function sondeoRespondido(){
     var zondeoPedidoEl = document.querySelector('input[name=zondeoPedidoPendiente]:checked');
     var zondeoPenalidadEl = document.querySelector('input[name=zondeoPenalidadActiva]:checked');
-    return !!(zondeoPedidoEl && zondeoPenalidadEl);
+    if (!zondeoPedidoEl || !zondeoPenalidadEl) return false;
+    // mientras el numero evaluado siga con penalidad activa (caja "campoZondeoLibrePenalidad"
+    // visible), el SIMULADOR DE TERMINALES queda bloqueado salvo que el agente marque que el
+    // numero SI esta libre o que el cliente asume la deuda — un NO (o sin contestar) bloquea.
+    if (!$("campoZondeoLibrePenalidad").classList.contains("oculto")){
+      var libreEl = document.querySelector('input[name=zondeoNumeroLibrePenalidad]:checked');
+      if (!libreEl || libreEl.value === "NO") return false;
+    }
+    return true;
   }
 
   function datosCompletos(){
@@ -3842,11 +3875,44 @@ if (location.protocol === "file:") {
       if (!esSi){
         $("zondeoFechaPenalidad").value = "";
         $("zondeoResultado").innerHTML = "";
-        $("campoZondeoNuevoNumero").classList.add("oculto");
+        ocultarBloquePenalidadActiva();
       }
       actualizarHabilitacionPostCobertura();
     });
   });
+
+  // si el agente cambia de opinion (SI libre / NO / cliente asume deuda), eso decide si el
+  // SIMULADOR DE TERMINALES sigue bloqueado o no — ver el chequeo en sondeoRespondido().
+  document.querySelectorAll('input[name=zondeoNumeroLibrePenalidad]').forEach(function(r){
+    r.addEventListener("change", function(){
+      var esNo = document.querySelector('input[name=zondeoNumeroLibrePenalidad]:checked').value === "NO";
+      $("zondeoLibrePenalidadBloqueo").classList.toggle("oculto", !esNo);
+      actualizarHabilitacionPostCobertura();
+    });
+  });
+
+  // esconde tanto el guion de "monto pendiente" como la pregunta de "libre de penalidad" —
+  // los dos solo aplican mientras el numero evaluado SIGUE con penalidad activa (caso rojo).
+  function ocultarBloquePenalidadActiva(){
+    $("zondeoScriptMontoPendiente").classList.add("oculto");
+    $("campoZondeoNuevoNumero").classList.add("oculto");
+    $("campoZondeoLibrePenalidad").classList.add("oculto");
+  }
+
+  // guion para que el agente le informe al cliente el cargo pendiente si renueva con el
+  // numero que TODAVIA tiene penalidad. El monto no se conoce en este punto del guion (recien
+  // se pide en CONTRATO 7. Penalidad), asi que ese dato queda como texto literal entre
+  // corchetes para que el agente lo diga de viva voz, igual que "[DIA]"/"[rango horario]"
+  // en el guion de Delivery cuando todavia no hay cobertura confirmada.
+  function actualizarScriptMontoPendiente(){
+    var titular = nombreTitularActual() || "[NOMBRE DEL TITULAR]";
+    var numero = $("guionNumero").value.trim() || "[NÚMERO A EVALUAR]";
+    $("zondeoScriptMontoPendiente").innerHTML =
+      "<b>" + titular + "</b>, te comentamos que tienes un monto pendiente de <b>[monto pendiente]</b>, " +
+      "si en caso quieres que renovemos con el <b>" + numero + "</b>, en tu próxima factura se te " +
+      "adicionará ese cargo.<br>Se podría evitar este cargo, ¿tienes otro número a evaluar?";
+    $("zondeoScriptMontoPendiente").classList.remove("oculto");
+  }
 
   function calcularZondeoPenalidad(){
     var out = $("zondeoResultado");
@@ -3854,14 +3920,16 @@ if (location.protocol === "file:") {
     var m = txt.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
     if (!m){
       out.innerHTML = "";
-      $("campoZondeoNuevoNumero").classList.add("oculto");
+      ocultarBloquePenalidadActiva();
+      actualizarHabilitacionPostCobertura();
       return;
     }
     var dia = Number(m[1]), mes = Number(m[2]), anio = Number(m[3]);
     var fecha = new Date(anio, mes - 1, dia);
     if (isNaN(fecha.getTime()) || fecha.getDate() !== dia || fecha.getMonth() !== mes - 1){
       out.innerHTML = '<span style="color:var(--rojo);">Fecha inválida.</span>';
-      $("campoZondeoNuevoNumero").classList.add("oculto");
+      ocultarBloquePenalidadActiva();
+      actualizarHabilitacionPostCobertura();
       return;
     }
     // umbral real de exoneracion: permanencia >= 6 meses + 1 dia desde esa fecha
@@ -3871,11 +3939,14 @@ if (location.protocol === "file:") {
     umbral.setHours(0, 0, 0, 0);
     if (hoy >= umbral){
       out.innerHTML = '<span style="color:var(--verde);font-weight:700;">✅ Sin riesgo de penalidad: ya pasaron más de 6 meses y 1 día desde la última renovación. Puede renovar sin problema con este número.</span>';
-      $("campoZondeoNuevoNumero").classList.add("oculto");
+      ocultarBloquePenalidadActiva();
     } else {
       out.innerHTML = '<span style="color:var(--rojo);font-weight:700;">⚠ Todavía no se puede renovar un equipo con este número (aún no pasan los 6 meses + 1 día de permanencia). Anote un número distinto para evaluar.</span>';
       $("campoZondeoNuevoNumero").classList.remove("oculto");
+      $("campoZondeoLibrePenalidad").classList.remove("oculto");
+      actualizarScriptMontoPendiente();
     }
+    actualizarHabilitacionPostCobertura();
   }
   // auto-inserta las "/" mientras se escribe (10 -> 10/, 1002 -> 10/02/, etc.) — el agente
   // solo tipea los 8 numeros de corrido, no hace falta que el mismo escriba las barras.
@@ -6859,6 +6930,7 @@ if (location.protocol === "file:") {
       zondeoPenalidadActiva: (document.querySelector('input[name=zondeoPenalidadActiva]:checked') || {}).value || "",
       zondeoFechaPenalidad: $("zondeoFechaPenalidad").value.trim(),
       zondeoNuevoNumero: $("zondeoNuevoNumero").value.trim(),
+      zondeoNumeroLibrePenalidad: (document.querySelector('input[name=zondeoNumeroLibrePenalidad]:checked') || {}).value || "",
       plan: $("plan").value.trim(),
       distrito: $("distrito").value.trim(),
       provincia: $("provincia").value.trim(),
