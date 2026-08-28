@@ -574,35 +574,6 @@
   }
   #avisoLaboratorioAplicado.visible{ opacity:1; transform:translate(-50%, 0); }
 
-  /* Panel flotante y arrastrable del contador de tiempo de gestion — z-index bien alto para
-     quedar siempre en primer plano, por encima incluso de los modales (z-index:300) y las
-     alertas de casos agendados (z-index:900). */
-  .panel-flotante-tiempo{
-    position:fixed; top:80px; right:16px; z-index:9999; background:#fff;
-    border:2px solid var(--azul); border-radius:12px; width:170px; overflow:hidden;
-    box-shadow:0 10px 30px rgba(0,0,0,.25); user-select:none;
-  }
-  .panel-flotante-tiempo.oculto{ display:none; }
-  .panel-tiempo-header{
-    background:var(--azul); color:#fff; padding:7px 10px; display:flex; align-items:center;
-    justify-content:space-between; gap:8px; font-size:11.5px; font-weight:700; cursor:move;
-    touch-action:none;
-  }
-  .btn-cerrar-mini{
-    background:transparent; border:none; color:#fff; cursor:pointer; font-size:13px;
-    padding:0; line-height:1; flex-shrink:0;
-  }
-  .panel-tiempo-valor{
-    font-size:30px; font-weight:800; text-align:center; padding:12px 8px 4px;
-    color:var(--texto); font-variant-numeric:tabular-nums; transition:color .3s, background .3s;
-  }
-  .panel-tiempo-valor.alerta-tipificar{
-    color:#fff; background:var(--rojo); animation:pulsoTiempoGestion 1s ease-in-out infinite;
-  }
-  @keyframes pulsoTiempoGestion{ 0%,100%{ opacity:1; } 50%{ opacity:.55; } }
-  .panel-tiempo-nota{ text-align:center; font-size:10.5px; color:var(--gris); padding:0 10px 10px; }
-  body.tema-oscuro .panel-flotante-tiempo{ background:#1c2029; }
-
   #alertasCasosContainer{
     position:fixed; top:10px; right:10px; z-index:900; display:flex; flex-direction:column; gap:8px;
     max-width:340px;
@@ -875,15 +846,6 @@ if (location.protocol === "file:") {
 
 <div id="alertasCasosContainer"></div>
 <div class="oculto" id="avisoLaboratorioAplicado">✓ Ubicación importada desde el Laboratorio de Ubicación</div>
-
-<div class="panel-flotante-tiempo oculto" id="panelTiempoGestion">
-  <div class="panel-tiempo-header" id="panelTiempoHeader">
-    <span>⏱ Tiempo de gestión</span>
-    <button type="button" class="btn-cerrar-mini" id="btnCerrarPanelTiempo" title="Ocultar (el contador sigue corriendo)">✕</button>
-  </div>
-  <div class="panel-tiempo-valor" id="panelTiempoValor">00:00</div>
-  <div class="panel-tiempo-nota" id="panelTiempoNota">Inicio: --:--</div>
-</div>
 
 <div class="banner-sin-datos oculto" id="bannerSinDatos">
   ⛔ NO se pudieron cargar los datos (distritos, equipos, precios, etc.) — por eso nada se
@@ -5955,102 +5917,47 @@ if (location.protocol === "file:") {
   // ============ CONTABILIZAR TIEMPO DE GESTION ============
   // Cronometro que arranca cuando se presiona el boton por primera vez en la llamada, y NO
   // se reinicia solo hasta que la llamada se cierra de verdad (limpiarFormularioCompleto(),
-  // que corre tanto si se vendio como si no — ver cerrarLlamada()). Cada 5 minutos el numero
-  // se pone en rojo pulsante unos segundos como recordatorio para tipificar.
-  var TIEMPO_GESTION_UMBRAL_MS = 5 * 60 * 1000;
-  var TIEMPO_GESTION_ALERTA_DURACION_MS = 12000;
+  // que corre tanto si se vendio como si no — ver cerrarLlamada()).
+  //
+  // Vive en una VENTANA APARTE (tiempo-gestion.html, abierta con window.open) en vez de un
+  // panel flotante dentro de la pagina: un <div>, por mas position:fixed que tenga, nunca
+  // puede salirse de la ventana del navegador — es una ventana real del sistema operativo, asi
+  // que el agente si la puede arrastrar a cualquier parte de la pantalla (incluso a otro
+  // monitor) sin que quede atada a donde esta la pagina principal.
+  //
+  // La sincronizacion es por localStorage (misma idea que el Laboratorio de Ubicacion): esta
+  // pagina escribe la hora de inicio en localStorage al arrancar el cronometro y la borra al
+  // cerrar la llamada; tiempo-gestion.html la lee sola cada segundo (sin canal de mensajes
+  // directo) y arma su propia cuenta — asi funciona igual esté la ventana abierta o cerrada,
+  // y si el agente la cierra por accidente, el boton de aca la vuelve a abrir sin perder nada.
+  var LS_TIEMPO_GESTION_INICIO = "tiempo_gestion_inicio_ts";
   var tiempoGestionInicioTs = null;
-  var tiempoGestionIntervalo = null;
-  var tiempoGestionUltimoUmbral = 0;
-
-  function formatearTranscurrido(ms){
-    var totalSeg = Math.floor(ms / 1000);
-    var h = Math.floor(totalSeg / 3600);
-    var m = Math.floor((totalSeg % 3600) / 60);
-    var s = totalSeg % 60;
-    var mm = String(m).padStart(2, "0");
-    var ss = String(s).padStart(2, "0");
-    return h > 0 ? (h + ":" + mm + ":" + ss) : (mm + ":" + ss);
-  }
-
-  function actualizarTiempoGestion(){
-    if (!tiempoGestionInicioTs) return;
-    var transcurrido = Date.now() - tiempoGestionInicioTs;
-    $("panelTiempoValor").textContent = formatearTranscurrido(transcurrido);
-
-    var umbralActual = Math.floor(transcurrido / TIEMPO_GESTION_UMBRAL_MS);
-    if (umbralActual > tiempoGestionUltimoUmbral){
-      tiempoGestionUltimoUmbral = umbralActual;
-      var valorEl = $("panelTiempoValor");
-      valorEl.classList.add("alerta-tipificar");
-      clearTimeout(actualizarTiempoGestion._t);
-      actualizarTiempoGestion._t = setTimeout(function(){
-        valorEl.classList.remove("alerta-tipificar");
-      }, TIEMPO_GESTION_ALERTA_DURACION_MS);
-    }
-  }
+  var ventanaTiempoGestion = null;
 
   function iniciarTiempoGestionSiHaceFalta(){
     if (tiempoGestionInicioTs) return;
     tiempoGestionInicioTs = Date.now();
-    tiempoGestionUltimoUmbral = 0;
-    $("panelTiempoNota").textContent = "Inicio: " + horaCorta();
-    actualizarTiempoGestion();
-    clearInterval(tiempoGestionIntervalo);
-    tiempoGestionIntervalo = setInterval(actualizarTiempoGestion, 1000);
+    try{ localStorage.setItem(LS_TIEMPO_GESTION_INICIO, String(tiempoGestionInicioTs)); }catch(err){}
   }
 
   // Se llama desde limpiarFormularioCompleto() al cerrar la llamada (se haya vendido o no):
   // el contador de la SIGUIENTE llamada tiene que arrancar de cero, no seguir sumando.
   function detenerYReiniciarTiempoGestion(){
-    clearInterval(tiempoGestionIntervalo);
-    clearTimeout(actualizarTiempoGestion._t);
     tiempoGestionInicioTs = null;
-    tiempoGestionUltimoUmbral = 0;
-    $("panelTiempoValor").classList.remove("alerta-tipificar");
-    $("panelTiempoValor").textContent = "00:00";
-    $("panelTiempoNota").textContent = "Inicio: --:--";
-    $("panelTiempoGestion").classList.add("oculto");
+    try{ localStorage.removeItem(LS_TIEMPO_GESTION_INICIO); }catch(err){}
   }
 
   function initContabilizarTiempo(){
     $("btnContabilizarTiempo").addEventListener("click", function(){
       iniciarTiempoGestionSiHaceFalta();
-      $("panelTiempoGestion").classList.remove("oculto");
+      // si la ventana ya esta abierta, .focus() la trae al frente en vez de abrir otra
+      if (ventanaTiempoGestion && !ventanaTiempoGestion.closed){
+        ventanaTiempoGestion.focus();
+        return;
+      }
+      ventanaTiempoGestion = window.open("tiempo-gestion.html", "tiempoGestionCovisian",
+        "width=220,height=150,resizable=yes,scrollbars=no");
     });
-    $("btnCerrarPanelTiempo").addEventListener("click", function(){
-      // solo oculta la ventana flotante — el cronometro sigue corriendo por dentro, se puede
-      // volver a abrir con el boton del encabezado sin que se haya perdido el tiempo.
-      $("panelTiempoGestion").classList.add("oculto");
-    });
-
-    // Arrastrar el panel por su encabezado (mismo patron que la ventana del mapa expandido:
-    // position:fixed con left/top en px mientras se arrastra, con clamp para no salirse de
-    // la pantalla).
-    var panel = $("panelTiempoGestion");
-    var header = $("panelTiempoHeader");
-    var arrastrando = false, offsetX = 0, offsetY = 0;
-    header.addEventListener("pointerdown", function(e){
-      if (e.target.closest(".btn-cerrar-mini")) return;
-      var rect = panel.getBoundingClientRect();
-      arrastrando = true;
-      offsetX = e.clientX - rect.left;
-      offsetY = e.clientY - rect.top;
-      panel.style.top = rect.top + "px";
-      panel.style.left = rect.left + "px";
-      panel.style.right = "auto";
-      header.setPointerCapture(e.pointerId);
-      e.preventDefault();
-    });
-    header.addEventListener("pointermove", function(e){
-      if (!arrastrando) return;
-      var maxX = window.innerWidth - panel.offsetWidth;
-      var maxY = window.innerHeight - panel.offsetHeight;
-      panel.style.left = Math.min(Math.max(0, e.clientX - offsetX), Math.max(0, maxX)) + "px";
-      panel.style.top = Math.min(Math.max(0, e.clientY - offsetY), Math.max(0, maxY)) + "px";
-    });
-    header.addEventListener("pointerup", function(){ arrastrando = false; });
-    header.addEventListener("pointercancel", function(){ arrastrando = false; });
   }
 
   // ============ CAMBIOS HISTORICOS DE STOCK (equipos/colores agregados o eliminados) ============

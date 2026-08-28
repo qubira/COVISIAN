@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tiempo de gestión</title>
+<style>
+  :root{
+    --azul:#0f3d91; --rojo:#c0392b; --gris:#6b7280; --texto:#1f2530; --borde:#d7dce3;
+  }
+  *{ box-sizing:border-box; }
+  html, body{ margin:0; padding:0; height:100%; }
+  body{
+    font-family:'Segoe UI', Arial, sans-serif; background:#fff; color:var(--texto);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    height:100vh; user-select:none; overflow:hidden;
+  }
+  .titulo{
+    position:fixed; top:6px; left:0; right:0; text-align:center;
+    font-size:11px; font-weight:700; color:var(--azul); letter-spacing:.3px;
+  }
+  .valor{
+    font-size:44px; font-weight:800; font-variant-numeric:tabular-nums;
+    padding:6px 16px; border-radius:10px; transition:color .3s, background .3s;
+  }
+  .valor.alerta{ color:#fff; background:var(--rojo); animation:pulso 1s ease-in-out infinite; }
+  @keyframes pulso{ 0%, 100%{ opacity:1; } 50%{ opacity:.55; } }
+  .nota{ font-size:11.5px; color:var(--gris); margin-top:2px; }
+</style>
+</head>
+<body>
+  <div class="titulo">⏱ Tiempo de gestión</div>
+  <div class="valor" id="valor">00:00</div>
+  <div class="nota" id="nota">Inicio: --:--</div>
+
+<script>
+(function(){
+  "use strict";
+  var LS_INICIO = "tiempo_gestion_inicio_ts";
+  var UMBRAL_MS = 5 * 60 * 1000;
+  var ALERTA_DURACION_MS = 12000;
+  var ultimoUmbral = 0;
+  var ultimoInicioVisto = undefined; // distinto de null a proposito, para forzar el primer render
+  var alertaTimer = null;
+
+  function formatearTranscurrido(ms){
+    var totalSeg = Math.floor(ms / 1000);
+    var h = Math.floor(totalSeg / 3600);
+    var m = Math.floor((totalSeg % 3600) / 60);
+    var s = totalSeg % 60;
+    var mm = String(m).padStart(2, "0");
+    var ss = String(s).padStart(2, "0");
+    return h > 0 ? (h + ":" + mm + ":" + ss) : (mm + ":" + ss);
+  }
+
+  function horaCorta(ts){
+    var f = new Date(ts);
+    return String(f.getHours()).padStart(2, "0") + ":" + String(f.getMinutes()).padStart(2, "0") +
+      ":" + String(f.getSeconds()).padStart(2, "0");
+  }
+
+  function leerInicio(){
+    try{
+      var v = localStorage.getItem(LS_INICIO);
+      return v ? parseInt(v, 10) : null;
+    }catch(err){ return null; }
+  }
+
+  function tick(){
+    var inicio = leerInicio();
+    var valorEl = document.getElementById("valor");
+    var notaEl = document.getElementById("nota");
+
+    // el inicio cambio (arranco una llamada nueva, o se cerro la anterior): reiniciar el
+    // conteo de umbrales de 5 minutos y la nota de hora, no arrastrar el estado de antes.
+    if (inicio !== ultimoInicioVisto){
+      ultimoInicioVisto = inicio;
+      ultimoUmbral = 0;
+      clearTimeout(alertaTimer);
+      valorEl.classList.remove("alerta");
+      notaEl.textContent = inicio ? ("Inicio: " + horaCorta(inicio)) : "Inicio: --:--";
+    }
+
+    if (!inicio){
+      valorEl.textContent = "00:00";
+      return;
+    }
+
+    var transcurrido = Date.now() - inicio;
+    valorEl.textContent = formatearTranscurrido(transcurrido);
+
+    var umbralActual = Math.floor(transcurrido / UMBRAL_MS);
+    if (umbralActual > ultimoUmbral){
+      ultimoUmbral = umbralActual;
+      valorEl.classList.add("alerta");
+      clearTimeout(alertaTimer);
+      alertaTimer = setTimeout(function(){ valorEl.classList.remove("alerta"); }, ALERTA_DURACION_MS);
+    }
+  }
+
+  setInterval(tick, 1000);
+  tick();
+})();
+</script>
+</body>
+</html>
