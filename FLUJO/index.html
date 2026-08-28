@@ -4452,10 +4452,14 @@ if (location.protocol === "file:") {
     setupCampoUbicacion("distrito", function(row){ return row.distrito; });
     setupCampoUbicacion("provincia", function(row){ return row.provincia; });
     setupCampoUbicacion("departamento", function(row){ return row.departamento; });
-    // UBICACIÓN del encabezado fijo tambien editable, buscando por distrito igual que el
-    // campo de abajo — al elegir una opcion aplica la MISMA cobertura completa (aplicarCobertura
-    // ya deja distrito/provincia/departamento sincronizados, no hace falta logica aparte).
-    setupCampoUbicacion("rUbicacion", function(row){ return row.distrito; });
+    // UBICACIÓN del encabezado fijo tambien editable — a diferencia de los 3 campos de abajo
+    // (que buscan cada uno por su propio campo), esta busca por distrito, provincia O
+    // departamento a la vez, ya que es un solo campo que reemplaza a los tres. Al elegir una
+    // opcion aplica la MISMA cobertura completa (aplicarCobertura ya deja distrito/provincia/
+    // departamento sincronizados, no hace falta logica aparte).
+    setupCampoUbicacion("rUbicacion", function(row){ return row.distrito; }, function(row){
+      return row.distrito + " " + row.provincia + " " + row.departamento;
+    });
     $("rUbicacion").addEventListener("focus", function(){
       $("resumenTabla").classList.add("lista-ubicacion-abierta");
     });
@@ -4482,7 +4486,11 @@ if (location.protocol === "file:") {
     actualizarEncabezado();
   }
 
-  function setupCampoUbicacion(campo, getVal){
+  // matchVal es opcional: por defecto busca solo con getVal (un campo), pero UBICACIÓN del
+  // encabezado pasa un matchVal que junta distrito+provincia+departamento, para poder filtrar
+  // por cualquiera de los tres sin tener que bajar a los 3 campos separados de abajo.
+  function setupCampoUbicacion(campo, getVal, matchVal){
+    matchVal = matchVal || getVal;
     var input = $(campo);
     var lista = $("lista-" + campo);
 
@@ -4495,7 +4503,7 @@ if (location.protocol === "file:") {
 
       var vistos = {};
       var coincidencias = DATA.cobertura.filter(function(row){
-        var v = getVal(row);
+        var v = matchVal(row);
         return v && norm(v).indexOf(q) !== -1;
       });
 
