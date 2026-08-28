@@ -678,11 +678,12 @@
   /* TIPO/SUBTIPO editables directo desde el encabezado fijo, para no tener que bajar hasta
      el guion y volver a subir — ver initTipoSubtipoEncabezado(). */
   .rvalor-select{ padding:2px 4px !important; overflow:visible !important; }
-  .rvalor-select select{
+  .rvalor-select select, .rvalor-select input[type=text]{
     width:100%; border:none; background:transparent; color:var(--texto); font-weight:700;
-    font-size:11.5px; font-family:inherit; padding:3px 2px; cursor:pointer;
+    font-size:11.5px; font-family:inherit; padding:3px 2px;
   }
-  .rvalor-select select:focus{ outline:2px solid var(--azul-claro); outline-offset:-1px; border-radius:3px; }
+  .rvalor-select select{ cursor:pointer; }
+  .rvalor-select select:focus, .rvalor-select input[type=text]:focus{ outline:2px solid var(--azul-claro); outline-offset:-1px; border-radius:3px; }
   .btn-info-region{
     border:1px solid var(--azul); background:#fff; color:var(--azul); border-radius:50%;
     width:15px; height:15px; font-size:10px; font-weight:700; line-height:1; cursor:pointer;
@@ -940,7 +941,10 @@ if (location.protocol === "file:") {
     <div class="rlabel">CEL REF.</div><div class="rvalor" id="rCelRef">-</div>
     <div class="rlabel">CLIENTE</div><div class="rvalor" id="rNombre">-</div>
     <div class="rlabel">TITULAR</div><div class="rvalor" id="rNombreTitular">-</div>
-    <div class="rlabel">PLAN</div><div class="rvalor" id="rPlan">-</div>
+    <div class="rlabel">PLAN</div>
+    <div class="rvalor rvalor-select">
+      <input type="text" id="rPlan" placeholder="-" autocomplete="off">
+    </div>
     <div class="rlabel">TIPO</div>
     <div class="rvalor rvalor-select">
       <select id="rTipo">
@@ -2352,7 +2356,7 @@ if (location.protocol === "file:") {
     // demas — sin esto, un solo error silencioso podia dejar sin usar, por ejemplo, el
     // buscador de EQUIPO (initAutocomplete) si algo antes de el en la lista fallaba.
     [initCodFinanciamiento, initPlanes, initAutocomplete, initComparar, initStockNacional,
-      initCosto, initSimuladorEquipos, initVerDetalleEquipo, initZoomEquipo, initExpandirMapas, initFiltroAvanzadoDireccion, initAgendarLlamada, initCasosAgendados, initAutoguardado, initEncabezadoColapsable, initCambiosHistoricos, initInvalidarValidacionesContrato, initContabilizarTiempo, initResaltarCamposLlenos, initTipoSubtipoEncabezado, initSuprimirAutocompletePago, precargarCicloContrato, actualizarContrato, actualizarSimuladorFinanciamiento, actualizarEncabezado].forEach(function(fn){
+      initCosto, initSimuladorEquipos, initVerDetalleEquipo, initZoomEquipo, initExpandirMapas, initFiltroAvanzadoDireccion, initAgendarLlamada, initCasosAgendados, initAutoguardado, initEncabezadoColapsable, initCambiosHistoricos, initInvalidarValidacionesContrato, initContabilizarTiempo, initResaltarCamposLlenos, initTipoSubtipoEncabezado, initPlanEncabezado, initSuprimirAutocompletePago, precargarCicloContrato, actualizarContrato, actualizarSimuladorFinanciamiento, actualizarEncabezado].forEach(function(fn){
       try{ fn(); }catch(err){ console.error("Fallo al inicializar " + fn.name + ":", err); }
     });
   }).catch(function(err){
@@ -3288,7 +3292,6 @@ if (location.protocol === "file:") {
     $("rCel").textContent = $("guionAni").value.trim() || "-";
     $("rCelRef").textContent = $("guionAniReferencia").value.trim() || "-";
     $("rNombre").textContent = $("guionNombreCliente").value.trim() || "-";
-    $("rPlan").textContent = $("plan").value.trim() || "-";
 
     var esTitularEl = document.querySelector('input[name=guionEsTitular]:checked');
     $("rNombreTitular").textContent = nombreTitularActual() || "-";
@@ -3364,6 +3367,7 @@ if (location.protocol === "file:") {
     calcularZondeoPenalidad();
 
     $("plan").value = estado.plan || "";
+    $("rPlan").value = estado.plan || "";
 
     // se restaura antes de aplicarCobertura para que la geocodificacion del mapa la use ya
     $("direccion").value = estado.direccion || "";
@@ -3561,6 +3565,7 @@ if (location.protocol === "file:") {
     $("provincia").value = "";
     $("departamento").value = "";
     $("plan").value = "";
+    $("rPlan").value = "";
     $("tipo").value = "";
     $("rTipo").value = "";
     poblarSubtipoEncabezado("", "");
@@ -5813,6 +5818,20 @@ if (location.protocol === "file:") {
 
     $("rTipo").value = $("tipo").value;
     poblarSubtipoEncabezado($("tipo").value, $("subtipo").value);
+  }
+
+  // PLAN tambien editable desde el encabezado fijo (#rPlan), sincronizado en los dos
+  // sentidos con el campo real del guion (#plan) — mismo motivo que TIPO/SUBTIPO arriba.
+  function initPlanEncabezado(){
+    $("plan").addEventListener("input", function(){
+      $("rPlan").value = $("plan").value;
+    });
+    $("rPlan").addEventListener("change", function(){
+      $("plan").value = $("rPlan").value;
+      $("plan").dispatchEvent(new Event("change", { bubbles: true }));
+      guardarProgreso();
+    });
+    $("rPlan").value = $("plan").value;
   }
 
   // Chrome a veces sugiere "métodos de pago" (chip de Google Pay) encima de campos de
