@@ -4668,13 +4668,16 @@ if (location.protocol === "file:") {
 
     var mesesPerm = parseFloat($("contratoPermanenciaMeses").value);
     var monto7 = $("contratoMontoPenalidad").value.trim() || "XXX";
-    // "Cliente asume deuda" en SONDEO es una gestion de retencion: el agente exonera el cobro
-    // como gesto para cerrar la renovacion, sin importar si ya pasaron los 6 meses o no — por
-    // eso fuerza el texto 7.1 aunque la permanencia calculada diga lo contrario.
+    // el resultado de "¿El numero esta libre de penalidad?" en SONDEO ya responde esto
+    // directamente, sin depender de la permanencia calculada: SI (libre) fuerza 7.1
+    // EXONERAR; "Cliente asume deuda" (el cliente va a pagarla) fuerza 7.2 SIN EXONERAR.
+    // NO (bloqueado) o sin contestar cae al chequeo normal de permanencia >= 6 meses.
     var libreEl7 = document.querySelector('input[name=zondeoNumeroLibrePenalidad]:checked');
-    var forzarExoneracion7 = !!(libreEl7 && libreEl7.value === "ASUME_DEUDA");
-    if (forzarExoneracion7 || !isNaN(mesesPerm)){
-      $("contratoPenalidadScript").innerHTML = (forzarExoneracion7 || mesesPerm >= 6)
+    var forzarExoneracion7 = !!(libreEl7 && libreEl7.value === "SI");
+    var forzarCobro7 = !!(libreEl7 && libreEl7.value === "ASUME_DEUDA");
+    if (forzarExoneracion7 || forzarCobro7 || !isNaN(mesesPerm)){
+      var exonera7 = forzarExoneracion7 || (!forzarCobro7 && mesesPerm >= 6);
+      $("contratoPenalidadScript").innerHTML = exonera7
         ? ("<b>7.1. EXONERAR PENALIDAD</b> (permanencia mayor o igual a 6 meses + 1 día): Aplica para cualquier " +
            "cliente en planta móvil SA y MT a partir del mes 6 + 1 día (180 días antes de fin de permanencia), " +
            "puede exonerarse la penalidad. Te recordamos que estaremos anulando el cobro de <b>S/ " + monto7 +
