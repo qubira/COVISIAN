@@ -3939,7 +3939,10 @@ if (location.protocol === "file:") {
       }
       fila.remove();
       if (!$("listaRebates").children.length){
-        $("listaRebates").appendChild(crearFilaRebate());
+        // era la unica fila: antes se regeneraba una vacia en su lugar, y la "X" parecia no
+        // hacer nada (el agente veia la misma caja vacia de siempre ahi). Si no queda ninguna
+        // fila, se cierra el panel entero — se puede volver a abrir con el boton de siempre.
+        $("panelNegativa").classList.add("oculto");
       }
     });
 
