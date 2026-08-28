@@ -226,6 +226,15 @@
   .ficha .fila-ficha.fila-color-elegido input{
     width:100%; padding:4px 8px; font-size:12.5px; text-align:right;
   }
+  /* "COLOR ELEGIDO DEL EQUIPO" late en rojo mientras no se eligio ningun color, para que
+     salte a la vista; en cuanto se pone un color queda fijo en verde, sin animacion. */
+  .ficha .fila-ficha span.label-color-elegido{
+    color:var(--rojo); font-weight:700; animation:pulsoColorElegido 1.1s ease-in-out infinite;
+  }
+  .ficha .fila-ficha .label-color-elegido.color-elegido-ok{
+    color:var(--verde); animation:none; opacity:1;
+  }
+  @keyframes pulsoColorElegido{ 0%, 100%{ opacity:1; } 50%{ opacity:.35; } }
   .sin-match{ color:var(--rojo); font-size:12px; margin-top:6px; }
 
   .costo-monto{ font-size:22px; font-weight:800; color:var(--verde); }
@@ -1442,7 +1451,7 @@ if (location.protocol === "file:") {
           <div class="fila-ficha"><span>PROCESADOR:</span><span id="dProcesador">-</span></div>
           <div class="fila-ficha"><span>COLORES:</span><span id="dColores">-</span></div>
           <div class="fila-ficha fila-color-elegido">
-            <span>COLOR ELEGIDO DEL EQUIPO:</span>
+            <span id="labelColorElegido" class="label-color-elegido">COLOR ELEGIDO DEL EQUIPO:</span>
             <div class="autocomplete" id="ac-resumenColorEquipo">
               <input type="text" id="resumenColorEquipo" placeholder="Ej: Azul" autocomplete="off">
               <div class="lista" id="lista-resumenColorEquipo"></div>
@@ -3481,6 +3490,7 @@ if (location.protocol === "file:") {
       if (rConvenio) rConvenio.checked = true;
     }
     $("resumenColorEquipo").value = estado.resumenColorEquipo || "";
+    actualizarEstadoLabelColorElegido();
     $("creditoTipoGestion").value = estado.creditoTipoGestion || "";
     $("creditoCuotas").value = estado.creditoCuotas || "12";
     $("creditoAplicaEspecial").value = estado.creditoAplicaEspecial || "";
@@ -3589,6 +3599,9 @@ if (location.protocol === "file:") {
     // campo que ya se toco en ESTA llamada quedaria editable de una para la SIGUIENTE, sin el
     // blindaje anti-sugerencia-de-pago de Chrome.
     IDS_BLINDAR_AUTOCOMPLETE_PAGO.forEach(blindarCampoDeAutocompletePago);
+    // form.reset() tampoco dispara "input" en cada campo, asi que hay que refrescar a mano
+    // el rojo/verde de la etiqueta de color (si no, se queda en verde de la llamada anterior).
+    actualizarEstadoLabelColorElegido();
     seleccionCobertura = null;
     equipoActual = null;
     equiposAComparar = [];
@@ -5141,9 +5154,18 @@ if (location.protocol === "file:") {
     return colores;
   }
 
+  // "COLOR ELEGIDO DEL EQUIPO" late en rojo hasta que se elige un color, y ahi se queda fijo
+  // en verde — asi salta a la vista si el agente se olvido de completarlo antes de cerrar.
+  function actualizarEstadoLabelColorElegido(){
+    var tieneColor = !!$("resumenColorEquipo").value.trim();
+    $("labelColorElegido").classList.toggle("color-elegido-ok", tieneColor);
+  }
+
   function initColorEquipoAutocomplete(){
     var input = $("resumenColorEquipo");
     var lista = $("lista-resumenColorEquipo");
+    input.addEventListener("input", actualizarEstadoLabelColorElegido);
+    actualizarEstadoLabelColorElegido();
 
     function render(filtro){
       lista.innerHTML = "";
