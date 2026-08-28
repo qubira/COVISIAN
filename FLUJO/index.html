@@ -3687,23 +3687,34 @@ if (location.protocol === "file:") {
   // tanto al confirmar la ciudad (aplicarCobertura) como al completar DATOS (el listener
   // global del form) — sin importar cual de los dos pase primero.
   function actualizarHabilitacionPostCobertura(){
-    if (seleccionCobertura && datosCompletos()){
+    // SIMULADOR DE TERMINALES tiene su propio requisito, mas liviano que el resto: solo
+    // necesita cobertura confirmada + haber contestado el SONDEO (pedido pendiente/penalidad
+    // activa), sin importar si contesto SI o NO en cualquiera de los dos — no hace falta
+    // esperar a que ANI/nombre/plan/tipo/subtipo tambien esten listos, el agente puede ir
+    // armando el equipo mientras termina de conversar esos otros datos con el cliente.
+    if (seleccionCobertura && sondeoRespondido()){
       habilitar("fs-credito");
+    }
+    if (seleccionCobertura && datosCompletos()){
       habilitar("fs-resumen");
       habilitar("fs-contrato");
       habilitar("fs-venta");
     }
   }
 
-  function datosCompletos(){
-    var esTitularEl = document.querySelector('input[name=guionEsTitular]:checked');
+  function sondeoRespondido(){
     var zondeoPedidoEl = document.querySelector('input[name=zondeoPedidoPendiente]:checked');
     var zondeoPenalidadEl = document.querySelector('input[name=zondeoPenalidadActiva]:checked');
+    return !!(zondeoPedidoEl && zondeoPenalidadEl);
+  }
+
+  function datosCompletos(){
+    var esTitularEl = document.querySelector('input[name=guionEsTitular]:checked');
     // todo select/SI-NO que el agente tiene que contestar a mano queda obligatorio para
     // habilitar los modulos de abajo; los que ya traen un valor por defecto (Tipo de Gestion,
     // Codigo de Financiamiento, etc.) no se tocan, ya cuentan como "llenos" solos.
     if (!$("guionAni").value.trim() || !$("guionNombreCliente").value.trim() || !esTitularEl || !$("plan").value.trim() ||
-        !$("tipo").value || !$("subtipo").value || !zondeoPedidoEl || !zondeoPenalidadEl){
+        !$("tipo").value || !$("subtipo").value || !sondeoRespondido()){
       return false;
     }
     // si quien llama NO es el titular, se necesita ademas el nombre del titular real
@@ -3792,6 +3803,7 @@ if (location.protocol === "file:") {
       var esSi = document.querySelector('input[name=zondeoPedidoPendiente]:checked').value === "SI";
       $("campoZondeoNumeroPedidoPendiente").classList.toggle("oculto", !esSi);
       if (!esSi) $("zondeoNumeroPedidoPendiente").value = "";
+      actualizarHabilitacionPostCobertura();
     });
   });
   $("zondeoNumeroPedidoPendiente").addEventListener("input", function(){
@@ -3814,6 +3826,7 @@ if (location.protocol === "file:") {
         $("zondeoResultado").innerHTML = "";
         $("campoZondeoNuevoNumero").classList.add("oculto");
       }
+      actualizarHabilitacionPostCobertura();
     });
   });
 
