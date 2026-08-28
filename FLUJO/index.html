@@ -657,6 +657,9 @@
     max-width:720px; margin:8px auto 0; display:grid; grid-template-columns:auto 1fr auto 1fr;
     border:1px solid var(--borde); border-radius:8px; overflow:hidden; font-size:11.5px;
   }
+  /* mientras el desplegable de PLAN esta abierto, se levanta el overflow:hidden de arriba
+     (solo sirve para recortar las esquinas redondeadas) para que la lista no se corte */
+  .resumen-tabla.lista-plan-abierta{ overflow:visible; }
   .resumen-tabla > div{
     padding:5px 10px; border-bottom:1px solid var(--borde); border-right:1px solid var(--borde);
     overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
@@ -942,8 +945,9 @@ if (location.protocol === "file:") {
     <div class="rlabel">CLIENTE</div><div class="rvalor" id="rNombre">-</div>
     <div class="rlabel">TITULAR</div><div class="rvalor" id="rNombreTitular">-</div>
     <div class="rlabel">PLAN</div>
-    <div class="rvalor rvalor-select">
+    <div class="rvalor rvalor-select autocomplete">
       <input type="text" id="rPlan" placeholder="-" autocomplete="off">
+      <div class="lista" id="lista-rPlan"></div>
     </div>
     <div class="rlabel">TIPO</div>
     <div class="rvalor rvalor-select">
@@ -5822,7 +5826,18 @@ if (location.protocol === "file:") {
 
   // PLAN tambien editable desde el encabezado fijo (#rPlan), sincronizado en los dos
   // sentidos con el campo real del guion (#plan) — mismo motivo que TIPO/SUBTIPO arriba.
+  // Ademas reusa el mismo desplegable de sugerencias que el campo #plan de abajo.
   function initPlanEncabezado(){
+    configurarAutocompletePlan("rPlan", "lista-rPlan");
+    // el contenedor de la tabla recorta (overflow:hidden) solo para redondear sus esquinas;
+    // mientras el desplegable esta abierto hay que levantar ese recorte o se corta la lista.
+    $("rPlan").addEventListener("focus", function(){
+      $("resumenTabla").classList.add("lista-plan-abierta");
+    });
+    $("rPlan").addEventListener("blur", function(){
+      setTimeout(function(){ $("resumenTabla").classList.remove("lista-plan-abierta"); }, 200);
+    });
+
     $("plan").addEventListener("input", function(){
       $("rPlan").value = $("plan").value;
     });
