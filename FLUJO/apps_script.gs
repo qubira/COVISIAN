@@ -21,7 +21,7 @@ var HOJA_AGENDA = "Llamadas Agendadas";
 
 var COLUMNAS_VENTA = [
   "fecha", "guionAni", "guionAniReferencia", "guionDni", "guionEsTitular", "guionNombreCliente", "guionNombreTitular", "guionNumero",
-  "zondeoPedidoPendiente", "zondeoNumeroPedidoPendiente", "zondeoPenalidadActiva", "zondeoFechaPenalidad", "zondeoNuevoNumero", "zondeoNumeroLibrePenalidad",
+  "zondeoPedidoPendiente", "zondeoNumeroPedidoPendiente", "zondeoPenalidadActiva", "zondeoFechaPenalidad", "zondeoNuevoNumero", "zondeoMontoPendiente", "zondeoNumeroLibrePenalidad",
   "plan",
   "distrito", "provincia", "departamento", "direccion", "direccionReferencia",
   "express", "expressHasta", "regularRango", "regularDia",
@@ -49,7 +49,7 @@ var COLUMNAS_VENTA = [
 
 var COLUMNAS_BORRADOR = [
   "draftId", "actualizado", "guionAni", "guionAniReferencia", "guionDni", "guionEsTitular", "guionNombreCliente", "guionNombreTitular", "guionNumero",
-  "zondeoPedidoPendiente", "zondeoNumeroPedidoPendiente", "zondeoPenalidadActiva", "zondeoFechaPenalidad", "zondeoNuevoNumero", "zondeoNumeroLibrePenalidad",
+  "zondeoPedidoPendiente", "zondeoNumeroPedidoPendiente", "zondeoPenalidadActiva", "zondeoFechaPenalidad", "zondeoNuevoNumero", "zondeoMontoPendiente", "zondeoNumeroLibrePenalidad",
   "plan",
   "distrito", "provincia", "departamento", "direccion", "direccionReferencia",
   "cargoFijoMaximo", "codFinanciamiento", "capFinanciamiento", "creditoTipoGestion", "creditoCuotas", "creditoAplicaEspecial",

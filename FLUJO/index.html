@@ -1257,6 +1257,10 @@ if (location.protocol === "file:") {
       <div id="zondeoResultado" style="margin-top:8px;"></div>
     </div>
 
+    <div class="campo oculto" id="campoZondeoMontoPendiente">
+      <label for="zondeoMontoPendiente">Monto pendiente (S/)</label>
+      <input type="number" step="0.01" id="zondeoMontoPendiente" placeholder="S/" style="max-width:160px;">
+    </div>
     <div class="guion-texto oculto" id="zondeoScriptMontoPendiente" style="margin-top:8px;"></div>
 
     <div class="campo oculto" id="campoZondeoNuevoNumero">
@@ -3148,6 +3152,7 @@ if (location.protocol === "file:") {
       zondeoPenalidadActiva: (document.querySelector('input[name=zondeoPenalidadActiva]:checked') || {}).value || "",
       zondeoFechaPenalidad: $("zondeoFechaPenalidad").value,
       zondeoNuevoNumero: $("zondeoNuevoNumero").value,
+      zondeoMontoPendiente: $("zondeoMontoPendiente").value,
       zondeoNumeroLibrePenalidad: (document.querySelector('input[name=zondeoNumeroLibrePenalidad]:checked') || {}).value || "",
       plan: $("plan").value,
       seleccionCobertura: seleccionCobertura,
@@ -3383,6 +3388,7 @@ if (location.protocol === "file:") {
     }
     $("zondeoFechaPenalidad").value = estado.zondeoFechaPenalidad || "";
     $("zondeoNuevoNumero").value = estado.zondeoNuevoNumero || "";
+    $("zondeoMontoPendiente").value = estado.zondeoMontoPendiente || "";
     calcularZondeoPenalidad();
     if (estado.zondeoNumeroLibrePenalidad){
       var rZondeoLibre = document.querySelector('input[name=zondeoNumeroLibrePenalidad][value="' + estado.zondeoNumeroLibrePenalidad + '"]');
@@ -3671,6 +3677,8 @@ if (location.protocol === "file:") {
     $("campoZondeoNuevoNumero").classList.add("oculto");
     $("campoZondeoNumeroPedidoPendiente").classList.add("oculto");
     $("zondeoResultado").innerHTML = "";
+    $("campoZondeoMontoPendiente").classList.add("oculto");
+    $("zondeoMontoPendiente").value = "";
     $("zondeoScriptMontoPendiente").classList.add("oculto");
     $("campoZondeoLibrePenalidad").classList.add("oculto");
     $("zondeoLibrePenalidadBloqueo").classList.add("oculto");
@@ -3894,25 +3902,29 @@ if (location.protocol === "file:") {
   // esconde tanto el guion de "monto pendiente" como la pregunta de "libre de penalidad" —
   // los dos solo aplican mientras el numero evaluado SIGUE con penalidad activa (caso rojo).
   function ocultarBloquePenalidadActiva(){
+    $("campoZondeoMontoPendiente").classList.add("oculto");
     $("zondeoScriptMontoPendiente").classList.add("oculto");
     $("campoZondeoNuevoNumero").classList.add("oculto");
     $("campoZondeoLibrePenalidad").classList.add("oculto");
   }
 
   // guion para que el agente le informe al cliente el cargo pendiente si renueva con el
-  // numero que TODAVIA tiene penalidad. El monto no se conoce en este punto del guion (recien
-  // se pide en CONTRATO 7. Penalidad), asi que ese dato queda como texto literal entre
-  // corchetes para que el agente lo diga de viva voz, igual que "[DIA]"/"[rango horario]"
-  // en el guion de Delivery cuando todavia no hay cobertura confirmada.
+  // numero que TODAVIA tiene penalidad. El monto lo anota el agente a mano en
+  // #zondeoMontoPendiente (no hay forma de calcularlo solo en este punto del guion) y se
+  // refleja en vivo en el texto del guion.
   function actualizarScriptMontoPendiente(){
     var titular = nombreTitularActual() || "[NOMBRE DEL TITULAR]";
     var numero = $("guionNumero").value.trim() || "[NÚMERO A EVALUAR]";
+    var monto = $("zondeoMontoPendiente").value.trim();
+    var montoTexto = monto ? ("S/ " + monto) : "[monto pendiente]";
     $("zondeoScriptMontoPendiente").innerHTML =
-      "<b>" + titular + "</b>, te comentamos que tienes un monto pendiente de <b>[monto pendiente]</b>, " +
+      "<b>" + titular + "</b>, te comentamos que tienes un monto pendiente de <b>" + montoTexto + "</b>, " +
       "si en caso quieres que renovemos con el <b>" + numero + "</b>, en tu próxima factura se te " +
       "adicionará ese cargo.<br>Se podría evitar este cargo, ¿tienes otro número a evaluar?";
+    $("campoZondeoMontoPendiente").classList.remove("oculto");
     $("zondeoScriptMontoPendiente").classList.remove("oculto");
   }
+  $("zondeoMontoPendiente").addEventListener("input", actualizarScriptMontoPendiente);
 
   function calcularZondeoPenalidad(){
     var out = $("zondeoResultado");
@@ -6930,6 +6942,7 @@ if (location.protocol === "file:") {
       zondeoPenalidadActiva: (document.querySelector('input[name=zondeoPenalidadActiva]:checked') || {}).value || "",
       zondeoFechaPenalidad: $("zondeoFechaPenalidad").value.trim(),
       zondeoNuevoNumero: $("zondeoNuevoNumero").value.trim(),
+      zondeoMontoPendiente: $("zondeoMontoPendiente").value.trim(),
       zondeoNumeroLibrePenalidad: (document.querySelector('input[name=zondeoNumeroLibrePenalidad]:checked') || {}).value || "",
       plan: $("plan").value.trim(),
       distrito: $("distrito").value.trim(),
