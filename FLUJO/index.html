@@ -222,8 +222,9 @@
   .ficha .fila-ficha span:first-child{ color:var(--gris); font-weight:600; }
   .ficha .fila-ficha span:last-child{ text-align:right; max-width:60%; }
   .ficha .fila-ficha.fila-color-elegido{ align-items:center; }
+  .ficha .fila-ficha.fila-color-elegido .autocomplete{ max-width:140px; }
   .ficha .fila-ficha.fila-color-elegido input{
-    width:auto; max-width:140px; padding:4px 8px; font-size:12.5px; text-align:right;
+    width:100%; padding:4px 8px; font-size:12.5px; text-align:right;
   }
   .sin-match{ color:var(--rojo); font-size:12px; margin-top:6px; }
 
@@ -1442,7 +1443,10 @@ if (location.protocol === "file:") {
           <div class="fila-ficha"><span>COLORES:</span><span id="dColores">-</span></div>
           <div class="fila-ficha fila-color-elegido">
             <span>COLOR ELEGIDO DEL EQUIPO:</span>
-            <input type="text" id="resumenColorEquipo" placeholder="Ej: Azul" autocomplete="off">
+            <div class="autocomplete" id="ac-resumenColorEquipo">
+              <input type="text" id="resumenColorEquipo" placeholder="Ej: Azul" autocomplete="off">
+              <div class="lista" id="lista-resumenColorEquipo"></div>
+            </div>
           </div>
           <div class="fila-ficha"><span>SISTEMA OPERATIVO:</span><span id="dSo">-</span></div>
           <div class="fila-ficha"><span>PRECIO ESPECIAL:</span><span id="dPEspecial">-</span></div>
@@ -2385,7 +2389,7 @@ if (location.protocol === "file:") {
     // demas — sin esto, un solo error silencioso podia dejar sin usar, por ejemplo, el
     // buscador de EQUIPO (initAutocomplete) si algo antes de el en la lista fallaba.
     [initCodFinanciamiento, initPlanes, initAutocomplete, initComparar, initStockNacional,
-      initCosto, initSimuladorEquipos, initVerDetalleEquipo, initZoomEquipo, initExpandirMapas, initFiltroAvanzadoDireccion, initAgendarLlamada, initCasosAgendados, initAutoguardado, initEncabezadoColapsable, initCambiosHistoricos, initInvalidarValidacionesContrato, initContabilizarTiempo, initResaltarCamposLlenos, initTipoSubtipoEncabezado, initPlanEncabezado, initSuprimirAutocompletePago, precargarCicloContrato, actualizarContrato, actualizarSimuladorFinanciamiento, actualizarEncabezado].forEach(function(fn){
+      initCosto, initSimuladorEquipos, initVerDetalleEquipo, initZoomEquipo, initExpandirMapas, initFiltroAvanzadoDireccion, initAgendarLlamada, initCasosAgendados, initAutoguardado, initEncabezadoColapsable, initCambiosHistoricos, initInvalidarValidacionesContrato, initContabilizarTiempo, initResaltarCamposLlenos, initMayusculasAutomaticas, initTipoSubtipoEncabezado, initPlanEncabezado, initColorEquipoAutocomplete, initSuprimirAutocompletePago, precargarCicloContrato, actualizarContrato, actualizarSimuladorFinanciamiento, actualizarEncabezado].forEach(function(fn){
       try{ fn(); }catch(err){ console.error("Fallo al inicializar " + fn.name + ":", err); }
     });
   }).catch(function(err){
@@ -5121,6 +5125,54 @@ if (location.protocol === "file:") {
     el.innerHTML = chips.join(" ");
   }
 
+  // colores realmente disponibles para el equipo actual en la zona actual, para el desplegable
+  // de COLOR ELEGIDO DEL EQUIPO — misma fuente que actualizarColoresYStock() de arriba, sin
+  // repetir el estado/modo de entrega que ahi si hace falta pero aca no.
+  function coloresDisponiblesDelEquipo(nombreEquipo){
+    var departamento = seleccionCobertura ? seleccionCobertura.departamento : null;
+    if (!departamento || !nombreEquipo) return [];
+    var res = stockDelEquipo(nombreEquipo, departamento);
+    var vistos = {};
+    var colores = [];
+    res.filas.forEach(function(row){
+      var color = extraerColor(row.modelo) || "N/D";
+      if (!vistos[color]){ vistos[color] = true; colores.push(color); }
+    });
+    return colores;
+  }
+
+  function initColorEquipoAutocomplete(){
+    var input = $("resumenColorEquipo");
+    var lista = $("lista-resumenColorEquipo");
+
+    function render(filtro){
+      lista.innerHTML = "";
+      var q = norm(filtro);
+      var colores = coloresDisponiblesDelEquipo(equipoActual).filter(function(c){
+        return norm(c).indexOf(q) !== -1;
+      });
+      colores.forEach(function(c){
+        var div = document.createElement("div");
+        div.className = "opcion";
+        div.textContent = c;
+        div.addEventListener("mousedown", function(e){
+          e.preventDefault();
+          input.value = c;
+          lista.classList.remove("abierta");
+          input.dispatchEvent(new Event("input", { bubbles: true }));
+        });
+        lista.appendChild(div);
+      });
+      lista.classList.toggle("abierta", colores.length > 0);
+    }
+
+    input.addEventListener("focus", function(){ render(input.value); });
+    input.addEventListener("input", function(){ render(input.value); });
+    input.addEventListener("blur", function(){
+      setTimeout(function(){ lista.classList.remove("abierta"); }, 150);
+    });
+  }
+
   // ============ STOCK POR DEPARTAMENTO (ventana flotante con filtro avanzado) ============
   // Lista TODOS los equipos con stock en un departamento elegido (no uno en particular):
   // MODELO + ESTADO STOCK, con filtro de estado, buscador de modelo y columnas ordenables.
@@ -5977,6 +6029,32 @@ if (location.protocol === "file:") {
     desmarcarSiCambia("contratoFechaNacimiento", "contratoValidFechaNac", "input");
     desmarcarSiCambia("contratoNombrePadreMadre", "contratoValidPadreMadre", "input");
     desmarcarSiCambia("contratoCorreo", "contratoValidCorreo", "input");
+  }
+
+  // ============ MAYUSCULAS AUTOMATICAS AL ESCRIBIR ============
+  // Todo lo que el agente escribe a mano queda en mayuscula, igual que los datos que ya
+  // vienen en mayuscula desde los excels de origen (DNI, nombres, ubicacion, etc.). No aplica
+  // a type=email (el correo se escribe en minuscula por convencion) ni a numeros/fechas/selects
+  // (no tienen letras o ya vienen fijos, no hace falta tocarlos). norm() ya uppercasea todo
+  // internamente para comparar, asi que esto no cambia ningun resultado de busqueda/match,
+  // solo como se ve mientras se escribe.
+  var SELECTOR_CAMPOS_MAYUSCULA = "input[type=text], input[type=tel], textarea";
+
+  function mayuscularEnVivo(el){
+    var mayus = el.value.toUpperCase();
+    if (mayus === el.value) return; // ya esta en mayuscula (o son solo numeros/simbolos): no
+                                     // tocar el cursor sin necesidad
+    var inicio = el.selectionStart, fin = el.selectionEnd;
+    el.value = mayus;
+    try{ el.setSelectionRange(inicio, fin); }catch(err){}
+  }
+
+  function initMayusculasAutomaticas(){
+    document.addEventListener("input", function(e){
+      if (e.target.matches && e.target.matches(SELECTOR_CAMPOS_MAYUSCULA)){
+        mayuscularEnVivo(e.target);
+      }
+    }, true);
   }
 
   // ============ RESALTAR EN VERDE LOS CAMPOS LLENOS ============
