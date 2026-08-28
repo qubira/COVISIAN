@@ -3989,6 +3989,11 @@ if (location.protocol === "file:") {
   $("zondeoFechaPenalidad").addEventListener("input", function(){
     this.value = formatearFechaConBarras(this.value);
     calcularZondeoPenalidad();
+    // sin esto, CONTRATO 7 solo se enteraba del nuevo resultado en el proximo disparador
+    // que le tocara (cada 30s, o al tocar otro campo) — si el agente corregia la fecha
+    // (ej: escribio un rojo por error y lo cambio a uno verde), CONTRATO podia quedar
+    // mostrando el resultado viejo por un rato.
+    actualizarContrato();
   });
   $("contratoFechaNacimiento").addEventListener("input", function(){
     this.value = formatearFechaConBarras(this.value);
@@ -4658,19 +4663,34 @@ if (location.protocol === "file:") {
     // mano) en vez de que los vuelva a pedir de nuevo.
     var zondeoPenalidadEl7 = document.querySelector('input[name=zondeoPenalidadActiva]:checked');
     var mFecha7 = null;
+    var zondeoExonera7 = null; // null = SONDEO no tiene fecha valida todavia
     if (zondeoPenalidadEl7 && zondeoPenalidadEl7.value === "SI"){
       mFecha7 = $("zondeoFechaPenalidad").value.trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-      if (mFecha7 && !$("contratoPermanenciaMeses").value.trim()){
-        var fecha7 = new Date(Number(mFecha7[3]), Number(mFecha7[2]) - 1, Number(mFecha7[1]));
-        $("contratoPermanenciaMeses").value = mesesTranscurridosDesde(fecha7);
+      if (mFecha7){
+        var dia7 = Number(mFecha7[1]), mes7 = Number(mFecha7[2]), anio7 = Number(mFecha7[3]);
+        var fecha7 = new Date(anio7, mes7 - 1, dia7);
+        // misma cuenta que calcularZondeoPenalidad() (SONDEO): >= 6 meses + 1 dia desde esa
+        // fecha. Se recalcula fresco aca en vez de leer contratoPermanenciaMeses porque ese
+        // campo solo se autocompleta UNA vez (si no, no se podria editar a mano) y quedaba
+        // desfasado si el agente corregia la fecha en SONDEO despues de la primera vez.
+        var umbral7 = new Date(anio7, mes7 - 1 + 6, dia7 + 1);
+        var hoy7 = new Date();
+        hoy7.setHours(0, 0, 0, 0);
+        umbral7.setHours(0, 0, 0, 0);
+        zondeoExonera7 = hoy7 >= umbral7;
+        if (!$("contratoPermanenciaMeses").value.trim()){
+          $("contratoPermanenciaMeses").value = mesesTranscurridosDesde(fecha7);
+        }
       }
       if ($("zondeoMontoPendiente").value.trim() && !$("contratoMontoPenalidad").value.trim()){
         $("contratoMontoPenalidad").value = $("zondeoMontoPendiente").value.trim();
       }
     }
-    // los campos manuales de permanencia/monto solo hacen falta cuando SONDEO no trajo ya
-    // esos datos (numero sin penalidad activa, o penalidad activa sin fecha valida todavia).
-    $("filaContratoPenalidadManual").classList.toggle("oculto", !!mFecha7);
+    // el campo manual solo se oculta en el caso ROJO: ahi SONDEO ya trae permanencia Y monto
+    // (via el campo #zondeoMontoPendiente + el guion morado). En el caso VERDE, SONDEO solo
+    // trae la fecha/permanencia — el monto para el guion 7.1 no se pide en SONDEO, asi que el
+    // campo manual se deja visible para que el agente lo escriba directo aca.
+    $("filaContratoPenalidadManual").classList.toggle("oculto", zondeoExonera7 === false);
 
     var mesesPerm = parseFloat($("contratoPermanenciaMeses").value);
     var monto7 = $("contratoMontoPenalidad").value.trim() || "XXX";
@@ -4689,8 +4709,8 @@ if (location.protocol === "file:") {
       $("seccionContratoPenalidad").classList.add("oculto");
     } else {
       $("seccionContratoPenalidad").classList.remove("oculto");
-      if (forzarCobro7 || !isNaN(mesesPerm)){
-        var exonera7 = !forzarCobro7 && mesesPerm >= 6;
+      if (forzarCobro7 || zondeoExonera7 !== null || !isNaN(mesesPerm)){
+        var exonera7 = forzarCobro7 ? false : (zondeoExonera7 !== null ? zondeoExonera7 : mesesPerm >= 6);
         $("contratoPenalidadScript").innerHTML = exonera7
           ? ('<span style="color:var(--rojo);"><b style="color:var(--rojo);">7.1. EXONERAR PENALIDAD</b> (permanencia mayor o igual a 6 meses ' +
              '+ 1 día):</span> Te recordamos que estaremos anulando el cobro de <b>S/ ' + monto7 +
