@@ -1188,7 +1188,13 @@ if (location.protocol === "file:") {
             </div>
           </div>
         </div>
-        <div class="linea-coordenadas oculto" id="coordenadasResultado">📍 Coordenadas: <b id="coordenadasTexto">-</b></div>
+        <div class="linea-coordenadas oculto" id="coordenadasResultado">
+          📍 Coordenadas:
+          <div class="fila-input-btn" style="max-width:280px;margin-top:4px;">
+            <input type="text" id="coordenadasTexto" placeholder="-16.404012, -71.491151" autocomplete="off">
+            <button type="button" class="btn-mini" id="btnBuscarCoordenadas" title="Buscar estas coordenadas en el mapa">Buscar</button>
+          </div>
+        </div>
       </div>
       <div class="mapa-caja" id="cajaGoogleMaps" style="margin-top:10px;">
         <div class="mapa-titulo">
@@ -4878,10 +4884,34 @@ if (location.protocol === "file:") {
     $("iframeGoogleMyMaps").classList.remove("oculto");
     $("mapaLeafletCont").classList.remove("oculto");
     mostrarMapaLeaflet(coords, zoom);
-    $("coordenadasTexto").textContent = coords.lat.toFixed(6) + ", " + coords.lon.toFixed(6);
+    $("coordenadasTexto").value = coords.lat.toFixed(6) + ", " + coords.lon.toFixed(6);
     $("coordenadasResultado").classList.remove("oculto");
     $("mapaAviso").classList.toggle("oculto", !aproximado);
   }
+
+  // Permite escribir/pegar coordenadas a mano (ej: copiadas de Google Maps) y que los 3 mapas
+  // -incluido Mapa de Cobertura- busquen y centren ahi, reusando el mismo mostrarMapasEnCoordenada()
+  // que ya usan la geocodificacion por texto y el arrastre del pin en el mapa interactivo.
+  function buscarCoordenadasManual(){
+    var texto = $("coordenadasTexto").value.trim();
+    var m = texto.match(/^(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)$/);
+    if (!m){
+      marcarEstadoMapas("Coordenadas inválidas. Use el formato: latitud, longitud");
+      $("coordenadasResultado").classList.remove("oculto");
+      return;
+    }
+    var lat = parseFloat(m[1]), lon = parseFloat(m[2]);
+    if (Math.abs(lat) > 90 || Math.abs(lon) > 180){
+      marcarEstadoMapas("Coordenadas fuera de rango.");
+      $("coordenadasResultado").classList.remove("oculto");
+      return;
+    }
+    mostrarMapasEnCoordenada({ lat: lat, lon: lon }, false);
+  }
+  $("btnBuscarCoordenadas").addEventListener("click", buscarCoordenadasManual);
+  $("coordenadasTexto").addEventListener("keydown", function(e){
+    if (e.key === "Enter"){ e.preventDefault(); buscarCoordenadasManual(); }
+  });
 
   // Consulta Nominatim para una query puntual; usa/llena el cache. Devuelve una Promise
   // que resuelve con {lat, lon} o null si no encontró nada (nunca rechaza por "sin resultados").
