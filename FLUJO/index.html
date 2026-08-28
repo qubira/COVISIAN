@@ -3896,6 +3896,7 @@ if (location.protocol === "file:") {
       var esNo = document.querySelector('input[name=zondeoNumeroLibrePenalidad]:checked').value === "NO";
       $("zondeoLibrePenalidadBloqueo").classList.toggle("oculto", !esNo);
       actualizarHabilitacionPostCobertura();
+      actualizarContrato();
     });
   });
 
@@ -3925,6 +3926,20 @@ if (location.protocol === "file:") {
     $("zondeoScriptMontoPendiente").classList.remove("oculto");
   }
   $("zondeoMontoPendiente").addEventListener("input", actualizarScriptMontoPendiente);
+  // "change" (no "input"): si se disparara en cada tecla, CONTRATO 7 quedaria autocompletado
+  // con el monto a medio escribir (ej: "5" de "500") por la misma razon que btnZondeoNumeroPedidoNuevoNumero
+  // usa un clic en vez de "input" — solo que aca no hace falta boton, "change" ya espera a que
+  // el agente termine de escribir (blur/Enter) antes de propagar el valor.
+  $("zondeoMontoPendiente").addEventListener("change", actualizarContrato);
+
+  // meses completos transcurridos desde una fecha hasta hoy — usado para autocompletar
+  // "Permanencia del contrato anterior" en CONTRATO 7 a partir de la fecha ya pedida en SONDEO.
+  function mesesTranscurridosDesde(fecha){
+    var hoy = new Date();
+    var meses = (hoy.getFullYear() - fecha.getFullYear()) * 12 + (hoy.getMonth() - fecha.getMonth());
+    if (hoy.getDate() < fecha.getDate()) meses--;
+    return Math.max(meses, 0);
+  }
 
   function calcularZondeoPenalidad(){
     var out = $("zondeoResultado");
@@ -4636,10 +4651,30 @@ if (location.protocol === "file:") {
     }
 
     // --- 7. Penalidad ---
+    // si SONDEO detecto penalidad vigente en el numero evaluado, ahi ya se pidieron la fecha
+    // y el monto pendiente — se reusan aca (solo si el agente no escribio ya algo distinto a
+    // mano) en vez de que los vuelva a pedir de nuevo.
+    var zondeoPenalidadEl7 = document.querySelector('input[name=zondeoPenalidadActiva]:checked');
+    if (zondeoPenalidadEl7 && zondeoPenalidadEl7.value === "SI"){
+      var mFecha7 = $("zondeoFechaPenalidad").value.trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+      if (mFecha7 && !$("contratoPermanenciaMeses").value.trim()){
+        var fecha7 = new Date(Number(mFecha7[3]), Number(mFecha7[2]) - 1, Number(mFecha7[1]));
+        $("contratoPermanenciaMeses").value = mesesTranscurridosDesde(fecha7);
+      }
+      if ($("zondeoMontoPendiente").value.trim() && !$("contratoMontoPenalidad").value.trim()){
+        $("contratoMontoPenalidad").value = $("zondeoMontoPendiente").value.trim();
+      }
+    }
+
     var mesesPerm = parseFloat($("contratoPermanenciaMeses").value);
     var monto7 = $("contratoMontoPenalidad").value.trim() || "XXX";
-    if (!isNaN(mesesPerm)){
-      $("contratoPenalidadScript").innerHTML = (mesesPerm >= 6)
+    // "Cliente asume deuda" en SONDEO es una gestion de retencion: el agente exonera el cobro
+    // como gesto para cerrar la renovacion, sin importar si ya pasaron los 6 meses o no — por
+    // eso fuerza el texto 7.1 aunque la permanencia calculada diga lo contrario.
+    var libreEl7 = document.querySelector('input[name=zondeoNumeroLibrePenalidad]:checked');
+    var forzarExoneracion7 = !!(libreEl7 && libreEl7.value === "ASUME_DEUDA");
+    if (forzarExoneracion7 || !isNaN(mesesPerm)){
+      $("contratoPenalidadScript").innerHTML = (forzarExoneracion7 || mesesPerm >= 6)
         ? ("<b>7.1. EXONERAR PENALIDAD</b> (permanencia mayor o igual a 6 meses + 1 día): Aplica para cualquier " +
            "cliente en planta móvil SA y MT a partir del mes 6 + 1 día (180 días antes de fin de permanencia), " +
            "puede exonerarse la penalidad. Te recordamos que estaremos anulando el cobro de <b>S/ " + monto7 +
