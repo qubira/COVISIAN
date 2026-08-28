@@ -6,7 +6,8 @@
 "express": "NO",
 "hasta": null,
 "rango": "2 Y 3",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "ANCASH",
@@ -15,7 +16,8 @@
 "express": "NO",
 "hasta": null,
 "rango": "2 Y 3",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "ANCASH",
@@ -24,7 +26,8 @@
 "express": "NO",
 "hasta": null,
 "rango": "2 Y 3",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "ANCASH",
@@ -33,7 +36,8 @@
 "express": "NO",
 "hasta": null,
 "rango": "2 Y 3",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "AREQUIPA",
@@ -42,7 +46,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "AREQUIPA",
@@ -51,7 +56,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "AREQUIPA",
@@ -60,7 +66,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "AREQUIPA",
@@ -69,7 +76,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "AREQUIPA",
@@ -78,7 +86,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "AREQUIPA",
@@ -87,7 +96,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "AREQUIPA",
@@ -96,7 +106,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "AREQUIPA",
@@ -105,7 +116,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "AREQUIPA",
@@ -114,7 +126,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "AREQUIPA",
@@ -123,7 +136,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "AREQUIPA",
@@ -132,7 +146,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "AYACUCHO",
@@ -141,7 +156,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "AYACUCHO",
@@ -150,7 +166,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "AYACUCHO",
@@ -159,7 +176,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "AYACUCHO",
@@ -168,7 +186,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "AYACUCHO",
@@ -177,7 +196,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "CAJAMARCA",
@@ -186,7 +206,8 @@
 "express": "NO",
 "hasta": null,
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "CAJAMARCA",
@@ -195,7 +216,8 @@
 "express": "NO",
 "hasta": null,
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "CUSCO",
@@ -204,7 +226,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "CUSCO",
@@ -213,7 +236,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "CUSCO",
@@ -222,7 +246,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "CUSCO",
@@ -231,7 +256,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "CUSCO",
@@ -240,7 +266,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "HUANUCO",
@@ -249,7 +276,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "HUANUCO",
@@ -258,7 +286,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "HUANUCO",
@@ -267,7 +296,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "ICA",
@@ -276,7 +306,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "ICA",
@@ -285,7 +316,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "ICA",
@@ -294,7 +326,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "ICA",
@@ -303,7 +336,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "ICA",
@@ -312,7 +346,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "ICA",
@@ -321,7 +356,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "ICA",
@@ -330,7 +366,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "ICA",
@@ -339,7 +376,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "ICA",
@@ -348,7 +386,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "ICA",
@@ -357,7 +396,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "ICA",
@@ -366,7 +406,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "ICA",
@@ -375,7 +416,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "ICA",
@@ -384,7 +426,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "ICA",
@@ -393,7 +436,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "ICA",
@@ -402,7 +446,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "JUNIN",
@@ -411,7 +456,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "2 Y 3",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "JUNIN",
@@ -420,7 +466,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "2 Y 3",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "JUNIN",
@@ -429,7 +476,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "2 Y 3",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "JUNIN",
@@ -438,7 +486,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "2 Y 3",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LA LIBERTAD",
@@ -447,7 +496,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LA LIBERTAD",
@@ -456,7 +506,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LA LIBERTAD",
@@ -465,7 +516,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LA LIBERTAD",
@@ -474,7 +526,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LA LIBERTAD",
@@ -483,7 +536,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LA LIBERTAD",
@@ -492,7 +546,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LA LIBERTAD",
@@ -501,7 +556,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LA LIBERTAD",
@@ -510,7 +566,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LA LIBERTAD",
@@ -519,7 +576,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LA LIBERTAD",
@@ -528,7 +586,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "VIERNES"
+"diaEntrega": "VIERNES",
+"diasEntrega": 3
 },
 {
 "departamento": "LA LIBERTAD",
@@ -537,7 +596,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "VIERNES"
+"diaEntrega": "VIERNES",
+"diasEntrega": 3
 },
 {
 "departamento": "LAMBAYEQUE",
@@ -546,7 +606,8 @@
 "express": "SI",
 "hasta": "17:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LAMBAYEQUE",
@@ -555,7 +616,8 @@
 "express": "SI",
 "hasta": "17:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LAMBAYEQUE",
@@ -564,7 +626,8 @@
 "express": "SI",
 "hasta": "17:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LAMBAYEQUE",
@@ -573,7 +636,8 @@
 "express": "SI",
 "hasta": "17:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LAMBAYEQUE",
@@ -582,7 +646,8 @@
 "express": "SI",
 "hasta": "17:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LAMBAYEQUE",
@@ -591,7 +656,8 @@
 "express": "SI",
 "hasta": "17:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LAMBAYEQUE",
@@ -600,7 +666,8 @@
 "express": "SI",
 "hasta": "17:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LAMBAYEQUE",
@@ -609,7 +676,8 @@
 "express": "NO",
 "hasta": null,
 "rango": "TODOS",
-"diaEntrega": "JUEVES"
+"diaEntrega": "JUEVES",
+"diasEntrega": 2
 },
 {
 "departamento": "LAMBAYEQUE",
@@ -618,7 +686,8 @@
 "express": "NO",
 "hasta": null,
 "rango": "TODOS",
-"diaEntrega": "JUEVES"
+"diaEntrega": "JUEVES",
+"diasEntrega": 2
 },
 {
 "departamento": "LIMA",
@@ -627,7 +696,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -636,7 +706,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -645,7 +716,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -654,7 +726,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -663,7 +736,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -672,7 +746,8 @@
 "express": "NO",
 "hasta": "-",
 "rango": 1,
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -681,7 +756,8 @@
 "express": "NO",
 "hasta": "-",
 "rango": 1,
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -690,7 +766,8 @@
 "express": "NO",
 "hasta": "-",
 "rango": 1,
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -699,7 +776,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -708,7 +786,8 @@
 "express": "SI",
 "hasta": "17:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -717,7 +796,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -726,7 +806,8 @@
 "express": "NO",
 "hasta": "-",
 "rango": 1,
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -735,7 +816,8 @@
 "express": "NO",
 "hasta": "-",
 "rango": 1,
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -744,7 +826,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -753,7 +836,8 @@
 "express": "NO",
 "hasta": "-",
 "rango": 1,
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -762,7 +846,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -771,7 +856,8 @@
 "express": "NO",
 "hasta": "-",
 "rango": 1,
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -780,7 +866,8 @@
 "express": "SI",
 "hasta": "17:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -789,7 +876,8 @@
 "express": "SI",
 "hasta": "17:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -798,7 +886,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -807,7 +896,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -816,7 +906,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -825,7 +916,8 @@
 "express": "SI",
 "hasta": "17:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -834,7 +926,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -843,7 +936,8 @@
 "express": "NO",
 "hasta": "-",
 "rango": 1,
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -852,7 +946,8 @@
 "express": "NO",
 "hasta": "-",
 "rango": 1,
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -861,7 +956,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -870,7 +966,8 @@
 "express": "SI",
 "hasta": "17:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -879,7 +976,8 @@
 "express": "NO",
 "hasta": "-",
 "rango": 1,
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -888,7 +986,8 @@
 "express": "NO",
 "hasta": "-",
 "rango": 1,
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -897,7 +996,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -906,7 +1006,8 @@
 "express": "NO",
 "hasta": "-",
 "rango": 1,
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -915,7 +1016,8 @@
 "express": "NO",
 "hasta": "-",
 "rango": 1,
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -924,7 +1026,8 @@
 "express": "NO",
 "hasta": "-",
 "rango": 1,
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -933,7 +1036,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -942,7 +1046,8 @@
 "express": "NO",
 "hasta": "-",
 "rango": 1,
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -951,7 +1056,8 @@
 "express": "SI",
 "hasta": "17:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -960,7 +1066,8 @@
 "express": "SI",
 "hasta": "17:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -969,7 +1076,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -978,7 +1086,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -987,7 +1096,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -996,7 +1106,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -1005,7 +1116,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -1014,7 +1126,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -1023,7 +1136,8 @@
 "express": "NO",
 "hasta": "-",
 "rango": 1,
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -1032,7 +1146,8 @@
 "express": "NO",
 "hasta": "-",
 "rango": 1,
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -1041,7 +1156,8 @@
 "express": "SI",
 "hasta": "17:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -1050,7 +1166,8 @@
 "express": "SI",
 "hasta": "17:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -1059,7 +1176,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LIMA",
@@ -1068,7 +1186,8 @@
 "express": "SI",
 "hasta": "16:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "LORETO",
@@ -1077,7 +1196,8 @@
 "express": "NO",
 "hasta": null,
 "rango": "TODOS",
-"diaEntrega": "JUEVES"
+"diaEntrega": "JUEVES",
+"diasEntrega": 2
 },
 {
 "departamento": "MOQUEGUA",
@@ -1086,7 +1206,8 @@
 "express": "NO",
 "hasta": null,
 "rango": "TODOS",
-"diaEntrega": "JUEVES"
+"diaEntrega": "JUEVES",
+"diasEntrega": 2
 },
 {
 "departamento": "PIURA",
@@ -1095,7 +1216,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "PIURA",
@@ -1104,7 +1226,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "VIERNES"
+"diaEntrega": "VIERNES",
+"diasEntrega": 3
 },
 {
 "departamento": "PIURA",
@@ -1113,7 +1236,8 @@
 "express": "SI",
 "hasta": "17:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "PIURA",
@@ -1122,7 +1246,8 @@
 "express": "SI",
 "hasta": "17:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "PIURA",
@@ -1131,7 +1256,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "PIURA",
@@ -1140,7 +1266,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "JUEVES"
+"diaEntrega": "JUEVES",
+"diasEntrega": 2
 },
 {
 "departamento": "PIURA",
@@ -1149,7 +1276,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "JUEVES"
+"diaEntrega": "JUEVES",
+"diasEntrega": 2
 },
 {
 "departamento": "PIURA",
@@ -1158,7 +1286,8 @@
 "express": "SI",
 "hasta": "17:00",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "PIURA",
@@ -1167,7 +1296,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "PIURA",
@@ -1176,7 +1306,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "PIURA",
@@ -1185,7 +1316,8 @@
 "express": "NO",
 "hasta": "",
 "rango": "TODOS",
-"diaEntrega": "JUEVES"
+"diaEntrega": "JUEVES",
+"diasEntrega": 2
 },
 {
 "departamento": "PUNO",
@@ -1194,7 +1326,8 @@
 "express": "NO",
 "hasta": null,
 "rango": "TODOS",
-"diaEntrega": "JUEVES"
+"diaEntrega": "JUEVES",
+"diasEntrega": 2
 },
 {
 "departamento": "PUNO",
@@ -1203,7 +1336,8 @@
 "express": "NO",
 "hasta": null,
 "rango": "TODOS",
-"diaEntrega": "JUEVES"
+"diaEntrega": "JUEVES",
+"diasEntrega": 2
 },
 {
 "departamento": "SAN MARTIN",
@@ -1212,7 +1346,8 @@
 "express": "NO",
 "hasta": null,
 "rango": 3,
-"diaEntrega": "MIERCOLES"
+"diaEntrega": "MIERCOLES",
+"diasEntrega": 1
 },
 {
 "departamento": "TACNA",
@@ -1221,7 +1356,8 @@
 "express": "NO",
 "hasta": null,
 "rango": "TODOS",
-"diaEntrega": "JUEVES"
+"diaEntrega": "JUEVES",
+"diasEntrega": 2
 },
 {
 "departamento": "TACNA",
@@ -1230,7 +1366,8 @@
 "express": "NO",
 "hasta": null,
 "rango": "TODOS",
-"diaEntrega": "JUEVES"
+"diaEntrega": "JUEVES",
+"diasEntrega": 2
 },
 {
 "departamento": "TACNA",
@@ -1239,7 +1376,8 @@
 "express": "NO",
 "hasta": null,
 "rango": "TODOS",
-"diaEntrega": "JUEVES"
+"diaEntrega": "JUEVES",
+"diasEntrega": 2
 },
 {
 "departamento": "TACNA",
@@ -1248,7 +1386,8 @@
 "express": "NO",
 "hasta": null,
 "rango": "TODOS",
-"diaEntrega": "JUEVES"
+"diaEntrega": "JUEVES",
+"diasEntrega": 2
 },
 {
 "departamento": "TACNA",
@@ -1257,7 +1396,8 @@
 "express": "NO",
 "hasta": null,
 "rango": "TODOS",
-"diaEntrega": "JUEVES"
+"diaEntrega": "JUEVES",
+"diasEntrega": 2
 },
 {
 "departamento": "UCAYALI",
@@ -1266,7 +1406,8 @@
 "express": "NO",
 "hasta": null,
 "rango": "TODOS",
-"diaEntrega": "JUEVES"
+"diaEntrega": "JUEVES",
+"diasEntrega": 2
 },
 {
 "departamento": "UCAYALI",
@@ -1275,7 +1416,8 @@
 "express": "NO",
 "hasta": null,
 "rango": "TODOS",
-"diaEntrega": "JUEVES"
+"diaEntrega": "JUEVES",
+"diasEntrega": 2
 },
 {
 "departamento": "UCAYALI",
@@ -1284,6 +1426,7 @@
 "express": "NO",
 "hasta": null,
 "rango": "TODOS",
-"diaEntrega": "JUEVES"
+"diaEntrega": "JUEVES",
+"diasEntrega": 2
 }
 ]

@@ -4410,8 +4410,26 @@ if (location.protocol === "file:") {
     });
   }
 
+  // el "diaEntrega" que trae el JSON quedo congelado a la fecha en que se genero cobertura.json
+  // (ver comentario de _dia_entrega_real en extract_data.py) — se recalcula aca con la fecha
+  // real del navegador a partir de "diasEntrega" (numero crudo de dias habiles, sin domingo),
+  // asi siempre coincide con "hoy" sin importar cuando se corrio la extraccion por ultima vez.
+  var DIAS_ES = ["LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES", "SABADO", "DOMINGO"];
+  function diaEntregaDesdeHoy(dias){
+    if (typeof dias !== "number" || isNaN(dias)) return null;
+    var d = new Date();
+    var contador = 0;
+    while (contador < dias){
+      d.setDate(d.getDate() + 1);
+      if (d.getDay() !== 0) contador++; // 0 = domingo en JS, se salta igual que en Python
+    }
+    var jsDow = d.getDay();
+    return DIAS_ES[jsDow === 0 ? 6 : jsDow - 1];
+  }
+
   function aplicarCobertura(row){
     seleccionCobertura = row;
+    row.diaEntrega = diaEntregaDesdeHoy(row.diasEntrega) || row.diaEntrega;
     $("distrito").value = row.distrito || "";
     $("provincia").value = row.provincia || "";
     $("departamento").value = row.departamento || "";

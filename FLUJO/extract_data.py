@@ -62,6 +62,13 @@ def _dia_entrega_real(fecha_venta, dias, valor_excel):
     (datos crudos, no formulas), aplicando la regla que SI se confirma correcta dentro
     del propio archivo (saltar solo domingo). Si fecha_venta/dias no son utilizables,
     se cae de vuelta al valor que ya trae el Excel en esa fila.
+
+    OJO: fecha_venta es la celda =TODAY() cacheada por Excel la ultima vez que el archivo
+    se guardo abierto en Excel (openpyxl con data_only=True lee ese valor congelado, no
+    recalcula la formula) — NO es "hoy" en el momento en que un agente usa la app. Por eso
+    el JSON tambien exporta "diasEntrega" (el numero crudo de dias) para que index.html
+    recalcule el dia de entrega con la fecha real del navegador en cada carga, en vez de
+    confiar en este valor ya congelado. Ver diaEntregaDesdeHoy() en index.html.
     """
     if not isinstance(fecha_venta, datetime.datetime) or not isinstance(dias, (int, float)):
         return clean(valor_excel)
@@ -91,6 +98,7 @@ def extract_cobertura():
             "hasta": clean(r[8]),
             "rango": clean(r[13]),
             "diaEntrega": _dia_entrega_real(r[3], r[14], r[17] or r[16]),
+            "diasEntrega": int(r[14]) if isinstance(r[14], (int, float)) else None,
         })
 
     ws = wb["PROVINCIA"]
@@ -105,6 +113,7 @@ def extract_cobertura():
             "hasta": clean(r[8]),
             "rango": clean(r[11]),
             "diaEntrega": _dia_entrega_real(r[3], r[15], r[17]),
+            "diasEntrega": int(r[15]) if isinstance(r[15], (int, float)) else None,
         })
 
     # dedupe by distrito+provincia+departamento (keep first)
