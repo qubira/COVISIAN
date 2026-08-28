@@ -3890,6 +3890,9 @@ if (location.protocol === "file:") {
     this.value = formatearFechaConBarras(this.value);
     calcularZondeoPenalidad();
   });
+  $("contratoFechaNacimiento").addEventListener("input", function(){
+    this.value = formatearFechaConBarras(this.value);
+  });
 
   // mismo botón explícito que arriba, para el numero nuevo de penalidad.
   $("btnZondeoNuevoNumeroNuevoNumero").addEventListener("click", function(){
