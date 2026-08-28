@@ -3927,7 +3927,9 @@ if (location.protocol === "file:") {
     $("campoZondeoMontoPendiente").classList.remove("oculto");
     $("zondeoScriptMontoPendiente").classList.remove("oculto");
   }
-  $("zondeoMontoPendiente").addEventListener("input", actualizarScriptMontoPendiente);
+  // "input" recalcula todo el resultado (no solo el guion morado) porque el mismo campo de
+  // monto ahora se usa tanto en el caso rojo (guion morado) como en el verde (mensaje 7.1).
+  $("zondeoMontoPendiente").addEventListener("input", calcularZondeoPenalidad);
   // "change" (no "input"): si se disparara en cada tecla, CONTRATO 7 quedaria autocompletado
   // con el monto a medio escribir (ej: "5" de "500") por la misma razon que btnZondeoNumeroPedidoNuevoNumero
   // usa un clic en vez de "input" — solo que aca no hace falta boton, "change" ya espera a que
@@ -3967,8 +3969,18 @@ if (location.protocol === "file:") {
     hoy.setHours(0, 0, 0, 0);
     umbral.setHours(0, 0, 0, 0);
     if (hoy >= umbral){
-      out.innerHTML = '<span style="color:var(--verde);font-weight:700;">✅ Sin riesgo de penalidad: ya pasaron más de 6 meses y 1 día desde la última renovación. Puede renovar sin problema con este número.</span>';
-      ocultarBloquePenalidadActiva();
+      // ya pasaron los 6 meses + 1 dia: es exactamente el mismo caso de exoneracion que
+      // CONTRATO 7.1 mostrara mas adelante, asi que se adelanta el mismo guion aca — el monto
+      // se anota en el mismo campo #zondeoMontoPendiente que usa el caso rojo.
+      var montoVerde = $("zondeoMontoPendiente").value.trim();
+      var montoTextoVerde = montoVerde ? ("S/ " + montoVerde) : "S/ XXX";
+      out.innerHTML = '<span style="color:var(--verde);font-weight:700;">7.1. EXONERAR PENALIDAD (permanencia mayor ' +
+        'o igual a 6 meses + 1 día) Te recordamos que estaremos anulando el cobro de ' + montoTextoVerde +
+        ' por penalidad vigente de su contrato anterior.</span>';
+      $("campoZondeoMontoPendiente").classList.remove("oculto");
+      $("zondeoScriptMontoPendiente").classList.add("oculto");
+      $("campoZondeoNuevoNumero").classList.add("oculto");
+      $("campoZondeoLibrePenalidad").classList.add("oculto");
     } else {
       out.innerHTML = '<span style="color:var(--rojo);font-weight:700;">⚠ Todavía no se puede renovar un equipo con este número (aún no pasan los 6 meses + 1 día de permanencia). Anote un número distinto para evaluar.</span>';
       $("campoZondeoNuevoNumero").classList.remove("oculto");
