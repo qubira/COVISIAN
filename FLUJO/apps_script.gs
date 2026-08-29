@@ -3,7 +3,7 @@
  * y escribirlos en el Google Sheet al que este script esté vinculado (Extensiones →
  * Apps Script del propio Sheet — ver GUIA_APPS_SCRIPT.md).
  *
- * Maneja 5 tipos de envio (campo "accion" en el POST):
+ * Maneja 6 tipos de envio (campo "accion" en el POST):
  *  - "venta"               (o sin campo accion): agrega una fila nueva en la hoja "Ventas".
  *  - "borrador"             : autoguardado en progreso -> upsert (crea o actualiza) una fila
  *                            en la hoja "Borradores", identificada por draftId.
@@ -11,6 +11,10 @@
  *  - "agendarLlamada"       : boton "Agendar llamada" -> agrega una fila en "Llamadas Agendadas".
  *  - "actualizarEstadoAgenda": botones "Tomar caso"/"Concretado" -> actualiza la columna
  *                            "estado" de la fila con ese id en "Llamadas Agendadas".
+ *  - "tipificacion"        : boton "Tipificar" -> agrega una fila (mismas columnas que
+ *                            "Ventas") en la hoja con el nombre exacto de datos.tipificacion
+ *                            ("Contacto efectivo" / "No contacto efectivo" / "No contacto"),
+ *                            creandola si todavia no existe.
  *
  * Ver pasos de instalacion en GUIA_APPS_SCRIPT.md
  */
@@ -18,6 +22,7 @@
 var HOJA_VENTAS = "Ventas";
 var HOJA_BORRADORES = "Borradores";
 var HOJA_AGENDA = "Llamadas Agendadas";
+var TIPIFICACIONES_VALIDAS = ["Contacto efectivo", "No contacto efectivo", "No contacto"];
 
 var COLUMNAS_VENTA = [
   "fecha", "guionAni", "guionAniReferencia", "guionDni", "guionEsTitular", "guionNombreCliente", "guionNombreTitular", "guionNumero",
@@ -96,6 +101,8 @@ function doPost(e) {
       guardarAgenda(datos);
     } else if (accion === "actualizarEstadoAgenda") {
       actualizarEstadoAgenda(datos.id, datos.estado);
+    } else if (accion === "tipificacion") {
+      guardarTipificacion(datos);
     } else {
       guardarVenta(datos);
     }
@@ -110,6 +117,22 @@ function doPost(e) {
 
 function guardarVenta(datos) {
   var hoja = obtenerOCrearHoja(HOJA_VENTAS, COLUMNAS_VENTA);
+  var fila = COLUMNAS_VENTA.map(function (campo) {
+    return datos[campo] !== undefined ? datos[campo] : "";
+  });
+  hoja.appendRow(fila);
+}
+
+// Boton "Tipificar": mismo snapshot completo que "venta" (COLUMNAS_VENTA), pero cada
+// tipificacion tiene su propia hoja (se crea sola la primera vez, como cualquier otra
+// hoja de este script). Nombre de hoja restringido a las 3 tipificaciones conocidas para
+// que un valor inesperado del frontend no cree una hoja nueva por error de tipeo.
+function guardarTipificacion(datos) {
+  var nombreHoja = datos.tipificacion;
+  if (TIPIFICACIONES_VALIDAS.indexOf(nombreHoja) === -1) {
+    throw new Error("Tipificación desconocida: " + nombreHoja);
+  }
+  var hoja = obtenerOCrearHoja(nombreHoja, COLUMNAS_VENTA);
   var fila = COLUMNAS_VENTA.map(function (campo) {
     return datos[campo] !== undefined ? datos[campo] : "";
   });

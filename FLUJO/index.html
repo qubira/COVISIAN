@@ -263,6 +263,21 @@
 
   .fila-input-btn{ display:flex; gap:6px; }
   .fila-input-btn input{ flex:1; min-width:0; }
+
+  .fila-guardar-tipificar{ display:flex; gap:8px; align-items:stretch; }
+  .fila-guardar-tipificar .btn{ flex:1; }
+  .fila-guardar-tipificar .btn-agendar{ width:auto; white-space:nowrap; }
+  .tipificacion-opciones{ display:flex; flex-direction:column; gap:8px; }
+  .btn-tipificacion{
+    border:1.5px solid var(--azul); background:var(--azul-bg); color:var(--azul); border-radius:8px;
+    padding:10px 12px; font-size:13px; font-weight:700; cursor:pointer; text-align:left;
+  }
+  .btn-tipificacion:hover{ background:var(--azul); color:#fff; }
+  .toast-tipificacion{
+    position:fixed; top:14px; left:50%; transform:translateX(-50%); z-index:900;
+    background:var(--verde); color:#fff; padding:10px 18px; border-radius:8px; font-size:13.5px;
+    font-weight:700; box-shadow:0 6px 20px rgba(0,0,0,.25); max-width:calc(100vw - 24px); text-align:center;
+  }
   .btn-mini{
     border:1.5px solid var(--azul); background:var(--azul-bg); color:var(--azul);
     border-radius:6px; padding:0 10px; font-size:11.5px; font-weight:700; cursor:pointer;
@@ -941,6 +956,7 @@ if (location.protocol === "file:") {
       <button type="button" class="btn-agendar" id="btnCambiosHistoricos" title="Equipos y colores agregados o eliminados del stock">🕓 <span>Cambios</span> <span class="badge-casos oculto" id="badgeCambiosHistoricos">0</span></button>
       <button type="button" class="btn-agendar" id="btnContabilizarTiempo" title="Contabilizar tiempo de gestión">⏱ <span>Tiempo</span></button>
       <a href="tienda-movistar.html" target="_blank" rel="noopener" class="btn-agendar" style="text-decoration:none;" title="Precios reales de Movistar y Claro, para comparar (solo referencia)">🏪 <span>Tiendas</span></a>
+      <button type="button" class="btn-agendar" id="btnTipificacionHeader" title="Tipificar la llamada y empezar un caso nuevo">🏷️ <span>Tipificar</span></button>
       <button type="button" class="btn-agendar oculto" id="btnBitacoraRebate" title="Bitácora de objeciones de este cliente">📋 <span>Bitácora</span></button>
     </div>
     <div style="display:flex; gap:5px; flex-shrink:0;">
@@ -1816,11 +1832,31 @@ if (location.protocol === "file:") {
       </div>
     </div>
 
-    <button type="submit" class="btn" id="btnGuardar">GUARDAR</button>
+    <div class="fila-guardar-tipificar">
+      <button type="submit" class="btn" id="btnGuardar">GUARDAR</button>
+      <button type="button" class="btn-agendar" id="btnTipificacionVenta" title="Tipificar la llamada y empezar un caso nuevo">🏷️ <span>Tipificar</span></button>
+    </div>
     <div id="mensajeEnvio"></div>
   </fieldset>
 
 </form>
+
+<div class="popover-region oculto" id="popoverTipificacion">
+  <div class="popover-region-header">
+    <div class="popover-region-titulo">TIPIFICAR LLAMADA</div>
+    <button type="button" class="btn-cerrar" id="btnCerrarTipificacion">✕</button>
+  </div>
+  <div class="popover-region-seccion" style="color:var(--gris); margin-bottom:10px;">
+    Guarda todo el formulario en su hoja correspondiente y empieza un caso nuevo.
+  </div>
+  <div class="tipificacion-opciones">
+    <button type="button" class="btn-tipificacion" data-tipificacion="Contacto efectivo">Contacto efectivo</button>
+    <button type="button" class="btn-tipificacion" data-tipificacion="No contacto efectivo">No contacto efectivo</button>
+    <button type="button" class="btn-tipificacion" data-tipificacion="No contacto">No contacto</button>
+  </div>
+</div>
+
+<div class="toast-tipificacion oculto" id="toastTipificacion"></div>
 
 <div class="modal-overlay oculto" id="modalAgendar">
   <div class="modal-caja">
@@ -1835,6 +1871,13 @@ if (location.protocol === "file:") {
     <div class="campo">
       <label for="agendaHora">HORA</label>
       <input type="time" id="agendaHora">
+    </div>
+    <div class="campo">
+      <label for="agendaNumero">NÚMERO</label>
+      <div class="fila-input-btn">
+        <input type="tel" id="agendaNumero" placeholder="Número de contacto">
+        <button type="button" class="btn-mini" id="btnAgendaNumeroIgualRef" title="Copiar el número de referencia del encabezado">Igual al número de referencia</button>
+      </div>
     </div>
     <div class="campo autocomplete" id="ac-agenda-equipo">
       <label for="agendaEquipo">CELULAR QUE LE INTERESA</label>
@@ -4373,7 +4416,9 @@ if (location.protocol === "file:") {
   // misma mecanica de posicionamiento/cierre para ambos, solo cambia el contenido de cada uno.
   var POPOVERS_ANCLADOS = [
     { btn: "btnInfoRegion", popover: "popoverRegion" },
-    { btn: "btnInfoCodFinanciamiento", popover: "popoverCodFinanciamiento" }
+    { btn: "btnInfoCodFinanciamiento", popover: "popoverCodFinanciamiento" },
+    { btn: "btnTipificacionHeader", popover: "popoverTipificacion" },
+    { btn: "btnTipificacionVenta", popover: "popoverTipificacion" }
   ];
 
   function abrirPopoverAnclado(btnId, popoverId){
@@ -4423,6 +4468,26 @@ if (location.protocol === "file:") {
   });
   $("btnCerrarInfoCodFinanciamiento").addEventListener("click", function(){
     $("popoverCodFinanciamiento").classList.add("oculto");
+  });
+
+  // TIPIFICAR: mismo popover accesible desde dos botones (encabezado fijo y junto a
+  // GUARDAR) — abrirPopoverAnclado ya soporta esto, se reposiciona segun cual boton
+  // se haya presionado. Elegir una opcion guarda el formulario completo en su propia
+  // hoja de Sheets y arranca un caso nuevo, sin exigir que "¿SE VENDIO?" este contestado.
+  ["btnTipificacionHeader", "btnTipificacionVenta"].forEach(function(id){
+    $(id).addEventListener("click", function(e){
+      e.stopPropagation();
+      abrirPopoverAnclado(id, "popoverTipificacion");
+    });
+  });
+  $("btnCerrarTipificacion").addEventListener("click", function(){
+    $("popoverTipificacion").classList.add("oculto");
+  });
+  document.querySelectorAll(".btn-tipificacion").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      $("popoverTipificacion").classList.add("oculto");
+      enviarTipificacion(btn.dataset.tipificacion);
+    });
   });
 
   document.addEventListener("click", function(e){
@@ -6925,11 +6990,18 @@ if (location.protocol === "file:") {
     $("btnAgendarLlamada").addEventListener("click", function(){
       $("agendaFecha").value = new Date().toISOString().slice(0, 10);
       $("agendaHora").value = "";
-      $("agendaEquipo").value = "";
+      // se pre-llenan con lo que ya haya en el formulario en curso (numero de referencia y
+      // equipo elegido), asi el agente no tiene que volver a escribirlos si ya los tenia.
+      $("agendaNumero").value = $("guionAniReferencia").value.trim();
+      $("agendaEquipo").value = $("equipo").value.trim();
       $("agendaObservacion").value = "";
       $("mensajeAgenda").innerHTML = "";
       $("modalAgendar").classList.remove("oculto");
       $("agendaFecha").focus();
+    });
+
+    $("btnAgendaNumeroIgualRef").addEventListener("click", function(){
+      $("agendaNumero").value = $("guionAniReferencia").value.trim();
     });
 
     $("btnCerrarAgendar").addEventListener("click", function(){
@@ -6957,7 +7029,7 @@ if (location.protocol === "file:") {
         fecha: fecha,
         hora: hora,
         cel: $("guionAni").value.trim(),
-        celReferencia: $("guionAniReferencia").value.trim(),
+        celReferencia: $("agendaNumero").value.trim(),
         nombre: $("guionNombreCliente").value.trim(),
         equipoInteres: equipoInteres,
         observacion: observacion,
@@ -7165,25 +7237,14 @@ if (location.protocol === "file:") {
   }
 
   // ============ ENVÍO ============
-  document.getElementById("ficha").addEventListener("submit", function(e){
-    e.preventDefault();
-
+  // Arma el snapshot completo del formulario tal como se envia a la hoja "Ventas" al
+  // presionar GUARDAR. Se saco a una funcion aparte para que TIPIFICAR (enviarTipificacion)
+  // pueda reusar exactamente los mismos campos hacia sus propias hojas, sin duplicar esta
+  // lista ni arriesgarse a que las dos rutas de envio se desincronicen con el tiempo.
+  function construirRegistro(){
     var vendidoEl = document.querySelector('input[name=vendido]:checked');
-    if (!vendidoEl){
-      alert("Indique si se vendió o no.");
-      return;
-    }
-    var vendido = vendidoEl.value;
-    if (vendido === "NO" && !$("motivo").value){
-      alert("Seleccione un motivo.");
-      return;
-    }
-    if (vendido === "NO" && $("motivo").value === "OTRO" && !$("motivoOtro").value.trim()){
-      alert("Especifique el motivo en el campo de texto.");
-      return;
-    }
-
-    var registro = {
+    var vendido = vendidoEl ? vendidoEl.value : "";
+    return {
       fecha: new Date().toISOString(),
       guionAni: $("guionAni").value.trim(),
       guionAniReferencia: $("guionAniReferencia").value.trim(),
@@ -7274,6 +7335,27 @@ if (location.protocol === "file:") {
       vendido: vendido,
       motivo: vendido === "NO" ? ($("motivo").value === "OTRO" ? $("motivoOtro").value : $("motivo").options[$("motivo").selectedIndex].text) : ""
     };
+  }
+
+  document.getElementById("ficha").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    var vendidoEl = document.querySelector('input[name=vendido]:checked');
+    if (!vendidoEl){
+      alert("Indique si se vendió o no.");
+      return;
+    }
+    var vendido = vendidoEl.value;
+    if (vendido === "NO" && !$("motivo").value){
+      alert("Seleccione un motivo.");
+      return;
+    }
+    if (vendido === "NO" && $("motivo").value === "OTRO" && !$("motivoOtro").value.trim()){
+      alert("Especifique el motivo en el campo de texto.");
+      return;
+    }
+
+    var registro = construirRegistro();
 
     var mensaje = $("mensajeEnvio");
     var btn = $("btnGuardar");
@@ -7326,6 +7408,52 @@ if (location.protocol === "file:") {
       cerrarLlamada('<div class="aviso err">No se pudo enviar a la hoja de cálculo (quedó guardada localmente). Detalle: ' + err + '</div>');
     });
   });
+
+  // TIPIFICAR: ruta alterna a GUARDAR, para casos que no llegan a definirse como venta/no
+  // venta (ej. el cliente no contesta) pero igual hay que dejar registrado en su propia
+  // hoja de Sheets y liberar el formulario para la siguiente llamada — no exige que
+  // "¿SE VENDIÓ?" este contestado, reusa exactamente el mismo snapshot de construirRegistro().
+  function enviarTipificacion(tipo){
+    var registro = construirRegistro();
+    registro.accion = "tipificacion";
+    registro.tipificacion = tipo;
+    var idBorradorActual = draftId;
+
+    try{
+      var historico = JSON.parse(localStorage.getItem("fichas_llamada") || "[]");
+      historico.push(registro);
+      if (historico.length > 300) historico = historico.slice(historico.length - 300);
+      localStorage.setItem("fichas_llamada", JSON.stringify(historico));
+    }catch(err){ /* localStorage no disponible */ }
+
+    clearTimeout(syncTimer);
+    cerrarBorradorRemoto(idBorradorActual);
+    // si esta llamada se origino en un "Tomar caso", al tipificarla el caso agendado
+    // queda resuelto: se marca CONCRETADO para que salga de la lista/alerta.
+    if (casoAgendadoActivoId) marcarConcretado(casoAgendadoActivoId);
+
+    if (tieneScriptConfigurado()){
+      fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(registro)
+      }).catch(function(){ /* queda guardado localmente igual */ });
+      mostrarToast("✔ Tipificado como \"" + tipo + "\" — nuevo caso listo", 3000);
+    } else {
+      mostrarToast("⚠ Guardado localmente (falta configurar GOOGLE_SCRIPT_URL)", 3500);
+    }
+
+    setTimeout(limpiarFormularioCompleto, 1800);
+  }
+
+  function mostrarToast(texto, ms){
+    var t = $("toastTipificacion");
+    t.textContent = texto;
+    t.classList.remove("oculto");
+    clearTimeout(t._timerOculto);
+    t._timerOculto = setTimeout(function(){ t.classList.add("oculto"); }, ms || 2500);
+  }
 
 })();
 </script>

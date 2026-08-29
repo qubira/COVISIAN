@@ -37,7 +37,7 @@ formulario. Se hace una sola vez, dura 5 minutos.
 
    Reemplaza el texto entre comillas por la URL que copiaste. Guarda el archivo.
 
-9. Listo. El script crea tres pestañas solo (con encabezados, la primera vez que
+9. Listo. El script crea las pestañas solo (con encabezados, la primera vez que
    les llega algo):
 
    - **"Borradores"**: autoguardado en vivo. Mientras el agente llena el
@@ -52,7 +52,15 @@ formulario. Se hace una sola vez, dura 5 minutos.
      "en progreso".
    - **"Llamadas Agendadas"**: se agrega una fila cada vez que se usa el botón
      **"📅 Agendar llamada"** del encabezado y se guarda la cita (fecha, hora,
-     celular/celular referencia, nombre, equipo de interés y observación).
+     número, celular/celular referencia, nombre, equipo de interés y
+     observación).
+   - **"Contacto efectivo" / "No contacto efectivo" / "No contacto"**: se
+     agrega una fila (mismas columnas que "Ventas") cada vez que se usa el
+     botón **"🏷️ Tipificar"** (encabezado o junto a GUARDAR) y se elige una de
+     estas 3 opciones. No exige que "¿SE VENDIÓ?" esté contestado — pensado
+     para casos que no llegan a completar todo el formulario (ej. el cliente
+     no contesta). Igual que con GUARDAR, el formulario se limpia solo y
+     empieza un caso nuevo.
 
 ## Notas
 
