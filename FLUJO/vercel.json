@@ -1,7 +1,0 @@
-{
-  "functions": {
-    "api/tienda-movistar.js": {
-      "maxDuration": 30
-    }
-  }
-}

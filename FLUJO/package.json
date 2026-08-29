@@ -1,9 +1,0 @@
-{
-  "name": "flujo-covisian",
-  "private": true,
-  "type": "module",
-  "dependencies": {
-    "@sparticuz/chromium": "^149.0.0",
-    "puppeteer-core": "^25.9.0"
-  }
-}

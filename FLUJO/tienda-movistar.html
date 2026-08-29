@@ -72,8 +72,9 @@
 <body>
   <h1>🏪 Tienda Movistar — Renovación</h1>
   <p class="nota-referencia">
-    Solo de referencia: precios reales de <b>tienda.movistar.com.pe</b>, leídos en vivo cada vez
-    que abres esta página. No afecta el guion ni la cotización de la ficha.
+    Solo de referencia: precios reales de <b>tienda.movistar.com.pe</b>. No afecta el guion ni
+    la cotización de la ficha. Para pedir precios más recientes, dile a Claude "actualiza la
+    tienda Movistar".
   </p>
 
   <div class="barra">
@@ -174,21 +175,26 @@
     return String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
   }
 
-  fetch("/api/tienda-movistar")
+  function horaFecha(iso){
+    var d = new Date(iso);
+    return d.toLocaleDateString("es-PE") + " " + horaCorta(iso);
+  }
+
+  fetch("data/tienda_movistar.json")
     .then(function(r){
       if (!r.ok) throw new Error("HTTP " + r.status);
       return r.json();
     })
     .then(function(data){
       EQUIPOS = data.equipos || [];
-      document.getElementById("actualizado").textContent = "Actualizado " + horaCorta(data.actualizado);
+      document.getElementById("actualizado").textContent = "Última lectura: " + horaFecha(data.actualizado);
       renderChipsMarca();
       renderGrid();
       document.getElementById("buscador").addEventListener("input", renderGrid);
     })
     .catch(function(err){
       document.getElementById("contenido").innerHTML =
-        '<div class="estado-error">⚠ No se pudo leer la tienda Movistar en este momento (' + err.message + '). Intenta recargar la página.</div>';
+        '<div class="estado-error">⚠ No se pudo cargar el catálogo guardado (' + err.message + '). Pide que se regenere data/tienda_movistar.json.</div>';
     });
 })();
 </script>
