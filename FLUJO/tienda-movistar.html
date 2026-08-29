@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tienda Movistar (referencia)</title>
+<title>Comparador de tiendas (referencia)</title>
 <style>
   :root{
     --azul:#0f3d91; --azul-claro:#1a56d6; --azul-bg:#eef3fc;
@@ -16,6 +16,12 @@
   }
   h1{ font-size:19px; color:var(--azul); margin:0 0 4px; }
   .nota-referencia{ font-size:12.5px; color:var(--gris); margin:0 0 14px; }
+  .tiendas{ display:flex; gap:8px; margin-bottom:12px; }
+  .tab-tienda{
+    border:1.5px solid var(--borde); background:#fff; color:var(--gris); border-radius:10px;
+    padding:8px 16px; font-size:13px; font-weight:700; cursor:pointer;
+  }
+  .tab-tienda.activo{ border-color:var(--azul); background:var(--azul); color:#fff; }
   .barra{
     display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:14px;
     background:#fff; border:1px solid var(--borde); border-radius:10px; padding:10px 12px;
@@ -32,6 +38,7 @@
   .estado-carga{ text-align:center; color:var(--gris); padding:40px 0; font-size:14px; }
   .estado-error{ text-align:center; color:var(--rojo); padding:40px 0; font-size:14px; }
   .actualizado{ font-size:11.5px; color:var(--gris); margin-left:auto; white-space:nowrap; }
+  .contador{ font-size:12px; color:var(--gris); margin-bottom:8px; }
   .grid-equipos{
     display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:14px;
   }
@@ -66,12 +73,17 @@
 </style>
 </head>
 <body>
-  <h1>🏪 Tienda Movistar — Renovación</h1>
+  <h1>🏪 Comparador de tiendas — Renovación</h1>
   <p class="nota-referencia">
-    Solo de referencia: precios reales de <b>tienda.movistar.com.pe</b>. No afecta el guion ni
-    la cotización de la ficha. Para pedir precios más recientes, dile a Claude "actualiza la
-    tienda Movistar".
+    Solo de referencia: precios reales de <b>tienda.movistar.com.pe</b> y <b>tienda.claro.com.pe</b>.
+    No afecta el guion ni la cotización de la ficha. Para pedir precios más recientes, dile a
+    Claude "actualiza la tienda Movistar/Claro". Busca el mismo modelo en ambas pestañas para comparar.
   </p>
+
+  <div class="tiendas" id="tiendas">
+    <button type="button" class="tab-tienda" id="tabMovistar">📶 Movistar</button>
+    <button type="button" class="tab-tienda" id="tabClaro">🔴 Claro</button>
+  </div>
 
   <div class="barra">
     <input type="text" id="buscador" placeholder="Buscar equipo...">
@@ -79,22 +91,54 @@
     <span class="actualizado" id="actualizado"></span>
   </div>
 
+  <div class="contador" id="contador"></div>
   <div id="contenido">
-    <div class="estado-carga">Cargando catálogo real de la tienda Movistar…</div>
+    <div class="estado-carga">Cargando catálogo…</div>
   </div>
 
 <script>
 (function(){
   "use strict";
-  var EQUIPOS = [];
+  var DATOS = { movistar: [], claro: [] };
+  var ACTUALIZADO = { movistar: null, claro: null };
+  var tiendaActiva = "movistar";
   var marcaActiva = "";
 
   function formatearSoles(n){
-    return "S/ " + Number(n).toLocaleString("es-PE");
+    return n == null ? "-" : "S/ " + Number(n).toLocaleString("es-PE");
+  }
+
+  // unifica la forma de Movistar y Claro a un solo shape para poder usar el mismo render
+  function normalizarEquipo(e, tienda){
+    if (tienda === "movistar"){
+      return {
+        nombre: e.nombre, marca: e.marca, imagen: e.imagen,
+        specs: [e.memoria, e.camara].filter(Boolean).join(" · "),
+        precioOferta: e.precioOferta, precioRegular: e.precioRegular,
+        descuentoPct: e.descuentoPct, url: e.url, recomendado: e.recomendado,
+        colores: e.colores || []
+      };
+    }
+    return {
+      nombre: e.nombre, marca: (e.nombre || "").split(" ")[0], imagen: e.imagen,
+      specs: e.specs,
+      precioOferta: e.precioOnline, precioRegular: null,
+      descuentoPct: e.descuentoPct, url: null, recomendado: false,
+      colores: []
+    };
+  }
+
+  function equiposActivos(){
+    return (DATOS[tiendaActiva] || []).map(function(e){ return normalizarEquipo(e, tiendaActiva); });
+  }
+
+  function renderTabs(){
+    document.getElementById("tabMovistar").className = "tab-tienda" + (tiendaActiva === "movistar" ? " activo" : "");
+    document.getElementById("tabClaro").className = "tab-tienda" + (tiendaActiva === "claro" ? " activo" : "");
   }
 
   function renderChipsMarca(){
-    var marcas = Array.from(new Set(EQUIPOS.map(function(e){ return e.marca; }))).sort();
+    var marcas = Array.from(new Set(equiposActivos().map(function(e){ return e.marca; }))).sort();
     var cont = document.getElementById("chipsMarca");
     cont.innerHTML = "";
     var todos = document.createElement("div");
@@ -111,17 +155,21 @@
     });
   }
 
-  function normalizar(s){
+  function normalizarTexto(s){
     return (s || "").toString().toUpperCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
   }
 
   function renderGrid(){
-    var q = normalizar(document.getElementById("buscador").value);
-    var filtrados = EQUIPOS.filter(function(e){
+    var q = normalizarTexto(document.getElementById("buscador").value);
+    var equipos = equiposActivos();
+    var filtrados = equipos.filter(function(e){
       if (marcaActiva && e.marca !== marcaActiva) return false;
-      if (q && normalizar(e.nombre).indexOf(q) === -1 && normalizar(e.marca).indexOf(q) === -1) return false;
+      if (q && normalizarTexto(e.nombre).indexOf(q) === -1 && normalizarTexto(e.marca).indexOf(q) === -1) return false;
       return true;
     });
+
+    document.getElementById("contador").textContent =
+      "Mostrando " + filtrados.length + " de " + equipos.length + " equipos";
 
     var cont = document.getElementById("contenido");
     if (!filtrados.length){
@@ -142,17 +190,17 @@
       card.innerHTML =
         (e.recomendado ? '<span class="badge-recomendado">★ Recomendado</span>' : "") +
         (e.descuentoPct > 0 ? '<span class="badge-descuento">' + e.descuentoPct + '% dcto.</span>' : "") +
-        '<img src="' + e.imagen + '" alt="' + e.nombre + '" loading="lazy">' +
+        '<img src="' + (e.imagen || "") + '" alt="' + e.nombre + '" loading="lazy">' +
         '<div class="marca">' + e.marca + '</div>' +
         '<div class="nombre">' + e.nombre + '</div>' +
-        '<div class="specs">' + [e.memoria, e.camara].filter(Boolean).join(" · ") + '</div>' +
+        '<div class="specs">' + (e.specs || "") + '</div>' +
         (coloresHtml ? '<div class="colores-fila">' + coloresHtml + '</div>' : "") +
         '<div class="precios">' +
           '<div class="desde">Desde</div>' +
           '<span class="precio-oferta">' + formatearSoles(e.precioOferta) + '</span>' +
           (e.precioRegular > e.precioOferta ? '<span class="precio-regular">' + formatearSoles(e.precioRegular) + '</span>' : "") +
         '</div>' +
-        '<a class="ver-tienda" href="' + e.url + '" target="_blank" rel="noopener">Ver en tienda oficial ↗</a>';
+        (e.url ? '<a class="ver-tienda" href="' + e.url + '" target="_blank" rel="noopener">Ver en tienda oficial ↗</a>' : "");
 
       grid.appendChild(card);
     });
@@ -167,26 +215,46 @@
   }
 
   function horaFecha(iso){
+    if (!iso) return "-";
     var d = new Date(iso);
     return d.toLocaleDateString("es-PE") + " " + horaCorta(iso);
   }
 
-  fetch("data/tienda_movistar.json")
-    .then(function(r){
-      if (!r.ok) throw new Error("HTTP " + r.status);
-      return r.json();
-    })
-    .then(function(data){
-      EQUIPOS = data.equipos || [];
-      document.getElementById("actualizado").textContent = "Última lectura: " + horaFecha(data.actualizado);
-      renderChipsMarca();
-      renderGrid();
-      document.getElementById("buscador").addEventListener("input", renderGrid);
-    })
-    .catch(function(err){
-      document.getElementById("contenido").innerHTML =
-        '<div class="estado-error">⚠ No se pudo cargar el catálogo guardado (' + err.message + '). Pide que se regenere data/tienda_movistar.json.</div>';
-    });
+  function actualizarEncabezado(){
+    document.getElementById("actualizado").textContent =
+      "Última lectura: " + horaFecha(ACTUALIZADO[tiendaActiva]);
+  }
+
+  function cambiarTienda(t){
+    tiendaActiva = t;
+    marcaActiva = "";
+    renderTabs();
+    renderChipsMarca();
+    renderGrid();
+    actualizarEncabezado();
+  }
+
+  document.getElementById("tabMovistar").addEventListener("click", function(){ cambiarTienda("movistar"); });
+  document.getElementById("tabClaro").addEventListener("click", function(){ cambiarTienda("claro"); });
+  document.getElementById("buscador").addEventListener("input", renderGrid);
+
+  Promise.all([
+    fetch("data/tienda_movistar.json").then(function(r){ return r.ok ? r.json() : { equipos: [] }; }).catch(function(){ return { equipos: [] }; }),
+    fetch("data/tienda_claro.json").then(function(r){ return r.ok ? r.json() : { equipos: [] }; }).catch(function(){ return { equipos: [] }; })
+  ]).then(function(res){
+    DATOS.movistar = res[0].equipos || [];
+    ACTUALIZADO.movistar = res[0].actualizado || null;
+    DATOS.claro = res[1].equipos || [];
+    ACTUALIZADO.claro = res[1].actualizado || null;
+
+    renderTabs();
+    renderChipsMarca();
+    renderGrid();
+    actualizarEncabezado();
+  }).catch(function(err){
+    document.getElementById("contenido").innerHTML =
+      '<div class="estado-error">⚠ No se pudo cargar el catálogo guardado (' + err.message + ').</div>';
+  });
 })();
 </script>
 </body>
