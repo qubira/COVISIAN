@@ -21,7 +21,8 @@ def _ultimo_archivo(carpeta, patron):
     por ejemplo con la fecha en el nombre como los export de SAP) no hace falta tocar este
     script ni renombrar nada: el mas nuevo gana solo. Si hay varios, los viejos se pueden
     dejar ahi sin problema (no se leen), pero conviene borrarlos para no confundirse."""
-    candidatos = glob.glob(os.path.join(carpeta, patron))
+    candidatos = [c for c in glob.glob(os.path.join(carpeta, patron))
+                  if not os.path.basename(c).startswith("~$")]
     if not candidatos:
         raise FileNotFoundError("No se encontro ningun archivo '%s' en %s" % (patron, carpeta))
     return max(candidatos, key=os.path.getmtime)
