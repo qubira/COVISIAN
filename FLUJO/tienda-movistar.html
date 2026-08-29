@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tienda Movistar (referencia)</title>
+<style>
+  :root{
+    --azul:#0f3d91; --azul-claro:#1a56d6; --azul-bg:#eef3fc;
+    --verde:#1a8f4c; --rojo:#c0392b; --gris:#6b7280; --gris-bg:#f4f5f7; --borde:#d7dce3;
+  }
+  *{ box-sizing:border-box; }
+  body{
+    font-family:'Segoe UI', Arial, sans-serif; background:var(--gris-bg); color:#1f2530;
+    margin:0; padding:16px;
+  }
+  h1{ font-size:19px; color:var(--azul); margin:0 0 4px; }
+  .nota-referencia{ font-size:12.5px; color:var(--gris); margin:0 0 14px; }
+  .barra{
+    display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:14px;
+    background:#fff; border:1px solid var(--borde); border-radius:10px; padding:10px 12px;
+  }
+  .barra input[type=text]{
+    flex:1; min-width:180px; padding:8px 10px; border:1px solid var(--borde); border-radius:8px; font-size:13.5px;
+  }
+  .chips{ display:flex; gap:6px; flex-wrap:wrap; }
+  .chip{
+    border:1.5px solid var(--azul); background:var(--azul-bg); color:var(--azul); border-radius:16px;
+    padding:5px 12px; font-size:12px; font-weight:700; cursor:pointer; user-select:none;
+  }
+  .chip.activo{ background:var(--azul); color:#fff; }
+  .estado-carga{ text-align:center; color:var(--gris); padding:40px 0; font-size:14px; }
+  .estado-error{ text-align:center; color:var(--rojo); padding:40px 0; font-size:14px; }
+  .actualizado{ font-size:11.5px; color:var(--gris); margin-left:auto; white-space:nowrap; }
+  .grid-equipos{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:14px;
+  }
+  .card{
+    background:#fff; border:1px solid var(--borde); border-radius:10px; padding:12px;
+    display:flex; flex-direction:column; gap:6px; position:relative;
+  }
+  .card img{ width:100%; height:150px; object-fit:contain; }
+  .badge-recomendado{
+    position:absolute; top:8px; left:8px; background:#f5a623; color:#fff; font-size:10px;
+    font-weight:700; padding:2px 8px; border-radius:10px;
+  }
+  .badge-descuento{
+    position:absolute; top:8px; right:8px; background:var(--rojo); color:#fff; font-size:10.5px;
+    font-weight:700; padding:2px 8px; border-radius:10px;
+  }
+  .card .marca{ font-size:10.5px; color:var(--gris); font-weight:700; letter-spacing:.3px; text-transform:uppercase; }
+  .card .nombre{ font-size:13.5px; font-weight:700; line-height:1.25; min-height:34px; }
+  .card .specs{ font-size:11px; color:var(--gris); }
+  .card .precios{ margin-top:2px; }
+  .card .desde{ font-size:10.5px; color:var(--gris); }
+  .card .precio-oferta{ font-size:19px; font-weight:800; color:var(--verde); }
+  .card .precio-regular{ font-size:12px; color:var(--gris); text-decoration:line-through; margin-left:6px; }
+  .card details{ font-size:11.5px; margin-top:2px; }
+  .card summary{ cursor:pointer; color:var(--azul-claro); font-weight:700; }
+  .card .fila-plan{ display:flex; justify-content:space-between; padding:3px 0; border-bottom:1px solid #f0f1f3; }
+  .card .fila-plan:last-child{ border-bottom:none; }
+  .card a.ver-tienda{
+    margin-top:auto; text-align:center; font-size:11.5px; font-weight:700; color:var(--azul);
+    text-decoration:none; border:1px solid var(--azul); border-radius:8px; padding:6px 0;
+  }
+  .card a.ver-tienda:hover{ background:var(--azul-bg); }
+  .colores-fila{ display:flex; gap:4px; margin-top:2px; }
+  .punto-color{ width:14px; height:14px; border-radius:50%; border:1px solid #0002; }
+  .vacio{ text-align:center; color:var(--gris); padding:40px 0; grid-column:1/-1; }
+</style>
+</head>
+<body>
+  <h1>🏪 Tienda Movistar — Renovación</h1>
+  <p class="nota-referencia">
+    Solo de referencia: precios reales de <b>tienda.movistar.com.pe</b>, leídos en vivo cada vez
+    que abres esta página. No afecta el guion ni la cotización de la ficha.
+  </p>
+
+  <div class="barra">
+    <input type="text" id="buscador" placeholder="Buscar equipo...">
+    <div class="chips" id="chipsMarca"></div>
+    <span class="actualizado" id="actualizado"></span>
+  </div>
+
+  <div id="contenido">
+    <div class="estado-carga">Cargando catálogo real de la tienda Movistar…</div>
+  </div>
+
+<script>
+(function(){
+  "use strict";
+  var EQUIPOS = [];
+  var marcaActiva = "";
+
+  function formatearSoles(n){
+    return "S/ " + Number(n).toLocaleString("es-PE");
+  }
+
+  function renderChipsMarca(){
+    var marcas = Array.from(new Set(EQUIPOS.map(function(e){ return e.marca; }))).sort();
+    var cont = document.getElementById("chipsMarca");
+    cont.innerHTML = "";
+    var todos = document.createElement("div");
+    todos.className = "chip" + (marcaActiva === "" ? " activo" : "");
+    todos.textContent = "Todos";
+    todos.addEventListener("click", function(){ marcaActiva = ""; renderChipsMarca(); renderGrid(); });
+    cont.appendChild(todos);
+    marcas.forEach(function(m){
+      var chip = document.createElement("div");
+      chip.className = "chip" + (marcaActiva === m ? " activo" : "");
+      chip.textContent = m;
+      chip.addEventListener("click", function(){ marcaActiva = m; renderChipsMarca(); renderGrid(); });
+      cont.appendChild(chip);
+    });
+  }
+
+  function normalizar(s){
+    return (s || "").toString().toUpperCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+  }
+
+  function renderGrid(){
+    var q = normalizar(document.getElementById("buscador").value);
+    var filtrados = EQUIPOS.filter(function(e){
+      if (marcaActiva && e.marca !== marcaActiva) return false;
+      if (q && normalizar(e.nombre).indexOf(q) === -1 && normalizar(e.marca).indexOf(q) === -1) return false;
+      return true;
+    });
+
+    var cont = document.getElementById("contenido");
+    if (!filtrados.length){
+      cont.innerHTML = '<div class="vacio">No se encontró ningún equipo con ese filtro.</div>';
+      return;
+    }
+
+    var grid = document.createElement("div");
+    grid.className = "grid-equipos";
+    filtrados.forEach(function(e){
+      var card = document.createElement("div");
+      card.className = "card";
+
+      var planesHtml = e.planes.map(function(p){
+        return '<div class="fila-plan"><span>' + p.plan + '</span><b>' + formatearSoles(p.precioOferta) + '</b></div>';
+      }).join("");
+
+      var coloresHtml = e.colores.map(function(c){
+        return '<span class="punto-color" style="background:' + c + ';" title="' + c + '"></span>';
+      }).join("");
+
+      card.innerHTML =
+        (e.recomendado ? '<span class="badge-recomendado">★ Recomendado</span>' : "") +
+        (e.descuentoPct > 0 ? '<span class="badge-descuento">' + e.descuentoPct + '% dcto.</span>' : "") +
+        '<img src="' + e.imagen + '" alt="' + e.nombre + '" loading="lazy">' +
+        '<div class="marca">' + e.marca + '</div>' +
+        '<div class="nombre">' + e.nombre + '</div>' +
+        '<div class="specs">' + [e.memoria, e.camara].filter(Boolean).join(" · ") + '</div>' +
+        (coloresHtml ? '<div class="colores-fila">' + coloresHtml + '</div>' : "") +
+        '<div class="precios">' +
+          '<div class="desde">Desde</div>' +
+          '<span class="precio-oferta">' + formatearSoles(e.precioOferta) + '</span>' +
+          (e.precioRegular > e.precioOferta ? '<span class="precio-regular">' + formatearSoles(e.precioRegular) + '</span>' : "") +
+        '</div>' +
+        (planesHtml ? '<details><summary>Ver precio por plan (' + e.planes.length + ')</summary>' + planesHtml + '</details>' : "") +
+        '<a class="ver-tienda" href="' + e.url + '" target="_blank" rel="noopener">Ver en tienda oficial ↗</a>';
+
+      grid.appendChild(card);
+    });
+
+    cont.innerHTML = "";
+    cont.appendChild(grid);
+  }
+
+  function horaCorta(iso){
+    var d = new Date(iso);
+    return String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
+  }
+
+  fetch("/api/tienda-movistar")
+    .then(function(r){
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    })
+    .then(function(data){
+      EQUIPOS = data.equipos || [];
+      document.getElementById("actualizado").textContent = "Actualizado " + horaCorta(data.actualizado);
+      renderChipsMarca();
+      renderGrid();
+      document.getElementById("buscador").addEventListener("input", renderGrid);
+    })
+    .catch(function(err){
+      document.getElementById("contenido").innerHTML =
+        '<div class="estado-error">⚠ No se pudo leer la tienda Movistar en este momento (' + err.message + '). Intenta recargar la página.</div>';
+    });
+})();
+</script>
+</body>
+</html>

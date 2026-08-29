@@ -1,0 +1,8 @@
+{
+  "functions": {
+    "api/tienda-movistar.js": {
+      "maxDuration": 30,
+      "memory": 1536
+    }
+  }
+}
