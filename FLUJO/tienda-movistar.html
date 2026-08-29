@@ -61,6 +61,7 @@
   }
   .badge-entidad.movistar{ background:var(--azul); }
   .badge-entidad.claro{ background:#e30613; }
+  .badge-entidad.entel{ background:#0099a8; }
   .card .marca{ font-size:10.5px; color:var(--gris); font-weight:700; letter-spacing:.3px; text-transform:uppercase; }
   .card .nombre{ font-size:13.5px; font-weight:700; line-height:1.25; min-height:34px; }
   .card .specs{ font-size:11px; color:var(--gris); }
@@ -81,15 +82,17 @@
 <body>
   <h1>🏪 Comparador de tiendas — Renovación</h1>
   <p class="nota-referencia">
-    Solo de referencia: precios reales de <b>tienda.movistar.com.pe</b> y <b>tienda.claro.com.pe</b>.
-    No afecta el guion ni la cotización de la ficha. Para pedir precios más recientes, dile a
-    Claude "actualiza la tienda Movistar/Claro". Escribe un equipo en el buscador para comparar
-    de una si Movistar y/o Claro lo tienen — cada tarjeta muestra a qué tienda pertenece.
+    Solo de referencia: precios reales de <b>tienda.movistar.com.pe</b>, <b>tienda.claro.com.pe</b> y
+    <b>miportal.entel.pe</b>. No afecta el guion ni la cotización de la ficha. Para pedir precios más
+    recientes, dile a Claude "actualiza la tienda Movistar/Claro/Entel". Escribe un equipo en el
+    buscador para comparar de una si Movistar, Claro y/o Entel lo tienen — cada tarjeta muestra a
+    qué tienda pertenece.
   </p>
 
   <div class="tiendas" id="tiendas">
     <button type="button" class="tab-tienda" id="tabMovistar">📶 Movistar</button>
     <button type="button" class="tab-tienda" id="tabClaro">🔴 Claro</button>
+    <button type="button" class="tab-tienda" id="tabEntel">🔵 Entel</button>
   </div>
 
   <div class="barra">
@@ -106,8 +109,8 @@
 <script>
 (function(){
   "use strict";
-  var DATOS = { movistar: [], claro: [] };
-  var ACTUALIZADO = { movistar: null, claro: null };
+  var DATOS = { movistar: [], claro: [], entel: [] };
+  var ACTUALIZADO = { movistar: null, claro: null, entel: null };
   var tiendaActiva = "movistar";
   var marcaActiva = "";
 
@@ -127,6 +130,16 @@
         precioOferta: e.precioOferta, precioRegular: e.precioRegular,
         descuentoPct: e.descuentoPct, url: e.url, recomendado: e.recomendado,
         colores: e.colores || []
+      };
+    }
+    if (tienda === "entel"){
+      return {
+        entidad: "entel", entidadTexto: "Entel",
+        nombre: e.nombre, marca: e.marca, imagen: e.imagen,
+        specs: [e.memoria, e.planRenovacion, (e.colores || []).join(" / ")].filter(Boolean).join(" · "),
+        precioOferta: e.precioOferta, precioRegular: e.precioRegular,
+        descuentoPct: e.descuentoPct, url: e.url, recomendado: false,
+        colores: [] // nombres de color ("Azul Glacier"), no hex — no sirven para el punto-color de Movistar
       };
     }
     return {
@@ -150,6 +163,7 @@
   function renderTabs(){
     document.getElementById("tabMovistar").className = "tab-tienda" + (tiendaActiva === "movistar" ? " activo" : "");
     document.getElementById("tabClaro").className = "tab-tienda" + (tiendaActiva === "claro" ? " activo" : "");
+    document.getElementById("tabEntel").className = "tab-tienda" + (tiendaActiva === "entel" ? " activo" : "");
   }
 
   function renderChipsMarca(){
@@ -182,7 +196,7 @@
     // de pestaña a mano. Sin busqueda, se vuelve al modo normal de "una tienda a la vez".
     var enModoComparacion = !!q;
     var equipos = enModoComparacion
-      ? equiposDe("movistar").concat(equiposDe("claro"))
+      ? equiposDe("movistar").concat(equiposDe("claro")).concat(equiposDe("entel"))
       : equiposActivos();
 
     document.getElementById("chipsMarca").style.display = enModoComparacion ? "none" : "";
@@ -194,7 +208,7 @@
     });
 
     document.getElementById("contador").textContent = enModoComparacion
-      ? "Comparando en Movistar y Claro: " + filtrados.length + " resultado(s)"
+      ? "Comparando en Movistar, Claro y Entel: " + filtrados.length + " resultado(s)"
       : "Mostrando " + filtrados.length + " de " + equipos.length + " equipos";
 
     var cont = document.getElementById("contenido");
@@ -263,16 +277,20 @@
 
   document.getElementById("tabMovistar").addEventListener("click", function(){ cambiarTienda("movistar"); });
   document.getElementById("tabClaro").addEventListener("click", function(){ cambiarTienda("claro"); });
+  document.getElementById("tabEntel").addEventListener("click", function(){ cambiarTienda("entel"); });
   document.getElementById("buscador").addEventListener("input", renderGrid);
 
   Promise.all([
     fetch("data/tienda_movistar.json").then(function(r){ return r.ok ? r.json() : { equipos: [] }; }).catch(function(){ return { equipos: [] }; }),
-    fetch("data/tienda_claro.json").then(function(r){ return r.ok ? r.json() : { equipos: [] }; }).catch(function(){ return { equipos: [] }; })
+    fetch("data/tienda_claro.json").then(function(r){ return r.ok ? r.json() : { equipos: [] }; }).catch(function(){ return { equipos: [] }; }),
+    fetch("data/tienda_entel.json").then(function(r){ return r.ok ? r.json() : { equipos: [] }; }).catch(function(){ return { equipos: [] }; })
   ]).then(function(res){
     DATOS.movistar = res[0].equipos || [];
     ACTUALIZADO.movistar = res[0].actualizado || null;
     DATOS.claro = res[1].equipos || [];
     ACTUALIZADO.claro = res[1].actualizado || null;
+    DATOS.entel = res[2].equipos || [];
+    ACTUALIZADO.entel = res[2].actualizado || null;
 
     renderTabs();
     renderChipsMarca();
