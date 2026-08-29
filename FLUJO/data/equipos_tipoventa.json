@@ -571,7 +571,10 @@
 "CAEQ/MIGRA",
 "PORTA"
 ],
-"canal": []
+"canal": [
+"ESP_POST_ONLINE",
+"ESP_POST_PHOENIX"
+]
 },
 "OPPO A60 256GB LTE": {
 "tipoVenta": [
@@ -585,7 +588,11 @@
 "CAEQ/MIGRA",
 "PORTA"
 ],
-"canal": []
+"canal": [
+"ESP_POST_ONLINE",
+"ESP_POST_PHOENIX",
+"ESP_POST_RETENCION"
+]
 },
 "IPHONE 16 PRO MAX 256GB": {
 "tipoVenta": [
@@ -649,7 +656,10 @@
 "CAEQ/MIGRA",
 "PORTA"
 ],
-"canal": []
+"canal": [
+"ESP_POST_ONLINE",
+"ESP_POST_PHOENIX"
+]
 },
 "SAMSUNG GXY S25 PLUS 256GB SM-S936B 5G": {
 "tipoVenta": [
@@ -1134,7 +1144,11 @@
 "CAEQ/MIGRA",
 "PORTA"
 ],
-"canal": []
+"canal": [
+"ESP_POST_ONLINE",
+"ESP_POST_PHOENIX",
+"ESP_POST_RETENCION"
+]
 },
 "SAMSUNG GXY A37 SM-A376B 256GB 5G": {
 "tipoVenta": [
@@ -1355,7 +1369,11 @@
 "CAEQ/MIGRA",
 "PORTA"
 ],
-"canal": []
+"canal": [
+"ESP_POST_ONLINE",
+"ESP_POST_PHOENIX",
+"ESP_POST_RETENCION"
+]
 },
 "CAMP - IPHONE 17 256GB": {
 "tipoVenta": [
@@ -1386,14 +1404,19 @@
 "CAEQ/MIGRA",
 "PORTA"
 ],
-"canal": []
+"canal": [
+"ESP_POST_ONLINE",
+"ESP_POST_PHOENIX"
+]
 },
 "MOTOROLA G17 XT2623 128GB LTE": {
 "tipoVenta": [
 "CAEQ/MIGRA",
 "PORTA"
 ],
-"canal": []
+"canal": [
+"ESP_POST_RETENCION"
+]
 },
 "ZTE BLADE A57 PRO 128GB LTE": {
 "tipoVenta": [
@@ -1428,7 +1451,10 @@
 "CAEQ/MIGRA",
 "PORTA"
 ],
-"canal": []
+"canal": [
+"ESP_POST_ONLINE",
+"ESP_POST_PHOENIX"
+]
 },
 "IPHONE 16E 128GB": {
 "tipoVenta": [
