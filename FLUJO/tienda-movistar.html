@@ -55,10 +55,6 @@
   .card .desde{ font-size:10.5px; color:var(--gris); }
   .card .precio-oferta{ font-size:19px; font-weight:800; color:var(--verde); }
   .card .precio-regular{ font-size:12px; color:var(--gris); text-decoration:line-through; margin-left:6px; }
-  .card details{ font-size:11.5px; margin-top:2px; }
-  .card summary{ cursor:pointer; color:var(--azul-claro); font-weight:700; }
-  .card .fila-plan{ display:flex; justify-content:space-between; padding:3px 0; border-bottom:1px solid #f0f1f3; }
-  .card .fila-plan:last-child{ border-bottom:none; }
   .card a.ver-tienda{
     margin-top:auto; text-align:center; font-size:11.5px; font-weight:700; color:var(--azul);
     text-decoration:none; border:1px solid var(--azul); border-radius:8px; padding:6px 0;
@@ -139,10 +135,6 @@
       var card = document.createElement("div");
       card.className = "card";
 
-      var planesHtml = e.planes.map(function(p){
-        return '<div class="fila-plan"><span>' + p.plan + '</span><b>' + formatearSoles(p.precioOferta) + '</b></div>';
-      }).join("");
-
       var coloresHtml = e.colores.map(function(c){
         return '<span class="punto-color" style="background:' + c + ';" title="' + c + '"></span>';
       }).join("");
@@ -160,7 +152,6 @@
           '<span class="precio-oferta">' + formatearSoles(e.precioOferta) + '</span>' +
           (e.precioRegular > e.precioOferta ? '<span class="precio-regular">' + formatearSoles(e.precioRegular) + '</span>' : "") +
         '</div>' +
-        (planesHtml ? '<details><summary>Ver precio por plan (' + e.planes.length + ')</summary>' + planesHtml + '</details>' : "") +
         '<a class="ver-tienda" href="' + e.url + '" target="_blank" rel="noopener">Ver en tienda oficial ↗</a>';
 
       grid.appendChild(card);
