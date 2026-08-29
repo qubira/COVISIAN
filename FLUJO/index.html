@@ -644,10 +644,22 @@
   .panel-tiempo-nota{ text-align:center; font-size:10.5px; color:var(--gris); padding:0 10px 10px; }
   body.tema-oscuro .panel-flotante-tiempo{ background:#1c2029; }
 
-  #alertasCasosContainer{
-    position:fixed; top:10px; right:10px; z-index:900; display:flex; flex-direction:column; gap:8px;
-    max-width:340px;
+  /* Panel de alertas de llamada agendada: arrastrable (mismo patron que
+     .panel-flotante-tiempo) y minimizable a solo su encabezado, para que no se quede
+     tapando algo fijo en un lugar de la pantalla. */
+  .alertas-casos-panel{
+    position:fixed; top:10px; right:10px; z-index:900; width:300px; max-width:calc(100vw - 20px);
+    user-select:none;
   }
+  .alertas-casos-panel.oculto{ display:none; }
+  .alertas-casos-header{
+    background:var(--rojo); color:#fff; padding:7px 10px; border-radius:10px 10px 0 0;
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    font-size:12px; font-weight:700; cursor:move; touch-action:none;
+  }
+  .alertas-casos-panel.minimizado .alertas-casos-header{ border-radius:10px; }
+  .alertas-casos-panel.minimizado #alertasCasosContainer{ display:none; }
+  #alertasCasosContainer{ display:flex; flex-direction:column; gap:8px; margin-top:8px; }
   .alerta-caso{
     background:#fff; border:2px solid var(--rojo); border-radius:10px; padding:12px 14px;
     box-shadow:0 8px 24px rgba(0,0,0,.2); font-size:12.5px;
@@ -918,7 +930,13 @@ if (location.protocol === "file:") {
 }
 </script>
 
-<div id="alertasCasosContainer"></div>
+<div class="alertas-casos-panel oculto" id="alertasCasosPanel">
+  <div class="alertas-casos-header" id="alertasCasosHeader">
+    <span>🔔 <span id="alertasCasosContador">0</span> llamada(s) agendada(s)</span>
+    <button type="button" class="btn-cerrar-mini" id="btnMinimizarAlertasCasos" title="Minimizar / expandir">▁</button>
+  </div>
+  <div id="alertasCasosContainer"></div>
+</div>
 <div class="oculto" id="avisoLaboratorioAplicado">✓ Ubicación importada desde el Laboratorio de Ubicación</div>
 
 <div class="popover-elegir-tiempo oculto" id="popoverElegirTiempo">
@@ -7114,6 +7132,9 @@ if (location.protocol === "file:") {
     var cont = $("alertasCasosContainer");
     var activas = cargarCitasLocal().filter(function(c){ return c.estado === "PENDIENTE" && minutosHastaCita(c) <= 20; });
 
+    $("alertasCasosPanel").classList.toggle("oculto", activas.length === 0);
+    $("alertasCasosContador").textContent = activas.length;
+
     Array.prototype.slice.call(cont.children).forEach(function(el){
       var id = el.getAttribute("data-id");
       if (!activas.some(function(c){ return c.id === id; })) cont.removeChild(el);
@@ -7234,6 +7255,45 @@ if (location.protocol === "file:") {
     actualizarBadgeCasos();
     renderAlertasCasos();
     setInterval(renderAlertasCasos, 30000);
+    initPanelAlertasCasos();
+  }
+
+  // Arrastrar el panel de alertas por su encabezado (mismo patron que
+  // .panel-flotante-tiempo — ver initContabilizarTiempo) y un boton para minimizarlo a
+  // solo el encabezado, para que no se quede tapando algo fijo en un lugar de la pantalla.
+  function initPanelAlertasCasos(){
+    var panel = $("alertasCasosPanel");
+    var header = $("alertasCasosHeader");
+    var btnMin = $("btnMinimizarAlertasCasos");
+
+    btnMin.addEventListener("click", function(){
+      var minimizado = panel.classList.toggle("minimizado");
+      btnMin.textContent = minimizado ? "▲" : "▁";
+      btnMin.title = minimizado ? "Expandir" : "Minimizar";
+    });
+
+    var arrastrando = false, offsetX = 0, offsetY = 0;
+    header.addEventListener("pointerdown", function(e){
+      if (e.target.closest(".btn-cerrar-mini")) return;
+      var rect = panel.getBoundingClientRect();
+      arrastrando = true;
+      offsetX = e.clientX - rect.left;
+      offsetY = e.clientY - rect.top;
+      panel.style.top = rect.top + "px";
+      panel.style.left = rect.left + "px";
+      panel.style.right = "auto";
+      header.setPointerCapture(e.pointerId);
+      e.preventDefault();
+    });
+    header.addEventListener("pointermove", function(e){
+      if (!arrastrando) return;
+      var maxX = window.innerWidth - panel.offsetWidth;
+      var maxY = window.innerHeight - panel.offsetHeight;
+      panel.style.left = Math.min(Math.max(0, e.clientX - offsetX), Math.max(0, maxX)) + "px";
+      panel.style.top = Math.min(Math.max(0, e.clientY - offsetY), Math.max(0, maxY)) + "px";
+    });
+    header.addEventListener("pointerup", function(){ arrastrando = false; });
+    header.addEventListener("pointercancel", function(){ arrastrando = false; });
   }
 
   // ============ ENVÍO ============
