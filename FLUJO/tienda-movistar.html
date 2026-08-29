@@ -55,6 +55,12 @@
     position:absolute; top:8px; right:8px; background:var(--rojo); color:#fff; font-size:10.5px;
     font-weight:700; padding:2px 8px; border-radius:10px;
   }
+  .badge-entidad{
+    display:inline-block; font-size:9.5px; font-weight:700; letter-spacing:.3px; color:#fff;
+    padding:2px 8px; border-radius:10px; margin-bottom:2px; align-self:flex-start;
+  }
+  .badge-entidad.movistar{ background:var(--azul); }
+  .badge-entidad.claro{ background:#e30613; }
   .card .marca{ font-size:10.5px; color:var(--gris); font-weight:700; letter-spacing:.3px; text-transform:uppercase; }
   .card .nombre{ font-size:13.5px; font-weight:700; line-height:1.25; min-height:34px; }
   .card .specs{ font-size:11px; color:var(--gris); }
@@ -77,7 +83,8 @@
   <p class="nota-referencia">
     Solo de referencia: precios reales de <b>tienda.movistar.com.pe</b> y <b>tienda.claro.com.pe</b>.
     No afecta el guion ni la cotización de la ficha. Para pedir precios más recientes, dile a
-    Claude "actualiza la tienda Movistar/Claro". Busca el mismo modelo en ambas pestañas para comparar.
+    Claude "actualiza la tienda Movistar/Claro". Escribe un equipo en el buscador para comparar
+    de una si Movistar y/o Claro lo tienen — cada tarjeta muestra a qué tienda pertenece.
   </p>
 
   <div class="tiendas" id="tiendas">
@@ -108,10 +115,13 @@
     return n == null ? "-" : "S/ " + Number(n).toLocaleString("es-PE");
   }
 
-  // unifica la forma de Movistar y Claro a un solo shape para poder usar el mismo render
+  // unifica la forma de Movistar y Claro a un solo shape para poder usar el mismo render.
+  // "entidad" queda marcado en cada equipo para poder mostrar de que tienda es (importa sobre
+  // todo en el modo de busqueda combinada, donde salen mezclados resultados de las dos).
   function normalizarEquipo(e, tienda){
     if (tienda === "movistar"){
       return {
+        entidad: "movistar", entidadTexto: "Movistar",
         nombre: e.nombre, marca: e.marca, imagen: e.imagen,
         specs: [e.memoria, e.camara].filter(Boolean).join(" · "),
         precioOferta: e.precioOferta, precioRegular: e.precioRegular,
@@ -120,6 +130,7 @@
       };
     }
     return {
+      entidad: "claro", entidadTexto: "Claro",
       nombre: e.nombre, marca: (e.nombre || "").split(" ")[0], imagen: e.imagen,
       specs: e.specs,
       precioOferta: e.precioOnline, precioRegular: null,
@@ -128,8 +139,12 @@
     };
   }
 
+  function equiposDe(tienda){
+    return (DATOS[tienda] || []).map(function(e){ return normalizarEquipo(e, tienda); });
+  }
+
   function equiposActivos(){
-    return (DATOS[tiendaActiva] || []).map(function(e){ return normalizarEquipo(e, tiendaActiva); });
+    return equiposDe(tiendaActiva);
   }
 
   function renderTabs(){
@@ -161,15 +176,26 @@
 
   function renderGrid(){
     var q = normalizarTexto(document.getElementById("buscador").value);
-    var equipos = equiposActivos();
+    // en cuanto se escribe algo en el buscador, se compara en las DOS tiendas a la vez (no
+    // solo la pestaña activa) — asi el agente ve de una si Movistar y Claro tienen el mismo
+    // equipo, con el nombre de la entidad marcado en cada tarjeta, sin tener que ir cambiando
+    // de pestaña a mano. Sin busqueda, se vuelve al modo normal de "una tienda a la vez".
+    var enModoComparacion = !!q;
+    var equipos = enModoComparacion
+      ? equiposDe("movistar").concat(equiposDe("claro"))
+      : equiposActivos();
+
+    document.getElementById("chipsMarca").style.display = enModoComparacion ? "none" : "";
+
     var filtrados = equipos.filter(function(e){
-      if (marcaActiva && e.marca !== marcaActiva) return false;
+      if (!enModoComparacion && marcaActiva && e.marca !== marcaActiva) return false;
       if (q && normalizarTexto(e.nombre).indexOf(q) === -1 && normalizarTexto(e.marca).indexOf(q) === -1) return false;
       return true;
     });
 
-    document.getElementById("contador").textContent =
-      "Mostrando " + filtrados.length + " de " + equipos.length + " equipos";
+    document.getElementById("contador").textContent = enModoComparacion
+      ? "Comparando en Movistar y Claro: " + filtrados.length + " resultado(s)"
+      : "Mostrando " + filtrados.length + " de " + equipos.length + " equipos";
 
     var cont = document.getElementById("contenido");
     if (!filtrados.length){
@@ -191,6 +217,7 @@
         (e.recomendado ? '<span class="badge-recomendado">★ Recomendado</span>' : "") +
         (e.descuentoPct > 0 ? '<span class="badge-descuento">' + e.descuentoPct + '% dcto.</span>' : "") +
         '<img src="' + (e.imagen || "") + '" alt="' + e.nombre + '" loading="lazy">' +
+        (enModoComparacion ? '<span class="badge-entidad ' + e.entidad + '">' + e.entidadTexto + '</span>' : "") +
         '<div class="marca">' + e.marca + '</div>' +
         '<div class="nombre">' + e.nombre + '</div>' +
         '<div class="specs">' + (e.specs || "") + '</div>' +
