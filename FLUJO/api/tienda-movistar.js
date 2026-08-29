@@ -80,13 +80,18 @@ export default async function handler(req, res) {
       timeout: 25000
     });
 
-    // con la sesion ya valida, se pide directo el mismo JSON que la tienda usa para pintar
-    // la grilla de productos (mas simple y confiable que esperar/interceptar el AJAX interno)
-    var respuesta = await page.goto("https://tienda.movistar.com.pe/renovacion/ajax/products/", {
-      waitUntil: "domcontentloaded",
-      timeout: 15000
+    // con la sesion ya valida, se pide el mismo JSON que la tienda usa para pintar la grilla
+    // de productos, pero como fetch() DESDE DENTRO de la pagina (page.evaluate), no como una
+    // navegacion aparte — un page.goto() directo a esa URL volvia a chocar con el bloqueo (la
+    // pagina de error de Cloudflare en vez del JSON), porque no es una navegacion real de
+    // usuario. Un fetch interno es exactamente lo que hace la propia app Angular de la tienda,
+    // asi que pasa igual que cualquier llamada AJAX normal de la pagina.
+    var texto = await page.evaluate(async () => {
+      var r = await fetch("https://tienda.movistar.com.pe/renovacion/ajax/products/", {
+        headers: { "X-Requested-With": "XMLHttpRequest" }
+      });
+      return r.text();
     });
-    var texto = await respuesta.text();
     var data = JSON.parse(texto);
 
     var equipos = transformarProductos(data);
