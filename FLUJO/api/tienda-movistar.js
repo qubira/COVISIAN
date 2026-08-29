@@ -14,7 +14,9 @@
 // normal: si Movistar refuerza la deteccion de bots contra navegadores headless especificamente,
 // esto podria dejar de funcionar sin aviso. Se cachea la respuesta (Cache-Control) para no
 // tener que levantar Chromium en cada visita.
-const chromium = require("@sparticuz/chromium");
+// @sparticuz/chromium se publica como ES Module desde la v121+ — require() no lo puede cargar
+// (tira ERR_REQUIRE_ESM), asi que se trae con import() dinamico dentro del handler en vez de
+// arriba. puppeteer-core si sigue siendo CommonJS normal.
 const puppeteer = require("puppeteer-core");
 
 function transformarProductos(data) {
@@ -59,6 +61,7 @@ function transformarProductos(data) {
 module.exports = async (req, res) => {
   var browser;
   try {
+    var chromium = (await import("@sparticuz/chromium")).default;
     browser = await puppeteer.launch({
       args: chromium.args,
       defaultViewport: chromium.defaultViewport,
