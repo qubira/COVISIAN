@@ -5138,10 +5138,9 @@ if (location.protocol === "file:") {
     el.innerHTML = chips.join(" ");
   }
 
-  // colores realmente disponibles para el equipo actual en la zona actual, con su estado de
-  // stock (DISPONIBLE / ULTIMAS UNIDADES) — misma fuente que actualizarColoresYStock() de
-  // arriba, sin repetir el modo de entrega "(Express y Regular)" que ahi si hace falta pero
-  // aca no (el agente ya lo ve en el bloque COLORES: de mas arriba si lo necesita).
+  // colores realmente disponibles para el equipo actual en la zona actual, para el desplegable
+  // de COLOR ELEGIDO DEL EQUIPO — solo el nombre del color, sin estado ni modo de entrega (el
+  // agente ya ve esos detalles en el bloque COLORES: de mas arriba si los necesita).
   function coloresDisponiblesDelEquipo(nombreEquipo){
     var departamento = seleccionCobertura ? seleccionCobertura.departamento : null;
     if (!departamento || !nombreEquipo) return [];
@@ -5150,8 +5149,7 @@ if (location.protocol === "file:") {
     var colores = [];
     res.filas.forEach(function(row){
       var color = extraerColor(row.modelo) || "N/D";
-      var key = color + "|" + row.estado;
-      if (!vistos[key]){ vistos[key] = true; colores.push({ color: color, estado: row.estado || "" }); }
+      if (!vistos[color]){ vistos[color] = true; colores.push(color); }
     });
     return colores;
   }
@@ -5173,15 +5171,15 @@ if (location.protocol === "file:") {
       lista.innerHTML = "";
       var q = norm(filtro);
       var colores = coloresDisponiblesDelEquipo(equipoActual).filter(function(c){
-        return norm(c.color).indexOf(q) !== -1;
+        return norm(c).indexOf(q) !== -1;
       });
       colores.forEach(function(c){
         var div = document.createElement("div");
         div.className = "opcion";
-        div.textContent = c.estado ? (c.color + " · " + c.estado) : c.color;
+        div.textContent = c;
         div.addEventListener("mousedown", function(e){
           e.preventDefault();
-          input.value = c.color;
+          input.value = c;
           lista.classList.remove("abierta");
           input.dispatchEvent(new Event("input", { bubbles: true }));
         });
