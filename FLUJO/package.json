@@ -2,7 +2,7 @@
   "name": "flujo-covisian",
   "private": true,
   "dependencies": {
-    "@sparticuz/chromium": "^123.0.1",
-    "puppeteer-core": "^22.8.2"
+    "@sparticuz/chromium": "^149.0.0",
+    "puppeteer-core": "^25.9.0"
   }
 }
