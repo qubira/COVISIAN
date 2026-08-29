@@ -971,8 +971,8 @@ if (location.protocol === "file:") {
       </select>
     </div>
     <div class="rlabel">FINANC.</div>
-    <div class="rvalor rvalor-con-icono" id="rCodFinCelda">
-      <span id="rCodFin">-</span>
+    <div class="rvalor rvalor-con-icono rvalor-select" id="rCodFinCelda">
+      <select id="rCodFin"></select>
       <button type="button" class="btn-info-region" id="btnInfoCodFinanciamiento" title="Código de financiamiento">ℹ</button>
     </div>
     <div class="rlabel">SUBTIPO</div>
@@ -2399,7 +2399,7 @@ if (location.protocol === "file:") {
     // demas — sin esto, un solo error silencioso podia dejar sin usar, por ejemplo, el
     // buscador de EQUIPO (initAutocomplete) si algo antes de el en la lista fallaba.
     [initCodFinanciamiento, initPlanes, initAutocomplete, initComparar, initStockNacional,
-      initCosto, initSimuladorEquipos, initVerDetalleEquipo, initZoomEquipo, initExpandirMapas, initFiltroAvanzadoDireccion, initAgendarLlamada, initCasosAgendados, initAutoguardado, initEncabezadoColapsable, initCambiosHistoricos, initInvalidarValidacionesContrato, initContabilizarTiempo, initResaltarCamposLlenos, initMayusculasAutomaticas, initTipoSubtipoEncabezado, initPlanEncabezado, initColorEquipoAutocomplete, initSuprimirAutocompletePago, precargarCicloContrato, actualizarContrato, actualizarSimuladorFinanciamiento, actualizarEncabezado].forEach(function(fn){
+      initCosto, initSimuladorEquipos, initVerDetalleEquipo, initZoomEquipo, initExpandirMapas, initFiltroAvanzadoDireccion, initAgendarLlamada, initCasosAgendados, initAutoguardado, initEncabezadoColapsable, initCambiosHistoricos, initInvalidarValidacionesContrato, initContabilizarTiempo, initResaltarCamposLlenos, initMayusculasAutomaticas, initTipoSubtipoEncabezado, initPlanEncabezado, initCodFinanciamientoEncabezado, initColorEquipoAutocomplete, initSuprimirAutocompletePago, precargarCicloContrato, actualizarContrato, actualizarSimuladorFinanciamiento, actualizarEncabezado].forEach(function(fn){
       try{ fn(); }catch(err){ console.error("Fallo al inicializar " + fn.name + ":", err); }
     });
   }).catch(function(err){
@@ -3344,9 +3344,6 @@ if (location.protocol === "file:") {
     // otra persona, no del que esta al telefono, asi que conviene que salte a la vista.
     $("rNombreTitular").classList.toggle("rvalor-destacado", !!(esTitularEl && esTitularEl.value === "NO"));
 
-    var cod = $("codFinanciamiento").value;
-    $("rCodFin").textContent = cod ? ("Código " + cod) : "-";
-
     if (seleccionCobertura){
       $("rUbicacion").value = seleccionCobertura.distrito + " / " +
         seleccionCobertura.provincia + " / " + seleccionCobertura.departamento;
@@ -3499,6 +3496,7 @@ if (location.protocol === "file:") {
     // definen la cuota inicial cuando el convenio es FINANCIADO, asi que el calculo los
     // necesita desde el primer render.
     $("codFinanciamiento").value = estado.codFinanciamiento || "";
+    $("rCodFin").value = estado.codFinanciamiento || "";
     $("capFinanciamiento").value = estado.capFinanciamiento || "";
     if (estado.tipo && estado.equipo) actualizarCosto();
     if (estado.medioPago){
@@ -3669,6 +3667,7 @@ if (location.protocol === "file:") {
     $("resultadoPagoMenor").innerHTML = "";
     ultimoSimuladorBase = null;
     $("codFinanciamiento").value = "1";
+    $("rCodFin").value = "1";
     $("simEquipoBuscar").value = "";
     ["filtroSimRam", "filtroSimRom", "filtroSimGama", "filtroSimCamara", "filtroSimBateria"].forEach(function(id){ $(id).value = ""; });
     actualizarOpcionesFiltrosSimulador();
@@ -6158,6 +6157,33 @@ if (location.protocol === "file:") {
 
     $("rTipo").value = $("tipo").value;
     poblarSubtipoEncabezado($("tipo").value, $("subtipo").value);
+  }
+
+  // CÓDIGO DE FINANCIAMIENTO tambien editable desde el encabezado fijo (#rCodFin),
+  // sincronizado en los dos sentidos con el select real del Simulador (#codFinanciamiento)
+  // — mismo motivo que TIPO/SUBTIPO arriba: cambiar el codigo desde el resumen dispara el
+  // mismo "change" que si se hubiera elegido a mano ahi, asi actualizarCosto/el simulador
+  // de financiamiento se recalculan solos aunque fs-credito siga deshabilitado.
+  function initCodFinanciamientoEncabezado(){
+    var sel = $("rCodFin");
+    CODIGOS_FINANCIAMIENTO.forEach(function(c){
+      var opt = document.createElement("option");
+      opt.value = c.codigo;
+      opt.textContent = "CÓD " + c.codigo;
+      sel.appendChild(opt);
+    });
+
+    $("codFinanciamiento").addEventListener("change", function(){
+      $("rCodFin").value = $("codFinanciamiento").value;
+    });
+
+    $("rCodFin").addEventListener("change", function(){
+      $("codFinanciamiento").value = $("rCodFin").value;
+      $("codFinanciamiento").dispatchEvent(new Event("change", { bubbles: true }));
+      guardarProgreso();
+    });
+
+    $("rCodFin").value = $("codFinanciamiento").value;
   }
 
   // PLAN tambien editable desde el encabezado fijo (#rPlan), sincronizado en los dos
