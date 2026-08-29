@@ -1,84 +1,10 @@
 {
-"fechaAnterior": "2026-08-27T10:38:33",
-"fechaActual": "2026-08-29T10:21:59",
+"fechaAnterior": "2026-08-29T10:22:00",
+"fechaActual": "2026-08-29T14:43:00",
 "agregados": [
 {
 "zona": "AREQUIPA",
-"modelo": "HONOR 600E GRIS LNA-NX3 512GB C/PACK"
-},
-{
-"zona": "LA LIBERTAD",
-"modelo": "IPHONE 17 PRO MAX NARANJA MFYN4BE/A 256G"
-},
-{
-"zona": "LA LIBERTAD",
-"modelo": "MOTOROLA EDGE 70 512G GRIS"
-},
-{
-"zona": "LAMBAYEQUE",
-"modelo": "HONOR 600E GRIS LNA-NX3 512GB C/PACK"
-},
-{
-"zona": "LIMA",
-"modelo": "HONOR 600 DORADO VKJ-NX9 512GB"
-},
-{
-"zona": "LIMA",
-"modelo": "HONOR 600 NARANJA VKJ-NX9 512GB"
-},
-{
-"zona": "LIMA",
-"modelo": "HONOR 600E GRIS LNA-NX3 512GB"
-},
-{
-"zona": "LIMA",
-"modelo": "HONOR 600E GRIS LNA-NX3 512GB C/PACK"
-},
-{
-"zona": "LIMA",
-"modelo": "MOTOROLA RAZR 70 BLANCO XT2657 512G C/P"
-},
-{
-"zona": "LIMA",
-"modelo": "MOTOROLA RAZR 70 GRIS XT2657 512G C/P"
-},
-{
-"zona": "PIURA",
-"modelo": "HONOR 600E GRIS LNA-NX3 512GB C/PACK"
-},
-{
-"zona": "PIURA",
-"modelo": "XIAOMI REDMI A7 PRO VERDE 128GB"
-},
-{
-"zona": "PIURA",
-"modelo": "XIAOMI REDMI NOTE 15 PRO+ CAFE 512G C/C"
-},
-{
-"zona": "PROVINCIAS",
-"modelo": "CAMP-IPHONE 16 NEGRO MYE73BE/A 128GB"
-},
-{
-"zona": "PROVINCIAS",
-"modelo": "HONOR 600E GRIS LNA-NX3 512GB C/PACK"
-},
-{
-"zona": "PROVINCIAS",
-"modelo": "HONOR X6E NEGRO LBU-LX3 256GB C/PACK"
-}
-],
-"eliminados": [
-{
-"zona": "AREQUIPA",
-"modelo": "HONOR 600E DORADO LNA-NX3 512GB C/PACK"
-},
-{
-"zona": "AREQUIPA",
-"modelo": "HONOR MAGIC 8 LITE VERDE 512GB 5G"
-},
-{
-"zona": "AREQUIPA",
-"modelo": "HONOR MAGIC 8 LITE VERDE 512GB 5G C/P"
+"modelo": "MOTOROLA G67 GRIS XT2621 256GB"
 },
 {
 "zona": "AREQUIPA",
@@ -86,47 +12,7 @@
 },
 {
 "zona": "LA LIBERTAD",
-"modelo": "HONOR 600E DORADO LNA-NX3 512GB C/PACK"
-},
-{
-"zona": "LA LIBERTAD",
-"modelo": "HONOR MAGIC 8 LITE VERDE 512GB 5G"
-},
-{
-"zona": "LA LIBERTAD",
-"modelo": "HONOR MAGIC 8 LITE VERDE 512GB 5G C/P"
-},
-{
-"zona": "LA LIBERTAD",
 "modelo": "HONOR X5D NEGRO NAA-LX3 128GB"
-},
-{
-"zona": "LA LIBERTAD",
-"modelo": "OPPO A6K AZUL 256GB LTE C/PACK"
-},
-{
-"zona": "LA LIBERTAD",
-"modelo": "SAMSUNG GXY A57 AZUL SM-A576B 256G 5G"
-},
-{
-"zona": "LA LIBERTAD",
-"modelo": "XIAOMI REDMI A7 PRO AZUL 128GB"
-},
-{
-"zona": "LA LIBERTAD",
-"modelo": "ZTE NUBIA V80 PRO BLANCO 256GB"
-},
-{
-"zona": "LAMBAYEQUE",
-"modelo": "HONOR 600E DORADO LNA-NX3 512GB C/PACK"
-},
-{
-"zona": "LAMBAYEQUE",
-"modelo": "HONOR MAGIC 8 LITE VERDE 512GB 5G"
-},
-{
-"zona": "LAMBAYEQUE",
-"modelo": "HONOR MAGIC 8 LITE VERDE 512GB 5G C/P"
 },
 {
 "zona": "LAMBAYEQUE",
@@ -134,71 +20,41 @@
 },
 {
 "zona": "LAMBAYEQUE",
-"modelo": "HONOR X5D NEGRO NAA-LX3 128GB"
-},
-{
-"zona": "LAMBAYEQUE",
 "modelo": "MOTOROLA G17 ARANDANO XT2623 128GB"
 },
 {
-"zona": "LIMA",
-"modelo": "HONOR 600 NARANJA VKJ-NX9 512GB C/PACK"
-},
-{
-"zona": "LIMA",
-"modelo": "HONOR 600E DORADO LNA-NX3 512GB C/PACK"
-},
-{
-"zona": "LIMA",
-"modelo": "HONOR MAGIC 8 LITE VERDE 512GB 5G"
-},
-{
-"zona": "LIMA",
-"modelo": "HONOR MAGIC 8 LITE VERDE 512GB 5G C/P"
-},
-{
-"zona": "LIMA",
-"modelo": "HONOR X7C NEGRO ALT-LX3 256GB"
-},
-{
-"zona": "LIMA",
-"modelo": "IPHONE 16 PRO MAX TITANIO MYWY3BE/A 256G"
-},
-{
-"zona": "LIMA",
-"modelo": "OPPO A6K AZUL 256GB LTE C/PACK"
-},
-{
-"zona": "LIMA",
-"modelo": "XIAOMI REDMI NOTE 15 PRO+ NEGR 512GB C/C"
+"zona": "LAMBAYEQUE",
+"modelo": "OPPO A6K MORADO 256GB LTE"
 },
 {
 "zona": "PIURA",
-"modelo": "HONOR 600E DORADO LNA-NX3 512GB C/PACK"
+"modelo": "HONOR X6E NEGRO LBU-LX3 256GB C/PACK"
 },
 {
 "zona": "PIURA",
-"modelo": "HONOR MAGIC 8 LITE VERDE 512GB 5G"
+"modelo": "ZTE NUBIA V80 MAX PLATA 256GB"
 },
 {
 "zona": "PIURA",
-"modelo": "ZTE NUBIA V80 MAX NEGRO 256GB"
+"modelo": "ZTE NUBIA V80 PRO BLANCO 256GB"
+}
+],
+"eliminados": [
+{
+"zona": "LA LIBERTAD",
+"modelo": "XIAOMI REDMI A7 PRO VERDE 128GB"
+},
+{
+"zona": "LIMA",
+"modelo": "ZTE BLADE A56 PRO DORADO 128GB"
+},
+{
+"zona": "PIURA",
+"modelo": "XIAOMI REDMI A7 PRO VERDE 128GB"
 },
 {
 "zona": "PROVINCIAS",
-"modelo": "HONOR 600 NARANJA VKJ-NX9 512GB C/PACK"
-},
-{
-"zona": "PROVINCIAS",
-"modelo": "HONOR 600E DORADO LNA-NX3 512GB C/PACK"
-},
-{
-"zona": "PROVINCIAS",
-"modelo": "HONOR MAGIC 8 LITE VERDE 512GB 5G"
-},
-{
-"zona": "PROVINCIAS",
-"modelo": "HONOR MAGIC 8 LITE VERDE 512GB 5G C/P"
+"modelo": "ZTE BLADE A56 PRO DORADO 128GB"
 }
 ]
 }
