@@ -688,6 +688,7 @@
   }
   .caso-agendado-estado.pendiente{ background:#fff7e0; color:#8a6a00; }
   .caso-agendado-estado.tomado{ background:var(--azul-bg); color:var(--azul); }
+  .caso-agendado-estado.vencido{ background:#fdecea; color:var(--rojo); }
   .caso-agendado-vacio{ color:var(--gris); font-size:13px; text-align:center; padding:16px; }
 
   .resumen-tabla{
@@ -856,7 +857,8 @@
   body.tema-oscuro .entrega-aviso-prohibido,
   body.tema-oscuro .btn-no-quiere,
   body.tema-oscuro .tabla-ciclos tr.fila-cambio-eliminado td,
-  body.tema-oscuro .rlabel-inactivo, body.tema-oscuro .rvalor-inactivo{
+  body.tema-oscuro .rlabel-inactivo, body.tema-oscuro .rvalor-inactivo,
+  body.tema-oscuro .caso-agendado-estado.vencido{
     background:#3a1512 !important; border-color:#7a3a34;
   }
   body.tema-oscuro .banner-sin-drive,
@@ -7163,10 +7165,38 @@ if (location.protocol === "file:") {
   }
 
   function actualizarBadgeCasos(){
-    var pendientes = cargarCitasLocal().filter(function(c){ return c.estado !== "CONCRETADO"; });
+    var pendientes = cargarCitasLocal().filter(function(c){ return c.estado !== "CONCRETADO" && c.estado !== "VENCIDO"; });
     var badge = $("badgeCasosAgendados");
     badge.textContent = pendientes.length;
     badge.classList.toggle("oculto", pendientes.length === 0);
+  }
+
+  // "YYYY-MM-DD" de HOY en hora LOCAL (no toISOString(), que es UTC y en Peru puede
+  // adelantar o atrasar un dia segun la hora — mismo tipo de bug que ya se encontro y
+  // corrigio del lado del Apps Script para fecha/hora de listarCitas).
+  function fechaLocalHoy(){
+    var d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  }
+
+  // Una cita PENDIENTE cuyo DIA agendado ya paso por completo (no solo la hora puntual)
+  // pasa a "VENCIDO": deja de aparecer en la alerta urgente (que solo filtra PENDIENTE,
+  // ver renderAlertasCasos) pero se mantiene visible en "Casos agendados" con su propio
+  // badge, para que quede registro de que no se le devolvio la llamada. El cambio se manda
+  // tambien al Sheet (misma accion que Tomar caso/Concretado) para que se refleje igual
+  // en cualquier otro navegador/asesor.
+  function vencerCitasPasadas(){
+    var hoy = fechaLocalHoy();
+    var citas = cargarCitasLocal();
+    var huboCambios = false;
+    citas.forEach(function(c){
+      if (c.estado === "PENDIENTE" && c.fecha && c.fecha < hoy){
+        c.estado = "VENCIDO";
+        huboCambios = true;
+        enviarActualizacionEstadoAgenda(c.id, "VENCIDO");
+      }
+    });
+    if (huboCambios) guardarCitasLocal(citas);
   }
 
   // el estado tambien se sincroniza al Sheet (upsert por id, igual que el borrador), pero
@@ -7234,10 +7264,11 @@ if (location.protocol === "file:") {
     citas.forEach(function(c){
       var div = document.createElement("div");
       div.className = "caso-agendado-item";
-      var estadoClase = c.estado === "TOMADO" ? "tomado" : "pendiente";
+      var estadoClase = c.estado === "TOMADO" ? "tomado" : (c.estado === "VENCIDO" ? "vencido" : "pendiente");
+      var estadoTexto = c.estado === "VENCIDO" ? "NO DEVUELTA · FUERA DE PLAZO" : c.estado;
       div.innerHTML =
         '<div class="caso-agendado-fecha">' + c.fecha + " " + c.hora +
-          '<span class="caso-agendado-estado ' + estadoClase + '">' + c.estado + "</span></div>" +
+          '<span class="caso-agendado-estado ' + estadoClase + '">' + estadoTexto + "</span></div>" +
         '<div class="caso-agendado-datos">' +
           "<b>Cliente:</b> " + (c.nombre || "-") + "<br>" +
           "<b>Celular:</b> " + (c.cel || "-") + (c.celReferencia ? (" / Ref: " + c.celReferencia) : "") + "<br>" +
@@ -7314,6 +7345,7 @@ if (location.protocol === "file:") {
       // se vuelve a sincronizar al abrir el modal para que se vea al toque si otro
       // navegador tomo/concreto un caso, en vez de esperar hasta 30s al intervalo.
       sincronizarCitasRemotas(function(){
+        vencerCitasPasadas();
         actualizarBadgeCasos();
         renderAlertasCasos();
         renderModalCasos();
@@ -7322,14 +7354,17 @@ if (location.protocol === "file:") {
     $("btnCerrarCasosAgendados").addEventListener("click", function(){
       $("modalCasosAgendados").classList.add("oculto");
     });
+    vencerCitasPasadas();
     actualizarBadgeCasos();
     renderAlertasCasos();
     sincronizarCitasRemotas(function(){
+      vencerCitasPasadas();
       actualizarBadgeCasos();
       renderAlertasCasos();
     });
     setInterval(function(){
       sincronizarCitasRemotas(function(){
+        vencerCitasPasadas();
         actualizarBadgeCasos();
         renderAlertasCasos();
       });
