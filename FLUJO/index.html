@@ -268,11 +268,11 @@
   .fila-guardar-tipificar .btn{ flex:1; }
   .fila-guardar-tipificar .btn-agendar{ width:auto; white-space:nowrap; }
   .tipificacion-opciones{ display:flex; flex-direction:column; gap:8px; }
-  .btn-tipificacion{
+  .btn-tipificacion, .btn-plantilla-whatsapp{
     border:1.5px solid var(--azul); background:var(--azul-bg); color:var(--azul); border-radius:8px;
     padding:10px 12px; font-size:13px; font-weight:700; cursor:pointer; text-align:left;
   }
-  .btn-tipificacion:hover{ background:var(--azul); color:#fff; }
+  .btn-tipificacion:hover, .btn-plantilla-whatsapp:hover{ background:var(--azul); color:#fff; }
   .toast-tipificacion{
     position:fixed; top:14px; left:50%; transform:translateX(-50%); z-index:900;
     background:var(--verde); color:#fff; padding:10px 18px; border-radius:8px; font-size:13.5px;
@@ -983,6 +983,7 @@ if (location.protocol === "file:") {
       <button type="button" class="btn-agendar" id="btnContabilizarTiempo" title="Contabilizar tiempo de gestión">⏱ <span>Tiempo</span></button>
       <a href="tienda-movistar.html" target="_blank" rel="noopener" class="btn-agendar" style="text-decoration:none;" title="Precios reales de Movistar y Claro, para comparar (solo referencia)">🏪 <span>Tiendas</span></a>
       <button type="button" class="btn-agendar" id="btnTipificacionHeader" title="Tipificar la llamada y empezar un caso nuevo">🏷️ <span>Tipificar</span></button>
+      <button type="button" class="btn-agendar" id="btnWhatsapp" title="Escribir al cliente por WhatsApp">💬 <span>WhatsApp</span></button>
       <button type="button" class="btn-agendar oculto" id="btnBitacoraRebate" title="Bitácora de objeciones de este cliente">📋 <span>Bitácora</span></button>
     </div>
     <div style="display:flex; gap:5px; flex-shrink:0;">
@@ -1919,6 +1920,38 @@ if (location.protocol === "file:") {
   </div>
 </div>
 
+<div class="modal-overlay oculto" id="modalWhatsapp">
+  <div class="modal-caja modal-ancho">
+    <div class="modal-header">
+      <b>💬 Escribir por WhatsApp</b>
+      <button type="button" class="btn-cerrar" id="btnCerrarWhatsapp">✕</button>
+    </div>
+    <div class="campo">
+      <label>NÚMERO DE DESTINO</label>
+      <div class="radios" id="radiosWhatsappNumero"></div>
+    </div>
+    <div class="campo">
+      <label for="whatsappNumeroManual">O escribe otro número (tiene prioridad si lo llenas)</label>
+      <input type="tel" id="whatsappNumeroManual" placeholder="Ej: 987654321">
+    </div>
+    <div class="campo">
+      <label>PLANTILLAS</label>
+      <div class="tipificacion-opciones" id="whatsappPlantillas">
+        <button type="button" class="btn-plantilla-whatsapp" data-plantilla="saludo">Saludo / presentación</button>
+        <button type="button" class="btn-plantilla-whatsapp" data-plantilla="catalogo">Catálogo de equipos</button>
+        <button type="button" class="btn-plantilla-whatsapp" data-plantilla="seguimiento">Seguimiento</button>
+        <button type="button" class="btn-plantilla-whatsapp" data-plantilla="recordatorio">Recordatorio de cita</button>
+      </div>
+    </div>
+    <div class="campo">
+      <label for="whatsappMensaje">MENSAJE</label>
+      <textarea id="whatsappMensaje" rows="6" placeholder="Escribe o elige una plantilla para empezar..."></textarea>
+    </div>
+    <button type="button" class="btn" id="btnAbrirWhatsapp">💬 Abrir WhatsApp</button>
+    <div id="mensajeWhatsapp"></div>
+  </div>
+</div>
+
 <div class="modal-overlay oculto" id="modalCasosAgendados">
   <div class="modal-caja modal-ancho">
     <div class="modal-header">
@@ -2474,7 +2507,7 @@ if (location.protocol === "file:") {
     // demas — sin esto, un solo error silencioso podia dejar sin usar, por ejemplo, el
     // buscador de EQUIPO (initAutocomplete) si algo antes de el en la lista fallaba.
     [initCodFinanciamiento, initPlanes, initAutocomplete, initComparar, initStockNacional,
-      initCosto, initSimuladorEquipos, initVerDetalleEquipo, initZoomEquipo, initExpandirMapas, initFiltroAvanzadoDireccion, initAgendarLlamada, initCasosAgendados, initAutoguardado, initEncabezadoColapsable, initCambiosHistoricos, initInvalidarValidacionesContrato, initContabilizarTiempo, initResaltarCamposLlenos, initMayusculasAutomaticas, initTipoSubtipoEncabezado, initPlanEncabezado, initCodFinanciamientoEncabezado, initColorEquipoAutocomplete, initSuprimirAutocompletePago, precargarCicloContrato, actualizarContrato, actualizarSimuladorFinanciamiento, actualizarEncabezado].forEach(function(fn){
+      initCosto, initSimuladorEquipos, initVerDetalleEquipo, initZoomEquipo, initExpandirMapas, initFiltroAvanzadoDireccion, initAgendarLlamada, initCasosAgendados, initWhatsapp, initAutoguardado, initEncabezadoColapsable, initCambiosHistoricos, initInvalidarValidacionesContrato, initContabilizarTiempo, initResaltarCamposLlenos, initMayusculasAutomaticas, initTipoSubtipoEncabezado, initPlanEncabezado, initCodFinanciamientoEncabezado, initColorEquipoAutocomplete, initSuprimirAutocompletePago, precargarCicloContrato, actualizarContrato, actualizarSimuladorFinanciamiento, actualizarEncabezado].forEach(function(fn){
       try{ fn(); }catch(err){ console.error("Fallo al inicializar " + fn.name + ":", err); }
     });
   }).catch(function(err){
@@ -7096,6 +7129,90 @@ if (location.protocol === "file:") {
       }
 
       setTimeout(function(){ $("modalAgendar").classList.add("oculto"); }, 1200);
+    });
+  }
+
+  // ============ WHATSAPP (enlace wa.me, sin API paga) ============
+  // Solo arma el link y lo abre en una pestaña nueva con WhatsApp Web/App ya con el chat y
+  // el mensaje precargados — el asesor sigue presionando Enviar del lado de WhatsApp, igual
+  // que si lo hiciera a mano. No hay envio automatico ni adjuntar archivos porque eso
+  // requeriria WhatsApp Business API (servicio pago + backend nuevo), fuera de alcance para
+  // un sitio estatico como este.
+  function nombreClienteWhatsapp(){
+    return $("guionNombreCliente").value.trim() || "estimado(a) cliente";
+  }
+
+  var WHATSAPP_PLANTILLAS = {
+    saludo: function(){
+      var asesor = $("nombreAsesor").value.trim();
+      return "Hola " + nombreClienteWhatsapp() + ", te escribe" + (asesor ? (" " + asesor) : "") +
+        " de Movistar. Fue un gusto conversar contigo. Cualquier consulta, quedo atento por este medio.";
+    },
+    catalogo: function(){
+      return "Hola " + nombreClienteWhatsapp() + ", te comparto el catálogo de equipos y precios de referencia: " +
+        location.origin + "/tienda-movistar.html";
+    },
+    seguimiento: function(){
+      return "Hola " + nombreClienteWhatsapp() + ", ¿pudiste revisar la información que conversamos? Quedo atento a tus consultas.";
+    },
+    recordatorio: function(){
+      return "Hola " + nombreClienteWhatsapp() + ", te recuerdo la cita que coordinamos. Cualquier cambio, avísame por acá.";
+    }
+  };
+
+  // Numero peruano de 9 digitos sin codigo de pais -> se le antepone 51 (formato que
+  // requiere wa.me). Si ya viene con codigo de pais u otro largo, se manda tal cual.
+  function normalizarNumeroWhatsapp(num){
+    var limpio = (num || "").replace(/\D/g, "");
+    if (limpio.length === 9) limpio = "51" + limpio;
+    return limpio;
+  }
+
+  function abrirModalWhatsapp(){
+    var ani = $("guionAni").value.trim();
+    var ref = $("guionAniReferencia").value.trim();
+    var cont = $("radiosWhatsappNumero");
+    var opciones = [];
+    if (ani) opciones.push({ value: ani, label: "ANI: " + ani });
+    if (ref) opciones.push({ value: ref, label: "Referencia: " + ref });
+
+    cont.innerHTML = opciones.length
+      ? opciones.map(function(op, i){
+          return '<label><input type="radio" name="whatsappNumeroElegido" value="' + op.value + '"' +
+            (i === 0 ? " checked" : "") + '> ' + op.label + "</label>";
+        }).join("")
+      : '<span style="color:var(--gris); font-size:12.5px;">No hay ANI ni número de referencia cargados — usa el campo de abajo.</span>';
+
+    $("whatsappNumeroManual").value = "";
+    $("whatsappMensaje").value = "";
+    $("mensajeWhatsapp").innerHTML = "";
+    $("modalWhatsapp").classList.remove("oculto");
+  }
+
+  function initWhatsapp(){
+    $("btnWhatsapp").addEventListener("click", abrirModalWhatsapp);
+    $("btnCerrarWhatsapp").addEventListener("click", function(){
+      $("modalWhatsapp").classList.add("oculto");
+    });
+
+    document.querySelectorAll("#whatsappPlantillas .btn-plantilla-whatsapp").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var fn = WHATSAPP_PLANTILLAS[btn.dataset.plantilla];
+        if (fn) $("whatsappMensaje").value = fn();
+      });
+    });
+
+    $("btnAbrirWhatsapp").addEventListener("click", function(){
+      var elegido = document.querySelector('input[name=whatsappNumeroElegido]:checked');
+      var numero = $("whatsappNumeroManual").value.trim() || (elegido ? elegido.value : "");
+      var numeroLimpio = normalizarNumeroWhatsapp(numero);
+      if (!numeroLimpio || numeroLimpio.length < 9){
+        $("mensajeWhatsapp").innerHTML = '<div class="aviso err">Ingresa o elige un número válido.</div>';
+        return;
+      }
+      var mensaje = $("whatsappMensaje").value.trim();
+      var url = "https://wa.me/" + numeroLimpio + (mensaje ? ("?text=" + encodeURIComponent(mensaje)) : "");
+      window.open(url, "_blank", "noopener");
     });
   }
 
