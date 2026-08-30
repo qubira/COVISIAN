@@ -1961,6 +1961,7 @@ if (location.protocol === "file:") {
       Escanea este código con tu celular (con tu WhatsApp) para abrir el chat con el mensaje ya listo:
     </div>
     <div class="qr-whatsapp-caja oculto" id="cajaQrWhatsapp"></div>
+    <button type="button" class="btn-agendar" id="btnEnvioAutomaticoWhatsapp" style="width:100%; margin-top:10px;" title="Envía el mensaje solo, sin abrir WhatsApp (requiere API de WhatsApp Business configurada)">🚀 Envío automático (API)</button>
     <div id="mensajeWhatsapp"></div>
   </div>
 </div>
@@ -7215,13 +7216,20 @@ if (location.protocol === "file:") {
   // Arma la URL de wa.me a partir de lo elegido en el modal, o null + mensaje de error si
   // no hay un numero valido. Compartida entre "Abrir WhatsApp" y "Código QR" para no repetir
   // la misma logica de armado/validacion dos veces.
-  function obtenerUrlWhatsapp(){
+  // numero+mensaje elegidos en el modal, ya limpios — compartido entre los 3 botones de
+  // envio (wa.me, QR, API) para no repetir la logica de seleccion/validacion tres veces.
+  function obtenerNumeroYMensajeWhatsapp(){
     var elegido = document.querySelector('input[name=whatsappNumeroElegido]:checked');
     var numero = $("whatsappNumeroManual").value.trim() || (elegido ? elegido.value : "");
     var numeroLimpio = normalizarNumeroWhatsapp(numero);
     if (!numeroLimpio || numeroLimpio.length < 9) return null;
-    var mensaje = $("whatsappMensaje").value.trim();
-    return "https://wa.me/" + numeroLimpio + (mensaje ? ("?text=" + encodeURIComponent(mensaje)) : "");
+    return { numero: numeroLimpio, mensaje: $("whatsappMensaje").value.trim() };
+  }
+
+  function obtenerUrlWhatsapp(){
+    var datos = obtenerNumeroYMensajeWhatsapp();
+    if (!datos) return null;
+    return "https://wa.me/" + datos.numero + (datos.mensaje ? ("?text=" + encodeURIComponent(datos.mensaje)) : "");
   }
 
   function initWhatsapp(){
@@ -7263,6 +7271,42 @@ if (location.protocol === "file:") {
       caja.innerHTML = qr.createImgTag(5, 8);
       caja.classList.remove("oculto");
       $("notaQrWhatsapp").classList.remove("oculto");
+    });
+
+    // Manda el mensaje solo, sin que el asesor toque WhatsApp — requiere que Vercel tenga
+    // configurada la API de WhatsApp Business (Twilio, ver FLUJO/api/enviar-whatsapp.js).
+    // Mientras no este configurada, el backend responde "configurado:false" y este boton
+    // avisa eso en vez de fallar oscuro — el enlace/QR de arriba siguen funcionando igual.
+    $("btnEnvioAutomaticoWhatsapp").addEventListener("click", function(){
+      var datos = obtenerNumeroYMensajeWhatsapp();
+      if (!datos){
+        $("mensajeWhatsapp").innerHTML = '<div class="aviso err">Ingresa o elige un número válido.</div>';
+        return;
+      }
+      if (!datos.mensaje){
+        $("mensajeWhatsapp").innerHTML = '<div class="aviso err">Escribe un mensaje antes de enviar.</div>';
+        return;
+      }
+      var btn = $("btnEnvioAutomaticoWhatsapp");
+      btn.disabled = true;
+      $("mensajeWhatsapp").innerHTML = '<div class="aviso info">Enviando…</div>';
+      fetch("/api/enviar-whatsapp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ numero: datos.numero, mensaje: datos.mensaje })
+      }).then(function(r){ return r.json(); }).then(function(res){
+        btn.disabled = false;
+        if (res.ok){
+          $("mensajeWhatsapp").innerHTML = '<div class="aviso ok">Mensaje enviado.</div>';
+        } else if (res.configurado === false){
+          $("mensajeWhatsapp").innerHTML = '<div class="aviso info">Función pendiente: falta configurar la API de WhatsApp Business en Vercel. Usa "Abrir WhatsApp" o "Código QR" mientras tanto.</div>';
+        } else {
+          $("mensajeWhatsapp").innerHTML = '<div class="aviso err">No se pudo enviar: ' + (res.error || "error desconocido") + '</div>';
+        }
+      }).catch(function(err){
+        btn.disabled = false;
+        $("mensajeWhatsapp").innerHTML = '<div class="aviso err">No se pudo conectar con el servidor: ' + err + '</div>';
+      });
     });
   }
 
