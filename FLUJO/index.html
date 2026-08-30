@@ -701,6 +701,27 @@
     background:#fff; border-radius:10px; border:1px solid var(--borde);
   }
   .qr-whatsapp-caja img{ width:200px; height:200px; }
+
+  /* Panel flotante y arrastrable de "Datos del equipo (guion)" — mismo patron que
+     .panel-flotante-tiempo y .alertas-casos-panel: se puede mover a cualquier parte de la
+     pantalla, minimizar a solo el encabezado, o cerrar, sin bloquear el resto del formulario
+     como haria un modal-overlay comun. */
+  .panel-flotante-datos-guion{
+    position:fixed; top:80px; right:16px; z-index:850; background:#fff;
+    border:2px solid var(--azul); border-radius:12px; width:300px; max-width:calc(100vw - 20px);
+    overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,.25); user-select:none;
+  }
+  .panel-flotante-datos-guion.oculto{ display:none; }
+  .panel-datos-guion-header{
+    background:var(--azul); color:#fff; padding:7px 10px; display:flex; align-items:center;
+    justify-content:space-between; gap:8px; font-size:12px; font-weight:700; cursor:move;
+    touch-action:none;
+  }
+  .panel-flotante-datos-guion.minimizado .panel-datos-guion-header{ border-radius:10px; }
+  .panel-flotante-datos-guion.minimizado .panel-datos-guion-contenido{ display:none; }
+  .panel-datos-guion-botones{ display:flex; gap:6px; }
+  .panel-datos-guion-contenido{ padding:12px; max-height:70vh; overflow-y:auto; }
+  body.tema-oscuro .panel-flotante-datos-guion{ background:#1c2029; }
   .caso-agendado-vacio{ color:var(--gris); font-size:13px; text-align:center; padding:16px; }
 
   .resumen-tabla{
@@ -2329,12 +2350,15 @@ if (location.protocol === "file:") {
   </div>
 </div>
 
-<div class="modal-overlay oculto" id="modalDatosGuion">
-  <div class="modal-caja">
-    <div class="modal-header">
-      <b>Datos del equipo (guion)</b>
-      <button type="button" class="btn-cerrar" id="btnCerrarDatosGuion">✕</button>
+<div class="panel-flotante-datos-guion oculto" id="panelDatosGuion">
+  <div class="panel-datos-guion-header" id="panelDatosGuionHeader">
+    <span>📱 Datos del equipo (guion)</span>
+    <div class="panel-datos-guion-botones">
+      <button type="button" class="btn-cerrar-mini" id="btnMinimizarDatosGuion" title="Minimizar">▁</button>
+      <button type="button" class="btn-cerrar-mini" id="btnCerrarDatosGuion" title="Cerrar">✕</button>
     </div>
+  </div>
+  <div class="panel-datos-guion-contenido" id="contenidoDatosGuion">
     <ol class="guion-preguntas">
       <li>
         ¿Qué marca y modelo utilizas actualmente?
@@ -3753,6 +3777,13 @@ if (location.protocol === "file:") {
     $("campoGuionNombreTitular").classList.add("oculto");
     document.querySelectorAll('input[name=guionEsTitular]').forEach(function(r){ r.checked = false; });
     $("guionNumero").value = "";
+    // "Datos del equipo (guion)" (modalDatosGuion) tambien esta fuera del <form>, se le
+    // habia pasado por alto a este reset manual y quedaba con los datos de la llamada
+    // anterior hasta que alguien los borraba a mano.
+    $("equipoActualCliente").value = "";
+    $("marcaFavorita").value = "";
+    $("equipoValora").value = "";
+    $("presupuestoEquipo").value = "";
     $("distrito").value = "";
     $("provincia").value = "";
     $("departamento").value = "";
@@ -4496,15 +4527,54 @@ if (location.protocol === "file:") {
     $("modalMovistarTotal").classList.add("oculto");
   });
 
-  // Preguntas del guion sobre el equipo actual del cliente: ventana flotante aparte para
-  // no ocupar espacio fijo en el formulario (los campos son reales, no informativos, asi
-  // que solo se movieron de lugar — siguen guardandose igual en el borrador/venta).
-  $("btnDatosGuion").addEventListener("click", function(){
-    $("modalDatosGuion").classList.remove("oculto");
-  });
-  $("btnCerrarDatosGuion").addEventListener("click", function(){
-    $("modalDatosGuion").classList.add("oculto");
-  });
+  // Preguntas del guion sobre el equipo actual del cliente: panel flotante arrastrable
+  // (no modal bloqueante) para no ocupar espacio fijo en el formulario ni tapar el resto de
+  // la pagina mientras se sigue trabajando — los campos son reales, no informativos, asi que
+  // solo se movieron de lugar, siguen guardandose igual en el borrador/venta.
+  initPanelDatosGuion();
+
+  // Arrastrar/minimizar/cerrar el panel de "Datos del equipo (guion)" — mismo patron que
+  // initPanelAlertasCasos (drag por pointerdown/pointermove con clamp a la pantalla).
+  function initPanelDatosGuion(){
+    var panel = $("panelDatosGuion");
+    var header = $("panelDatosGuionHeader");
+    var btnMin = $("btnMinimizarDatosGuion");
+
+    $("btnDatosGuion").addEventListener("click", function(){
+      panel.classList.remove("oculto");
+    });
+    $("btnCerrarDatosGuion").addEventListener("click", function(){
+      panel.classList.add("oculto");
+    });
+    btnMin.addEventListener("click", function(){
+      var minimizado = panel.classList.toggle("minimizado");
+      btnMin.textContent = minimizado ? "▲" : "▁";
+      btnMin.title = minimizado ? "Expandir" : "Minimizar";
+    });
+
+    var arrastrando = false, offsetX = 0, offsetY = 0;
+    header.addEventListener("pointerdown", function(e){
+      if (e.target.closest(".btn-cerrar-mini")) return;
+      var rect = panel.getBoundingClientRect();
+      arrastrando = true;
+      offsetX = e.clientX - rect.left;
+      offsetY = e.clientY - rect.top;
+      panel.style.top = rect.top + "px";
+      panel.style.left = rect.left + "px";
+      panel.style.right = "auto";
+      header.setPointerCapture(e.pointerId);
+      e.preventDefault();
+    });
+    header.addEventListener("pointermove", function(e){
+      if (!arrastrando) return;
+      var maxX = window.innerWidth - panel.offsetWidth;
+      var maxY = window.innerHeight - panel.offsetHeight;
+      panel.style.left = Math.min(Math.max(0, e.clientX - offsetX), Math.max(0, maxX)) + "px";
+      panel.style.top = Math.min(Math.max(0, e.clientY - offsetY), Math.max(0, maxY)) + "px";
+    });
+    header.addEventListener("pointerup", function(){ arrastrando = false; });
+    header.addEventListener("pointercancel", function(){ arrastrando = false; });
+  }
 
   // Ventana flotante con info turistica/cultural del departamento de la cobertura elegida
   // (data/regiones.json), anclada junto al icono ℹ de UBICACIÓN en la tabla del encabezado.
