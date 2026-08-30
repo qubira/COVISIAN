@@ -104,6 +104,16 @@ function doGet(e) {
   return respuestaJson(payload);
 }
 
+// "v instanceof Date" no detecta de forma confiable los objetos Date que devuelve
+// getValues() para celdas de Sheets en algunos contextos de ejecucion de Apps Script
+// (comprobado con testListarCitas: instanceof fallaba en silencio y dejaba pasar el Date
+// crudo). Object.prototype.toString.call() es la forma robusta de chequear esto — no
+// depende de que el objeto haya sido creado en el mismo "realm"/contexto que el Date
+// global de este archivo.
+function esFechaJS(v) {
+  return Object.prototype.toString.call(v) === "[object Date]";
+}
+
 // Sheets auto-convierte "fecha"/"hora" a celdas de tipo Fecha/Hora reales aunque el
 // codigo las escriba como texto plano — getValues() las devuelve como objetos Date, que
 // JSON.stringify() serializaria como ISO completo (con la fecha epoch 1899-12-30 pegada a
@@ -119,7 +129,7 @@ function listarCitas() {
     var obj = {};
     COLUMNAS_AGENDA.forEach(function (campo, i) {
       var v = fila[i];
-      if (v instanceof Date) {
+      if (esFechaJS(v)) {
         if (campo === "fecha") v = Utilities.formatDate(v, tz, "yyyy-MM-dd");
         else if (campo === "hora") v = Utilities.formatDate(v, tz, "HH:mm");
         else v = v.toISOString();
