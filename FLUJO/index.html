@@ -689,6 +689,12 @@
   .caso-agendado-estado.pendiente{ background:#fff7e0; color:#8a6a00; }
   .caso-agendado-estado.tomado{ background:var(--azul-bg); color:var(--azul); }
   .caso-agendado-estado.vencido{ background:#fdecea; color:var(--rojo); }
+  .filtro-casos-agendados{ display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap; }
+  .filtro-casos-btn{
+    border:1.5px solid var(--azul); background:var(--azul-bg); color:var(--azul); border-radius:16px;
+    padding:5px 12px; font-size:12px; font-weight:700; cursor:pointer;
+  }
+  .filtro-casos-btn.activo{ background:var(--azul); color:#fff; }
   .caso-agendado-vacio{ color:var(--gris); font-size:13px; text-align:center; padding:16px; }
 
   .resumen-tabla{
@@ -1918,6 +1924,12 @@ if (location.protocol === "file:") {
     <div class="modal-header">
       <b>Casos agendados</b>
       <button type="button" class="btn-cerrar" id="btnCerrarCasosAgendados">✕</button>
+    </div>
+    <div class="filtro-casos-agendados" id="filtroCasosAgendados">
+      <button type="button" class="filtro-casos-btn activo" data-filtro="todos">Todos</button>
+      <button type="button" class="filtro-casos-btn" data-filtro="hoy">Hoy</button>
+      <button type="button" class="filtro-casos-btn" data-filtro="semana">Semana</button>
+      <button type="button" class="filtro-casos-btn" data-filtro="mes">Mes</button>
     </div>
     <div id="listaCasosAgendados"></div>
   </div>
@@ -7171,12 +7183,40 @@ if (location.protocol === "file:") {
     badge.classList.toggle("oculto", pendientes.length === 0);
   }
 
-  // "YYYY-MM-DD" de HOY en hora LOCAL (no toISOString(), que es UTC y en Peru puede
-  // adelantar o atrasar un dia segun la hora — mismo tipo de bug que ya se encontro y
-  // corrigio del lado del Apps Script para fecha/hora de listarCitas).
-  function fechaLocalHoy(){
-    var d = new Date();
+  // "YYYY-MM-DD" en hora LOCAL (no toISOString(), que es UTC y en Peru puede adelantar o
+  // atrasar un dia segun la hora — mismo tipo de bug que ya se encontro y corrigio del
+  // lado del Apps Script para fecha/hora de listarCitas).
+  function formatearFechaLocalYMD(d){
     return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  }
+  function fechaLocalHoy(){
+    return formatearFechaLocalYMD(new Date());
+  }
+
+  // Semana calendario actual (lunes a domingo) y mes calendario actual, para el filtro
+  // Hoy/Semana/Mes de "Casos agendados". Comparacion de rango es por string YYYY-MM-DD
+  // (funciona igual que comparar fechas porque el formato es lexicograficamente ordenable).
+  function rangoSemanaActual(){
+    var d = new Date();
+    var diaSemana = d.getDay(); // 0=domingo, 1=lunes, ... 6=sabado
+    var offsetLunes = diaSemana === 0 ? -6 : 1 - diaSemana;
+    var lunes = new Date(d.getFullYear(), d.getMonth(), d.getDate() + offsetLunes);
+    var domingo = new Date(lunes.getFullYear(), lunes.getMonth(), lunes.getDate() + 6);
+    return { inicio: formatearFechaLocalYMD(lunes), fin: formatearFechaLocalYMD(domingo) };
+  }
+  function rangoMesActual(){
+    var d = new Date();
+    var inicio = new Date(d.getFullYear(), d.getMonth(), 1);
+    var fin = new Date(d.getFullYear(), d.getMonth() + 1, 0); // dia 0 del mes siguiente = ultimo dia de este mes
+    return { inicio: formatearFechaLocalYMD(inicio), fin: formatearFechaLocalYMD(fin) };
+  }
+
+  var filtroCasosActivo = "todos"; // "todos" | "hoy" | "semana" | "mes"
+  function citaEnFiltroCasos(c){
+    if (filtroCasosActivo === "todos" || !c.fecha) return true;
+    if (filtroCasosActivo === "hoy") return c.fecha === fechaLocalHoy();
+    var r = filtroCasosActivo === "semana" ? rangoSemanaActual() : rangoMesActual();
+    return c.fecha >= r.inicio && c.fecha <= r.fin;
   }
 
   // Una cita PENDIENTE cuyo DIA agendado ya paso por completo (no solo la hora puntual)
@@ -7253,11 +7293,15 @@ if (location.protocol === "file:") {
   function renderModalCasos(){
     var citas = cargarCitasLocal()
       .filter(function(c){ return c.estado !== "CONCRETADO"; })
+      .filter(citaEnFiltroCasos)
       .sort(function(a, b){ return (a.fecha + a.hora).localeCompare(b.fecha + b.hora); });
 
     var cont = $("listaCasosAgendados");
     if (!citas.length){
-      cont.innerHTML = '<div class="caso-agendado-vacio">No hay casos agendados pendientes.</div>';
+      var textoVacio = filtroCasosActivo === "todos"
+        ? "No hay casos agendados pendientes."
+        : "No hay casos agendados en ese rango (" + filtroCasosActivo + ").";
+      cont.innerHTML = '<div class="caso-agendado-vacio">' + textoVacio + '</div>';
       return;
     }
     cont.innerHTML = "";
@@ -7339,6 +7383,13 @@ if (location.protocol === "file:") {
   }
 
   function initCasosAgendados(){
+    document.querySelectorAll(".filtro-casos-btn").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        filtroCasosActivo = btn.dataset.filtro;
+        document.querySelectorAll(".filtro-casos-btn").forEach(function(b){ b.classList.toggle("activo", b === btn); });
+        renderModalCasos();
+      });
+    });
     $("btnCasosAgendados").addEventListener("click", function(){
       renderModalCasos();
       $("modalCasosAgendados").classList.remove("oculto");
