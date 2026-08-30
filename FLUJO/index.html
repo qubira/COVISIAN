@@ -7099,6 +7099,69 @@ if (location.protocol === "file:") {
     try{ localStorage.setItem("llamadas_agendadas", JSON.stringify(citas)); }catch(err){ /* localStorage no disponible */ }
   }
 
+  // El Sheet "Llamadas Agendadas" funciona como base de datos compartida: cualquier navegador
+  // debe poder ver las citas que agendo OTRO navegador/asesor, no solo las propias. Se trae
+  // via JSONP (no fetch()+CORS normal) porque los Web Apps de Apps Script no pueden mandar el
+  // header Access-Control-Allow-Origin — un <script src> no esta sujeto a esa restriccion,
+  // por eso doGet() en apps_script.gs responde "callback(JSON)" en vez de JSON plano.
+  var jsonpContador = 0;
+  var jsonpEnVuelo = 0;
+  // Si el Web App todavia responde con la version vieja (sin doGet) o con una pagina de
+  // error de Apps Script, el navegador intenta parsear ese HTML como si fuera el script y
+  // tira un SyntaxError global no capturable con try/catch (pasa durante el parseo del
+  // <script>, no durante la ejecucion del codigo que lo agrego). Como el script es de otro
+  // origen, el evento llega "enmascarado" (sin filename/mensaje reales, por seguridad del
+  // navegador) asi que no se puede filtrar con precision — se suprime cualquier error global
+  // mientras haya un jsonp() en vuelo; el timeout de abajo ya maneja la falla igual, esto solo
+  // evita ensuciar la consola con un error ajeno a la app.
+  window.addEventListener("error", function(e){ if (jsonpEnVuelo > 0) e.preventDefault(); }, true);
+
+  function jsonp(url, timeoutMs){
+    return new Promise(function(resolve, reject){
+      var cbName = "jsonpCitas" + (jsonpContador++);
+      var script = document.createElement("script");
+      jsonpEnVuelo++;
+      var timer = setTimeout(function(){ limpiar(); reject(new Error("timeout")); }, timeoutMs || 8000);
+      function limpiar(){
+        clearTimeout(timer);
+        delete window[cbName];
+        jsonpEnVuelo--;
+        if (script.parentNode) script.parentNode.removeChild(script);
+      }
+      window[cbName] = function(data){ limpiar(); resolve(data); };
+      script.onerror = function(){ limpiar(); reject(new Error("jsonp error")); };
+      script.src = url + (url.indexOf("?") === -1 ? "?" : "&") + "callback=" + cbName;
+      document.body.appendChild(script);
+    });
+  }
+
+  // Trae las citas del Sheet y las combina con las locales: si una cita ya existe en las dos
+  // partes, se conserva la version LOCAL (es la unica que puede tener formSnapshot, necesario
+  // para que "Tomar caso" restaure el formulario completo) pero se actualiza su "estado" con
+  // el del Sheet, que es la fuente de verdad cuando OTRO navegador ya tomo/concreto el caso.
+  // Las citas que solo existen en el Sheet se agregan tal cual (sin formSnapshot — tomarCaso()
+  // ya sabe precargar solo los datos basicos cuando no hay snapshot, ver mas abajo).
+  function sincronizarCitasRemotas(callback){
+    function terminar(){ if (callback) callback(); }
+    if (!tieneScriptConfigurado()){ terminar(); return; }
+    jsonp(GOOGLE_SCRIPT_URL + "?accion=listarCitas").then(function(res){
+      if (!res || !res.ok || !Array.isArray(res.citas)) return;
+      var locales = cargarCitasLocal();
+      var porId = {};
+      locales.forEach(function(c){ porId[c.id] = c; });
+      res.citas.forEach(function(remota){
+        if (!remota.id) return;
+        var local = porId[remota.id];
+        if (local){
+          local.estado = remota.estado || local.estado;
+        } else {
+          porId[remota.id] = remota;
+        }
+      });
+      guardarCitasLocal(Object.keys(porId).map(function(k){ return porId[k]; }));
+    }).then(terminar, terminar);
+  }
+
   function actualizarBadgeCasos(){
     var pendientes = cargarCitasLocal().filter(function(c){ return c.estado !== "CONCRETADO"; });
     var badge = $("badgeCasosAgendados");
@@ -7248,13 +7311,29 @@ if (location.protocol === "file:") {
     $("btnCasosAgendados").addEventListener("click", function(){
       renderModalCasos();
       $("modalCasosAgendados").classList.remove("oculto");
+      // se vuelve a sincronizar al abrir el modal para que se vea al toque si otro
+      // navegador tomo/concreto un caso, en vez de esperar hasta 30s al intervalo.
+      sincronizarCitasRemotas(function(){
+        actualizarBadgeCasos();
+        renderAlertasCasos();
+        renderModalCasos();
+      });
     });
     $("btnCerrarCasosAgendados").addEventListener("click", function(){
       $("modalCasosAgendados").classList.add("oculto");
     });
     actualizarBadgeCasos();
     renderAlertasCasos();
-    setInterval(renderAlertasCasos, 30000);
+    sincronizarCitasRemotas(function(){
+      actualizarBadgeCasos();
+      renderAlertasCasos();
+    });
+    setInterval(function(){
+      sincronizarCitasRemotas(function(){
+        actualizarBadgeCasos();
+        renderAlertasCasos();
+      });
+    }, 30000);
     initPanelAlertasCasos();
   }
 

@@ -53,7 +53,10 @@ formulario. Se hace una sola vez, dura 5 minutos.
    - **"Llamadas Agendadas"**: se agrega una fila cada vez que se usa el botón
      **"📅 Agendar llamada"** del encabezado y se guarda la cita (fecha, hora,
      número, celular/celular referencia, nombre, equipo de interés y
-     observación).
+     observación). Esta hoja también funciona como base de datos compartida:
+     el modal **"Casos agendados"** y la alerta de llamada agendada leen de
+     acá (vía `doGet`) para que un caso agendado desde un navegador/asesor
+     aparezca en cualquier otro, no solo en el que lo creó.
    - **"Contacto efectivo" / "No contacto efectivo" / "No contacto"**: se
      agrega una fila (mismas columnas que "Ventas") cada vez que se usa el
      botón **"🏷️ Tipificar"** (encabezado o junto a GUARDAR) y se elige una de

@@ -16,6 +16,10 @@
  *                            ("Contacto efectivo" / "No contacto efectivo" / "No contacto"),
  *                            creandola si todavia no existe.
  *
+ * Tambien responde GET (?accion=listarCitas): devuelve todas las filas de "Llamadas
+ * Agendadas" en JSONP, para que "Casos agendados" funcione como base de datos compartida
+ * entre navegadores (ver doGet mas abajo).
+ *
  * Ver pasos de instalacion en GUIA_APPS_SCRIPT.md
  */
 
@@ -77,6 +81,40 @@ var COLUMNAS_AGENDA = [
   "id", "agendadoEn", "fecha", "hora", "cel", "celReferencia", "nombre",
   "equipoInteres", "observacion", "estado"
 ];
+
+// GET: usado para que "Casos agendados" pueda leer el Sheet como base de datos compartida
+// (cualquier navegador ve las mismas citas, no solo las que agendo ese mismo navegador).
+// Se responde en formato JSONP (no JSON plano) porque los Web Apps de Apps Script no dejan
+// mandar el header Access-Control-Allow-Origin, asi que un fetch() cruzado normal quedaria
+// bloqueado por CORS del navegador — un <script src="..."> (que es como se consume JSONP)
+// no esta sujeto a esa restriccion.
+function doGet(e) {
+  var accion = (e.parameter && e.parameter.accion) || "";
+  var payload;
+  if (accion === "listarCitas") {
+    payload = { ok: true, citas: listarCitas() };
+  } else {
+    payload = { ok: false, error: "accion GET desconocida" };
+  }
+  var callback = e.parameter && e.parameter.callback;
+  if (callback) {
+    return ContentService.createTextOutput(callback + "(" + JSON.stringify(payload) + ");")
+      .setMimeType(ContentService.MimeType.JAVASCRIPT);
+  }
+  return respuestaJson(payload);
+}
+
+function listarCitas() {
+  var hoja = obtenerOCrearHoja(HOJA_AGENDA, COLUMNAS_AGENDA);
+  var ultimaFila = hoja.getLastRow();
+  if (ultimaFila < 2) return [];
+  var valores = hoja.getRange(2, 1, ultimaFila - 1, COLUMNAS_AGENDA.length).getValues();
+  return valores.map(function (fila) {
+    var obj = {};
+    COLUMNAS_AGENDA.forEach(function (campo, i) { obj[campo] = fila[i]; });
+    return obj;
+  });
+}
 
 function doPost(e) {
   // Varios agentes pueden guardar al mismo tiempo. Sin lock, dos "borrador" casi
