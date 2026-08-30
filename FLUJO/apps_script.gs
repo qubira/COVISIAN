@@ -104,14 +104,28 @@ function doGet(e) {
   return respuestaJson(payload);
 }
 
+// Sheets auto-convierte "fecha"/"hora" a celdas de tipo Fecha/Hora reales aunque el
+// codigo las escriba como texto plano — getValues() las devuelve como objetos Date, que
+// JSON.stringify() serializaria como ISO completo (con la fecha epoch 1899-12-30 pegada a
+// la hora, o la zona horaria corriendo el dia de la fecha). Hay que reconstruir a mano el
+// "yyyy-MM-dd"/"HH:mm" que el frontend espera, o minutosHastaCita() nunca puede parsearlos.
 function listarCitas() {
   var hoja = obtenerOCrearHoja(HOJA_AGENDA, COLUMNAS_AGENDA);
   var ultimaFila = hoja.getLastRow();
   if (ultimaFila < 2) return [];
   var valores = hoja.getRange(2, 1, ultimaFila - 1, COLUMNAS_AGENDA.length).getValues();
+  var tz = Session.getScriptTimeZone();
   return valores.map(function (fila) {
     var obj = {};
-    COLUMNAS_AGENDA.forEach(function (campo, i) { obj[campo] = fila[i]; });
+    COLUMNAS_AGENDA.forEach(function (campo, i) {
+      var v = fila[i];
+      if (v instanceof Date) {
+        if (campo === "fecha") v = Utilities.formatDate(v, tz, "yyyy-MM-dd");
+        else if (campo === "hora") v = Utilities.formatDate(v, tz, "HH:mm");
+        else v = v.toISOString();
+      }
+      obj[campo] = v;
+    });
     return obj;
   });
 }
