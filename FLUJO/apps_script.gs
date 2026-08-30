@@ -77,9 +77,15 @@ var COLUMNAS_BORRADOR = [
   "vendido", "motivo"
 ];
 
+// "tipoCliente" se agrego al FINAL a proposito (no despues de "equipoInteres", donde
+// tendria mas sentido semantico) — las filas ya existentes en la hoja "Llamadas Agendadas"
+// no tienen esa columna, y como guardarAgenda/listarCitas mapean por POSICION, insertarla
+// en el medio habria desalineado "estado" (la ultima columna real hoy) para todas las citas
+// viejas. Al ir al final, una fila vieja simplemente lee tipoCliente como vacio/undefined —
+// no rompe nada de lo que ya existe.
 var COLUMNAS_AGENDA = [
   "id", "agendadoEn", "fecha", "hora", "cel", "celReferencia", "nombre",
-  "equipoInteres", "observacion", "estado"
+  "equipoInteres", "observacion", "estado", "tipoCliente"
 ];
 
 // GET: usado para que "Casos agendados" pueda leer el Sheet como base de datos compartida

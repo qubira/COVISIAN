@@ -1918,6 +1918,16 @@ if (location.protocol === "file:") {
       <div class="lista" id="lista-agenda-equipo"></div>
     </div>
     <div class="campo">
+      <label for="agendaTipoCliente">TIPO DE CLIENTE</label>
+      <select id="agendaTipoCliente">
+        <option value="">Seleccione...</option>
+        <option value="Cliente potencial">Cliente potencial</option>
+        <option value="Cliente para confirmar">Cliente para confirmar</option>
+        <option value="Cliente dudoso">Cliente dudoso</option>
+        <option value="Otros">Otros</option>
+      </select>
+    </div>
+    <div class="campo">
       <label for="agendaObservacion">OBSERVACIÓN</label>
       <textarea id="agendaObservacion" rows="3" placeholder="Notas para la llamada..."></textarea>
     </div>
@@ -7080,6 +7090,7 @@ if (location.protocol === "file:") {
       // equipo elegido), asi el agente no tiene que volver a escribirlos si ya los tenia.
       $("agendaNumero").value = $("guionAniReferencia").value.trim();
       $("agendaEquipo").value = $("equipo").value.trim();
+      $("agendaTipoCliente").value = "";
       $("agendaObservacion").value = "";
       $("mensajeAgenda").innerHTML = "";
       $("modalAgendar").classList.remove("oculto");
@@ -7118,6 +7129,7 @@ if (location.protocol === "file:") {
         celReferencia: $("agendaNumero").value.trim(),
         nombre: $("guionNombreCliente").value.trim(),
         equipoInteres: equipoInteres,
+        tipoCliente: $("agendaTipoCliente").value,
         observacion: observacion,
         formSnapshot: JSON.stringify(capturarEstado())
       };
@@ -7494,7 +7506,8 @@ if (location.protocol === "file:") {
         '<div class="alerta-caso-titulo">📞 Llamada agendada</div>' +
         '<div class="alerta-caso-detalle"><b>' + (c.nombre || "Cliente") + "</b> · " + c.fecha + " " + c.hora + "<br>" +
         (faltan > 0 ? ("Faltan " + faltan + " min") : "La hora pactada ya se cumplió") +
-        (c.equipoInteres ? ("<br>Interés: " + c.equipoInteres) : "") + "</div>" +
+        (c.equipoInteres ? ("<br>Interés: " + c.equipoInteres) : "") +
+        (c.tipoCliente ? ("<br>Tipo: " + c.tipoCliente) : "") + "</div>" +
         '<button type="button" class="btn-tomar-caso">▶ Tomar caso</button>';
       div.querySelector(".btn-tomar-caso").addEventListener("click", function(){ tomarCaso(c.id); });
       cont.appendChild(div);
@@ -7528,6 +7541,7 @@ if (location.protocol === "file:") {
           "<b>Cliente:</b> " + (c.nombre || "-") + "<br>" +
           "<b>Celular:</b> " + (c.cel || "-") + (c.celReferencia ? (" / Ref: " + c.celReferencia) : "") + "<br>" +
           "<b>Interés:</b> " + (c.equipoInteres || "-") +
+          (c.tipoCliente ? ("<br><b>Tipo:</b> " + c.tipoCliente) : "") +
           (c.observacion ? ("<br><b>Obs:</b> " + c.observacion) : "") +
         "</div>" +
         '<div class="caso-agendado-acciones">' +
