@@ -111,6 +111,12 @@
   .caja-resultado.visible{ display:block; }
   .caja-resultado .linea{ display:flex; justify-content:space-between; padding:3px 0; }
   .caja-resultado .linea b{ color:var(--azul); }
+  /* z-index mas alto que .modal-overlay (300): confirmarPersonalizado() puede abrirse desde
+     ADENTRO de otro modal ya abierto (ej. "Tomar caso" dentro de "Casos agendados") — como
+     todos los .modal-overlay comparten el mismo z-index, sin esto el orden en el HTML decide
+     cual queda encima, y el de confirmacion quedaba tapado (boton "Aceptar" inaccesible) por
+     cualquier modal que estuviera despues de el en el documento. */
+  #modalConfirmar{ z-index:1000; }
   .modal-confirmar-caja{ max-width:380px; }
   .modal-confirmar-texto{ font-size:14px; line-height:1.5; color:var(--texto); margin-bottom:18px; }
   .modal-confirmar-botones{ display:flex; gap:10px; justify-content:flex-end; }
