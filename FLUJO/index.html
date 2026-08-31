@@ -6059,6 +6059,10 @@ if (location.protocol === "file:") {
       div.addEventListener("mousedown", function(e){
         e.preventDefault();
         $("equipo").value = nombre;
+        // "4. Ingrese el Equipo a Buscar" tambien se actualiza con el nombre completo elegido
+        // (antes se quedaba con el texto parcial que se habia tecleado para buscar, sin
+        // reflejar cual de los resultados quedo realmente seleccionado).
+        $("simEquipoBuscar").value = nombre;
         mostrarFichaEquipo(nombre);
         cont.querySelectorAll(".simulador-lista-item").forEach(function(el){ el.classList.remove("activo"); });
         div.classList.add("activo");
