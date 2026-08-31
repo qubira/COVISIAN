@@ -148,6 +148,9 @@
   .simulador-lista-item:last-child{ border-bottom:none; }
   .simulador-lista-item:hover{ background:var(--azul-bg); }
   .simulador-lista-item.activo{ background:var(--azul); color:#fff; font-weight:700; }
+  .simulador-lista-item.opcion-phoenix{ background:#fff8de; }
+  .simulador-lista-item.opcion-phoenix:hover{ background:#fff0ae; }
+  .simulador-lista-item.opcion-phoenix.activo{ background:var(--azul); }
   .precio-equipo-grid{ display:grid; grid-template-columns:1fr 1fr; gap:4px 24px; }
   .precio-equipo-grid .linea{ display:flex; justify-content:space-between; padding:3px 0; }
 
@@ -883,6 +886,9 @@
   body.tema-oscuro .autocomplete .opcion:hover, body.tema-oscuro .autocomplete .opcion.activa{ background:#22314f; }
   body.tema-oscuro .autocomplete .opcion.opcion-phoenix{ background:#3a2f0a; }
   body.tema-oscuro .autocomplete .opcion.opcion-phoenix:hover, body.tema-oscuro .autocomplete .opcion.opcion-phoenix.activa{ background:#544512; }
+  body.tema-oscuro .simulador-lista-item.opcion-phoenix{ background:#3a2f0a; }
+  body.tema-oscuro .simulador-lista-item.opcion-phoenix:hover{ background:#544512; }
+  body.tema-oscuro .simulador-lista-item.opcion-phoenix.activo{ background:var(--azul); }
   body.tema-oscuro .badge-phoenix{ background:#7a641f; color:#e8c14d; }
 
   body.tema-oscuro .campo label, body.tema-oscuro .color-chip{ color:#c7ccd6; }
@@ -5987,7 +5993,12 @@ if (location.protocol === "file:") {
     nombres.slice(0, 200).forEach(function(nombre){
       var div = document.createElement("div");
       div.className = "simulador-lista-item";
-      div.textContent = nombre;
+      if (esEquipoPhoenix(nombre)){
+        div.className += " opcion-phoenix";
+        div.innerHTML = "⭐ " + nombre + ' <span class="badge-phoenix">PHOENIX</span>';
+      } else {
+        div.textContent = nombre;
+      }
       div.addEventListener("mousedown", function(e){
         e.preventDefault();
         $("equipo").value = nombre;
