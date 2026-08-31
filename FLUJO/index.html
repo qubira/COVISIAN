@@ -1513,6 +1513,18 @@ if (location.protocol === "file:") {
           <label for="filtroSimBateria">BATERÍA</label>
           <select id="filtroSimBateria"><option value="">Todas</option></select>
         </div>
+        <div class="campo">
+          <label for="filtroSimPantalla">PANTALLA</label>
+          <select id="filtroSimPantalla"><option value="">Todas</option></select>
+        </div>
+        <div class="campo">
+          <label for="filtroSimMarca">MARCA</label>
+          <select id="filtroSimMarca"><option value="">Todas</option></select>
+        </div>
+        <div class="campo">
+          <label for="filtroSimProcesador">PROCESADOR</label>
+          <select id="filtroSimProcesador"><option value="">Todos</option></select>
+        </div>
       </div>
       <div class="simulador-lista-equipos" id="simListaEquipos">
         <div class="simulador-lista-vacio">Escriba, filtre, o presione "Filtrar todo" para ver el catálogo completo.</div>
@@ -3413,6 +3425,9 @@ if (location.protocol === "file:") {
       filtroSimGama: $("filtroSimGama").value,
       filtroSimCamara: $("filtroSimCamara").value,
       filtroSimBateria: $("filtroSimBateria").value,
+      filtroSimPantalla: $("filtroSimPantalla").value,
+      filtroSimMarca: $("filtroSimMarca").value,
+      filtroSimProcesador: $("filtroSimProcesador").value,
       convenioCosto: (document.querySelector('input[name=convenioCosto]:checked') || {}).value || "",
       medioPago: (document.querySelector('input[name=medioPago]:checked') || {}).value || "",
       resumenColorEquipo: $("resumenColorEquipo").value,
@@ -3675,8 +3690,12 @@ if (location.protocol === "file:") {
     $("filtroSimGama").value = estado.filtroSimGama || "";
     $("filtroSimCamara").value = estado.filtroSimCamara || "";
     $("filtroSimBateria").value = estado.filtroSimBateria || "";
+    $("filtroSimPantalla").value = estado.filtroSimPantalla || "";
+    $("filtroSimMarca").value = estado.filtroSimMarca || "";
+    $("filtroSimProcesador").value = estado.filtroSimProcesador || "";
     if (estado.simEquipoBuscar || estado.filtroSimRam || estado.filtroSimRom ||
-        estado.filtroSimGama || estado.filtroSimCamara || estado.filtroSimBateria){
+        estado.filtroSimGama || estado.filtroSimCamara || estado.filtroSimBateria ||
+        estado.filtroSimPantalla || estado.filtroSimMarca || estado.filtroSimProcesador){
       buscarEquiposSimulador(true);
     }
 
@@ -3883,7 +3902,8 @@ if (location.protocol === "file:") {
     $("codFinanciamiento").value = "1";
     $("rCodFin").value = "1";
     $("simEquipoBuscar").value = "";
-    ["filtroSimRam", "filtroSimRom", "filtroSimGama", "filtroSimCamara", "filtroSimBateria"].forEach(function(id){ $(id).value = ""; });
+    ["filtroSimRam", "filtroSimRom", "filtroSimGama", "filtroSimCamara", "filtroSimBateria",
+      "filtroSimPantalla", "filtroSimMarca", "filtroSimProcesador"].forEach(function(id){ $(id).value = ""; });
     actualizarOpcionesFiltrosSimulador();
     $("simListaEquipos").innerHTML = '<div class="simulador-lista-vacio">Escriba, filtre, o presione "Filtrar todo" para ver el catálogo completo.</div>';
     $("simTipoAlta").value = "";
@@ -5887,10 +5907,17 @@ if (location.protocol === "file:") {
       return ORDEN_GAMA.indexOf(a) - ORDEN_GAMA.indexOf(b);
     } },
     { id: "filtroSimCamara", specsKey: "camaraPrincipal", sufijo: " MP", comparador: comparadorNumerico },
-    { id: "filtroSimBateria", specsKey: "bateria", sufijo: " mAh", comparador: comparadorNumerico }
+    { id: "filtroSimBateria", specsKey: "bateria", sufijo: " mAh", comparador: comparadorNumerico },
+    // pantalla/procesador vienen como texto libre y no siempre empiezan con el numero (ej.
+    // "AMOLED 6,7 FHD+"), asi que un comparador numerico los dejaria mal ordenados (o todos
+    // como NaN) — se ordenan alfabeticamente, igual que marca.
+    { id: "filtroSimPantalla", specsKey: "pantalla", sufijo: "", comparador: comparadorTexto },
+    { id: "filtroSimMarca", specsKey: "marca", sufijo: "", comparador: comparadorTexto },
+    { id: "filtroSimProcesador", specsKey: "procesador", sufijo: "", comparador: comparadorTexto }
   ];
 
   function comparadorNumerico(a, b){ return parseFloat(a) - parseFloat(b); }
+  function comparadorTexto(a, b){ return String(a).localeCompare(String(b)); }
 
   // Lista de equipos que cumplen texto + zona + TIPO/SUBTIPO + todos los filtros YA elegidos
   // EXCEPTO el que se pasa en idFiltroExcluido — es la base para calcular que opciones tiene
@@ -5949,12 +5976,10 @@ if (location.protocol === "file:") {
     actualizarOpcionesFiltrosSimulador();
 
     var q = normBusqueda($("simEquipoBuscar").value);
-    var ram = $("filtroSimRam").value;
-    var rom = $("filtroSimRom").value;
-    var gama = $("filtroSimGama").value;
-    var camara = $("filtroSimCamara").value;
-    var bateria = $("filtroSimBateria").value;
-    var hayFiltro = q || ram || rom || gama || camara || bateria;
+    var valoresFiltro = {};
+    CAMPOS_FILTRO_SIMULADOR.forEach(function(f){ valoresFiltro[f.id] = $(f.id).value; });
+    var hayFiltroCampo = CAMPOS_FILTRO_SIMULADOR.some(function(f){ return valoresFiltro[f.id]; });
+    var hayFiltro = q || hayFiltroCampo;
 
     if (!hayFiltro && !forzarTodo){
       $("simListaEquipos").innerHTML = '<div class="simulador-lista-vacio">Escriba, filtre, o presione "Filtrar todo" para ver el catálogo completo.</div>';
@@ -5968,14 +5993,13 @@ if (location.protocol === "file:") {
       }
       if (!equipoTieneStockEnZona(nombre)) return false;
       if (!equipoCoincideTipoSubtipo(nombre)) return false;
-      if (ram || rom || gama || camara || bateria){
+      if (hayFiltroCampo){
         var specs = mejorMatchSpecs(nombre);
         if (!specs) return false;
-        if (ram && String(specs.ram) !== ram) return false;
-        if (rom && String(specs.memoria) !== rom) return false;
-        if (gama && specs.gama !== gama) return false;
-        if (camara && String(specs.camaraPrincipal) !== camara) return false;
-        if (bateria && String(specs.bateria) !== bateria) return false;
+        for (var i = 0; i < CAMPOS_FILTRO_SIMULADOR.length; i++){
+          var f = CAMPOS_FILTRO_SIMULADOR[i];
+          if (valoresFiltro[f.id] && String(specs[f.specsKey]) !== valoresFiltro[f.id]) return false;
+        }
       }
       return true;
     });
@@ -6017,7 +6041,8 @@ if (location.protocol === "file:") {
     // rompe el chequeo de "sin filtro" (paso ya vivido y corregido aca mismo).
     $("simEquipoBuscar").addEventListener("input", function(){ buscarEquiposSimulador(); });
     $("btnSimFiltrarTodo").addEventListener("click", function(){ buscarEquiposSimulador(true); });
-    ["filtroSimRam", "filtroSimRom", "filtroSimGama", "filtroSimCamara", "filtroSimBateria"].forEach(function(id){
+    ["filtroSimRam", "filtroSimRom", "filtroSimGama", "filtroSimCamara", "filtroSimBateria",
+      "filtroSimPantalla", "filtroSimMarca", "filtroSimProcesador"].forEach(function(id){
       $(id).addEventListener("change", function(){ buscarEquiposSimulador(); });
     });
   }
