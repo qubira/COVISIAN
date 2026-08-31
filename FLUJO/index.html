@@ -5686,6 +5686,11 @@ if (location.protocol === "file:") {
         }
         $("equipo").value = nombre;
         $("simEquipoBuscar").value = nombre;
+        // asignar .value por JS no dispara el evento "input" que normalmente refiltra la
+        // lista de abajo (#simListaEquipos) — sin este llamado explicito, la lista se
+        // quedaba mostrando lo que hubiera antes de abrir Stock, dando la impresion de que
+        // la seleccion "no reemplazaba" lo anterior.
+        buscarEquiposSimulador();
         mostrarFichaEquipo(nombre);
         $("modalStockNacional").classList.add("oculto");
       });
