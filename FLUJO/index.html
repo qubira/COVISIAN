@@ -2489,6 +2489,10 @@ if (location.protocol === "file:") {
         </select>
       </div>
       <div class="campo">
+        <label for="filtroColorStock">COLOR</label>
+        <select id="filtroColorStock"><option value="">Todos</option></select>
+      </div>
+      <div class="campo">
         <label for="filtroModeloStock">BUSCAR MODELO</label>
         <input type="text" id="filtroModeloStock" placeholder="Ej: Samsung, iPhone...">
       </div>
@@ -5566,6 +5570,7 @@ if (location.protocol === "file:") {
       renderStockDepartamento();
     });
     $("filtroEstadoStock").addEventListener("change", renderStockDepartamento);
+    $("filtroColorStock").addEventListener("change", renderStockDepartamento);
     $("filtroModeloStock").addEventListener("input", renderStockDepartamento);
 
     document.querySelectorAll("#tablaStockNacional th.th-ordenable").forEach(function(th){
@@ -5583,20 +5588,48 @@ if (location.protocol === "file:") {
   function abrirStockDepartamento(zona){
     $("filtroDeptoStock").value = zona;
     $("filtroEstadoStock").value = "";
+    $("filtroColorStock").value = "";
     $("filtroModeloStock").value = "";
     renderStockDepartamento();
     $("modalStockNacional").classList.remove("oculto");
   }
 
+  // Repuebla el <select> de COLOR con los colores que de verdad aparecen en stock para la
+  // zona elegida (extraerColor() sobre el nombre de modelo, mismo helper que ya usa el
+  // selector de "Color elegido del equipo") — conserva la seleccion actual si sigue siendo
+  // valida, igual que la cascada de filtros del Simulador de terminales.
+  function poblarFiltroColorStock(zona){
+    var sel = $("filtroColorStock");
+    var actual = sel.value;
+    var colores = {};
+    DATA.stock.forEach(function(row){
+      if (row.zona !== zona) return;
+      var c = extraerColor(row.modelo);
+      if (c) colores[c] = true;
+    });
+    var lista = Object.keys(colores).sort();
+    sel.innerHTML = '<option value="">Todos</option>';
+    lista.forEach(function(c){
+      var opt = document.createElement("option");
+      opt.value = c;
+      opt.textContent = c;
+      sel.appendChild(opt);
+    });
+    sel.value = colores[actual] ? actual : "";
+  }
+
   function renderStockDepartamento(){
     var zona = $("filtroDeptoStock").value;
     $("stockNacionalTitulo").textContent = etiquetaZona(zona);
+    poblarFiltroColorStock(zona);
     var estadoFiltro = norm($("filtroEstadoStock").value);
+    var colorFiltro = $("filtroColorStock").value;
     var textoModelo = norm($("filtroModeloStock").value);
 
     var filas = DATA.stock.filter(function(row){
       if (row.zona !== zona) return false;
       if (estadoFiltro && norm(row.estado) !== estadoFiltro) return false;
+      if (colorFiltro && extraerColor(row.modelo) !== colorFiltro) return false;
       if (textoModelo && norm(row.modelo).indexOf(textoModelo) === -1) return false;
       return true;
     });
