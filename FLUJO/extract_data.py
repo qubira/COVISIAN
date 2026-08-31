@@ -491,6 +491,21 @@ def extract_precios():
     return resultado
 
 
+def extract_equipos_phoenix():
+    """
+    Lista de equipos que aparecen en la hoja "ESP_PHOENIX" de Visor.xlsb (con precio
+    Contado real ahi, no solo la etiqueta generica "ESP_POST_PHOENIX" de BaseTerminales
+    columna 8 -- son conjuntos distintos, comprobado: 30 equipos en la hoja vs 52 con esa
+    etiqueta). Se usa para resaltar en el buscador de EQUIPO cuales tienen el descuento
+    Phoenix vigente.
+    """
+    with pyxlsb.open_workbook(VISOR_PATH) as wb:
+        bloques = _leer_bloques_hoja_precios(wb, "ESP_PHOENIX")
+    if not bloques:
+        return []
+    return sorted(bloques[0]["precios"].keys())
+
+
 def extract_cod_financiamiento():
     codes = set()
     sheets = ["ALTA PP y PF", "PORTA_GENERICA", "CAEQ_GENERICA", "MP-Cuotas sin intereses",
@@ -696,6 +711,7 @@ def main():
     equipos_tipoventa = extract_equipos_tipoventa()
     precios = extract_precios()
     equipos_imagenes = extract_equipos_imagenes()
+    equipos_phoenix = extract_equipos_phoenix()
 
     with open(OUT_DIR + r"\cobertura.json", "w", encoding="utf-8") as f:
         json.dump(cobertura, f, ensure_ascii=False, indent=0)
@@ -721,6 +737,8 @@ def main():
         json.dump(equipos_imagenes, f, ensure_ascii=False, indent=0)
     with open(OUT_DIR + r"\cambios_historicos.json", "w", encoding="utf-8") as f:
         json.dump(cambios_historicos, f, ensure_ascii=False, indent=0)
+    with open(OUT_DIR + r"\equipos_phoenix.json", "w", encoding="utf-8") as f:
+        json.dump(equipos_phoenix, f, ensure_ascii=False, indent=0)
 
     _escribir_meta()
 
@@ -737,6 +755,7 @@ def main():
     print("equipos_imagenes:", len(equipos_imagenes), "fotos de equipos copiadas a FLUJO/img/equipos")
     print("cambios_historicos:", len(cambios_historicos["agregados"]), "agregados,",
           len(cambios_historicos["eliminados"]), "eliminados desde", cambios_historicos["fechaAnterior"])
+    print("equipos_phoenix:", len(equipos_phoenix), "equipos con descuento Phoenix")
 
 
 if __name__ == "__main__":

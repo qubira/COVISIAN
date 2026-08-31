@@ -102,6 +102,12 @@
   .autocomplete .lista.abierta{ display:block; }
   .autocomplete .opcion{ padding:8px 10px; font-size:13.5px; cursor:pointer; }
   .autocomplete .opcion:hover, .autocomplete .opcion.activa{ background:var(--azul-bg); }
+  .autocomplete .opcion.opcion-phoenix{ background:#fff8de; }
+  .autocomplete .opcion.opcion-phoenix:hover, .autocomplete .opcion.opcion-phoenix.activa{ background:#fff0ae; }
+  .badge-phoenix{
+    display:inline-block; font-size:9.5px; font-weight:800; letter-spacing:.3px; color:#8a6a00;
+    background:#ffe58a; border-radius:8px; padding:1px 6px; margin-left:4px; vertical-align:middle;
+  }
   .autocomplete .opcion small{ display:block; color:var(--gris); font-size:11px; }
 
   .caja-resultado{
@@ -875,6 +881,9 @@
   body.tema-oscuro #tablaStockNacional th.th-ordenable:hover{ background:#22314f; }
   body.tema-oscuro .btn-ver-detalle:hover{ background:#22314f; }
   body.tema-oscuro .autocomplete .opcion:hover, body.tema-oscuro .autocomplete .opcion.activa{ background:#22314f; }
+  body.tema-oscuro .autocomplete .opcion.opcion-phoenix{ background:#3a2f0a; }
+  body.tema-oscuro .autocomplete .opcion.opcion-phoenix:hover, body.tema-oscuro .autocomplete .opcion.opcion-phoenix.activa{ background:#544512; }
+  body.tema-oscuro .badge-phoenix{ background:#7a641f; color:#e8c14d; }
 
   body.tema-oscuro .campo label, body.tema-oscuro .color-chip{ color:#c7ccd6; }
   body.tema-oscuro .color-chip{ background:#2a2e38; }
@@ -2501,7 +2510,7 @@ if (location.protocol === "file:") {
   // Pega aquí la URL del Web App de Google Apps Script (ver GUIA_APPS_SCRIPT.md)
   var GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzXtTACG2tyOQ675d18Xc5nZDPeUfHGkdnzXcD_pN2HcfQSv55PDHa2P8hgLr3cTcEV/exec";
 
-  var DATA = { cobertura: [], specs: [], equiposPlanes: [], codFinanciamiento: [], stock: [], packs: [], planes: [], equiposTipoventa: {}, precios: {}, objeciones: [], regiones: [], gamaFinanciamiento: {}, equiposImagenes: [], cambiosHistoricos: { agregados: [], eliminados: [] } };
+  var DATA = { cobertura: [], specs: [], equiposPlanes: [], codFinanciamiento: [], stock: [], packs: [], planes: [], equiposTipoventa: {}, precios: {}, objeciones: [], regiones: [], gamaFinanciamiento: {}, equiposImagenes: [], cambiosHistoricos: { agregados: [], eliminados: [] }, equiposPhoenix: [] };
 
   var SUBTIPOS = {
     PREPAGO: ["PREPAGO"],
@@ -2568,7 +2577,8 @@ if (location.protocol === "file:") {
     fetch("data/regiones.json").then(function(r){ return r.json(); }),
     fetch("data/gama_financiamiento.json").then(function(r){ return r.json(); }),
     fetch("data/equipos_imagenes.json").then(function(r){ return r.json(); }),
-    fetch("data/cambios_historicos.json").then(function(r){ return r.json(); })
+    fetch("data/cambios_historicos.json").then(function(r){ return r.json(); }),
+    fetch("data/equipos_phoenix.json").then(function(r){ return r.json(); })
   ]).then(function(res){
     DATA.cobertura = res[0];
     DATA.specs = res[1];
@@ -2584,6 +2594,7 @@ if (location.protocol === "file:") {
     DATA.gamaFinanciamiento = res[11];
     DATA.equiposImagenes = res[12];
     DATA.cambiosHistoricos = res[13];
+    DATA.equiposPhoenix = res[14];
 
     // Cada init() es independiente: si uno falla (dato raro, etc.) no debe tumbar a los
     // demas — sin esto, un solo error silencioso podia dejar sin usar, por ejemplo, el
@@ -5734,6 +5745,19 @@ if (location.protocol === "file:") {
     "ESPECIALES|RETENCION/BLINDAJE (Financiado)": { campo: "canal", valor: ["ESP_POST_RETENCION", "ESP_POST_BLINDAJE"] }
   };
 
+  // Equipos con descuento Phoenix vigente (hoja "ESP_PHOENIX" de Visor.xlsb, ver
+  // extract_equipos_phoenix() en extract_data.py) — se resaltan en el buscador de EQUIPO
+  // para que el asesor los detecte de una. Set normalizado (mismo norm() que el resto de
+  // comparaciones de nombre de equipo) para no fallar por mayusculas/tildes.
+  var EQUIPOS_PHOENIX_NORM = null;
+  function esEquipoPhoenix(nombreEquipo){
+    if (!EQUIPOS_PHOENIX_NORM){
+      EQUIPOS_PHOENIX_NORM = {};
+      (DATA.equiposPhoenix || []).forEach(function(n){ EQUIPOS_PHOENIX_NORM[norm(n)] = true; });
+    }
+    return !!EQUIPOS_PHOENIX_NORM[norm(nombreEquipo)];
+  }
+
   function equipoCoincideTipoSubtipo(nombreEquipo){
     var tipo = $("tipo").value;
     var subtipo = $("subtipo").value;
@@ -5782,7 +5806,12 @@ if (location.protocol === "file:") {
         coincidencias.slice(0, 30).forEach(function(nombre){
           var div = document.createElement("div");
           div.className = "opcion";
-          div.textContent = nombre;
+          if (esEquipoPhoenix(nombre)){
+            div.className += " opcion-phoenix";
+            div.innerHTML = "⭐ " + nombre + ' <span class="badge-phoenix">PHOENIX</span>';
+          } else {
+            div.textContent = nombre;
+          }
           div.addEventListener("mousedown", function(e){
             e.preventDefault();
             input.value = nombre;
