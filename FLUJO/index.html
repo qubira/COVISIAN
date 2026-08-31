@@ -111,6 +111,10 @@
   .caja-resultado.visible{ display:block; }
   .caja-resultado .linea{ display:flex; justify-content:space-between; padding:3px 0; }
   .caja-resultado .linea b{ color:var(--azul); }
+  .linea-recomendado{
+    margin-top:6px; padding:6px 8px; border-radius:6px; background:#e6f7ec; color:var(--verde);
+    font-size:12px; font-weight:700;
+  }
   .linea-titulo-rojo{ color:var(--rojo); font-weight:700; }
   .opciones-adicionales-fin{ margin-top:14px; padding-top:12px; border-top:1px dashed var(--borde); }
   .opciones-adicionales-fin > .titulo{ font-weight:700; color:var(--azul); margin-bottom:10px; letter-spacing:.3px; }
@@ -878,6 +882,7 @@
   body.tema-oscuro .banner-restaurado,
   body.tema-oscuro .tabla-ciclos tr.ciclo-recomendado td,
   body.tema-oscuro .tabla-planes tr.plan-actual td,
+  body.tema-oscuro .linea-recomendado,
   body.tema-oscuro .btn-concretado-item,
   body.tema-oscuro .entrega-si,
   body.tema-oscuro .tabla-ciclos tr.fila-cambio-agregado td,
@@ -1207,6 +1212,7 @@ if (location.protocol === "file:") {
       <div class="caja-resultado" id="cajaCobertura">
         <div class="linea"><span><b>EXPRESS:</b> <span id="covExpress">-</span></span><span id="covHasta">-</span></div>
         <div class="linea"><span><b>REGULAR:</b> <span id="covRango">-</span></span><span id="covDia">-</span></div>
+        <div class="linea-recomendado oculto" id="covRangoRecomendado"></div>
         <button type="button" class="btn-mini" id="btnInfoDelivery" title="Reglas de Delivery Express / Regular" style="margin-top:6px; padding:4px 10px;">ℹ ¿Qué significa Express/Regular?</button>
       </div>
       <div class="campo" id="campoDireccion" style="margin-top:8px;">
@@ -4812,6 +4818,42 @@ if (location.protocol === "file:") {
     return DIAS_ES[jsDow === 0 ? 6 : jsDow - 1];
   }
 
+  // Recomendacion de RANGO de entrega REGULAR segun la hora actual, dentro de los rangos
+  // que de verdad tiene disponibles el distrito (columna "rango" del Excel: "TODOS",
+  // "2 Y 3", "1", etc.). El campo del Excel es una lista de rangos posibles, no un rango
+  // concreto — el guion de CONTRATO necesita decirle al cliente UN horario real, no
+  // "2 Y 3", asi que se recomienda el que corresponde a la hora en que se esta llamando.
+  var RANGOS_HORARIOS = {
+    1: { etiqueta: "Rango 1 (Turno Mañana)", horario: "8:00 a.m. a 2:00 p.m." },
+    2: { etiqueta: "Rango 2 (Turno Tarde)", horario: "2:00 p.m. a 6:00 p.m." },
+    3: { etiqueta: "Rango 3 (Turno Extendido / Noche)", horario: "5:00 p.m. a 9:00 p.m." }
+  };
+
+  function rangosDisponibles(rangoTexto){
+    if (!rangoTexto) return [];
+    var t = rangoTexto.toString().toUpperCase();
+    if (t.indexOf("TODOS") !== -1) return [1, 2, 3];
+    var disponibles = [];
+    [1, 2, 3].forEach(function(n){
+      if (new RegExp("\\b" + n + "\\b").test(t)) disponibles.push(n);
+    });
+    return disponibles;
+  }
+
+  // Elige, de los rangos que el distrito realmente tiene, el que corresponde a la hora
+  // actual (1 antes de las 2pm, 2 de 2pm a 5pm, 3 desde las 5pm). Si ese rango ideal no
+  // esta disponible ahi, cae al siguiente disponible mas adelante en el dia; si ya no queda
+  // ninguno mas adelante (ej. se paso de las 9pm), cae al ultimo disponible.
+  function recomendarRango(rangoTexto){
+    var disponibles = rangosDisponibles(rangoTexto);
+    if (!disponibles.length) return null;
+    var hora = new Date().getHours();
+    var ideal = hora < 14 ? 1 : (hora < 17 ? 2 : 3);
+    if (disponibles.indexOf(ideal) !== -1) return ideal;
+    var siguientes = disponibles.filter(function(n){ return n >= ideal; });
+    return siguientes.length ? siguientes[0] : disponibles[disponibles.length - 1];
+  }
+
   function aplicarCobertura(row){
     seleccionCobertura = row;
     row.diaEntrega = diaEntregaDesdeHoy(row.diasEntrega) || row.diaEntrega;
@@ -4825,6 +4867,15 @@ if (location.protocol === "file:") {
     $("covHasta").textContent = row.hasta ? ("Hasta " + row.hasta) : "-";
     $("covRango").textContent = row.rango || "-";
     $("covDia").textContent = row.diaEntrega || "-";
+    var recEl = $("covRangoRecomendado");
+    var recomendado = recomendarRango(row.rango);
+    if (recomendado){
+      recEl.textContent = "★ Ahora se recomienda el " + RANGOS_HORARIOS[recomendado].etiqueta +
+        ": " + RANGOS_HORARIOS[recomendado].horario;
+      recEl.classList.remove("oculto");
+    } else {
+      recEl.classList.add("oculto");
+    }
     caja.classList.add("visible");
 
     // recomienda EXPRESS/REGULAR segun cobertura, sin pisar si el asesor ya eligio a mano
@@ -4852,11 +4903,15 @@ if (location.protocol === "file:") {
   function actualizarResumen(){
     var entregaEl = $("resumenEntregaInfo");
     if (seleccionCobertura){
+      var recomendadoResumen = recomendarRango(seleccionCobertura.rango);
       entregaEl.innerHTML =
         '<div class="linea"><span><b>EXPRESS:</b> ' + (seleccionCobertura.express || "NO") + '</span><span>' +
         (seleccionCobertura.hasta ? ("Hasta " + seleccionCobertura.hasta) : "-") + "</span></div>" +
         '<div class="linea"><span><b>REGULAR:</b> ' + (seleccionCobertura.rango || "-") + '</span><span>' +
-        (seleccionCobertura.diaEntrega || "-") + "</span></div>";
+        (seleccionCobertura.diaEntrega || "-") + "</span></div>" +
+        (recomendadoResumen ? ('<div class="linea-recomendado">★ Ahora se recomienda el ' +
+          RANGOS_HORARIOS[recomendadoResumen].etiqueta + ": " + RANGOS_HORARIOS[recomendadoResumen].horario +
+          "</div>") : "");
     } else {
       entregaEl.innerHTML = '<span style="color:var(--gris);">Seleccione la ciudad (guion de apertura) para ver el día/hora de entrega.</span>';
     }
@@ -4922,7 +4977,11 @@ if (location.protocol === "file:") {
       $("contratoDeliveryScript").innerHTML = TEXTO_DELIVERY_EXPRESS;
     } else if (tipoEntrega === "REGULAR"){
       var diaEnt = seleccionCobertura ? (seleccionCobertura.diaEntrega || "[DIA]") : "[DIA]";
-      var rangoEnt = seleccionCobertura ? (seleccionCobertura.rango || "[rango horario]") : "[rango horario]";
+      // el campo "rango" del Excel es una LISTA de rangos posibles para el distrito
+      // ("TODOS", "2 Y 3", etc.), no un horario concreto — al cliente hay que decirle un
+      // horario real, asi que se usa el rango recomendado segun la hora actual.
+      var rangoRecomendadoContrato = seleccionCobertura ? recomendarRango(seleccionCobertura.rango) : null;
+      var rangoEnt = rangoRecomendadoContrato ? RANGOS_HORARIOS[rangoRecomendadoContrato].horario : "[rango horario]";
       $("contratoDeliveryScript").innerHTML =
         "El día <b>" + diaEnt + "</b>, en el rango horario <b>" + rangoEnt + "</b>, nuestro Delivery te " +
         "visitará en la dirección coordinada. Es importante que estés esperando DURANTE TODO EL RANGO HORARIO " +
