@@ -551,6 +551,8 @@
   #tablaStockNacional th.th-ordenable{ cursor:pointer; user-select:none; }
   #tablaStockNacional th.th-ordenable:hover{ background:#dbe7fb; }
   #tablaStockNacional .orden-flecha{ font-size:9px; margin-left:2px; }
+  #tablaStockNacional tbody tr.fila-stock-seleccionable{ cursor:pointer; }
+  #tablaStockNacional tbody tr.fila-stock-seleccionable:hover td{ background:var(--azul-bg); }
 
   .entrega-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
   @media (max-width:520px){ .entrega-grid{ grid-template-columns:1fr; } }
@@ -882,6 +884,7 @@
   body.tema-oscuro .simulador-seccion{ background:#20242e; }
   body.tema-oscuro .tabla-costo-comp tbody tr:hover td{ background:#252a35; }
   body.tema-oscuro #tablaStockNacional th.th-ordenable:hover{ background:#22314f; }
+  body.tema-oscuro #tablaStockNacional tbody tr.fila-stock-seleccionable:hover td{ background:#22314f; }
   body.tema-oscuro .btn-ver-detalle:hover{ background:#22314f; }
   body.tema-oscuro .autocomplete .opcion:hover, body.tema-oscuro .autocomplete .opcion.activa{ background:#22314f; }
   body.tema-oscuro .autocomplete .opcion.opcion-phoenix{ background:#3a2f0a; }
@@ -5448,6 +5451,25 @@ if (location.protocol === "file:") {
     return { zona: zona, filas: filasStockEnZona(nombreEquipo, zona) };
   }
 
+  // Camino inverso a filasStockEnZona(): dado el nombre de un modelo tal como aparece en el
+  // libro de stock ("HONOR 600 DORADO VKJ-NX9 512GB", con color y codigo SAP pegados), busca
+  // a que equipo del catalogo (DATA.equiposPlanes, nombres "limpios" sin color) corresponde
+  // — misma comparacion de tokensStock() por tamaño+contenido, solo que recorriendo el
+  // catalogo en vez del libro de stock. Se usa para "jalar" el equipo elegido en la tabla de
+  // Stock por departamento hacia los cuadros de busqueda del formulario.
+  function equipoCatalogoDesdeStock(modeloStock){
+    var mTokens = tokensStock(modeloStock);
+    var mSet = {};
+    mTokens.forEach(function(t){ mSet[t] = true; });
+    for (var i = 0; i < DATA.equiposPlanes.length; i++){
+      var nombre = DATA.equiposPlanes[i];
+      var cTokens = tokensStock(nombre);
+      if (!cTokens.length || cTokens.length !== mTokens.length) continue;
+      if (cTokens.every(function(t){ return mSet[t]; })) return nombre;
+    }
+    return null;
+  }
+
   function extraerColor(modelo){
     var toks = norm(modelo).split(" ");
     for (var i = 0; i < toks.length; i++){
@@ -5647,6 +5669,8 @@ if (location.protocol === "file:") {
     tbody.innerHTML = "";
     filas.forEach(function(row){
       var tr = document.createElement("tr");
+      tr.className = "fila-stock-seleccionable";
+      tr.title = "Clic para elegir este equipo";
       var tdModelo = document.createElement("td");
       tdModelo.textContent = row.modelo;
       var tdEstado = document.createElement("td");
@@ -5654,6 +5678,17 @@ if (location.protocol === "file:") {
       tdEstado.className = norm(row.estado) === "ULTIMAS UNIDADES" ? "estado-ultimas" : "estado-disponible";
       tr.appendChild(tdModelo);
       tr.appendChild(tdEstado);
+      tr.addEventListener("click", function(){
+        var nombre = equipoCatalogoDesdeStock(row.modelo);
+        if (!nombre){
+          mostrarAvisoPersonalizado('No se pudo identificar "' + row.modelo + '" en el catálogo para seleccionarlo automáticamente.');
+          return;
+        }
+        $("equipo").value = nombre;
+        $("simEquipoBuscar").value = nombre;
+        mostrarFichaEquipo(nombre);
+        $("modalStockNacional").classList.add("oculto");
+      });
       tbody.appendChild(tr);
     });
 
