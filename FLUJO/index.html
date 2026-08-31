@@ -7109,7 +7109,7 @@ if (location.protocol === "file:") {
   function agregarComparar(nombre){
     if (equiposAComparar.indexOf(nombre) !== -1) return;
     if (equiposAComparar.length >= 3){
-      alert("Máximo 3 equipos para comparar. Quita uno para agregar otro.");
+      mostrarAvisoPersonalizado("Máximo 3 equipos para comparar. Quita uno para agregar otro.");
       return;
     }
     equiposAComparar.push(nombre);
@@ -7264,7 +7264,7 @@ if (location.protocol === "file:") {
       var observacion = $("agendaObservacion").value.trim();
 
       if (!fecha || !hora || !equipoInteres){
-        alert("Complete fecha, hora y celular de interés.");
+        mostrarAvisoPersonalizado("Complete fecha, hora y celular de interés.");
         return;
       }
 
@@ -7741,7 +7741,7 @@ if (location.protocol === "file:") {
       window.scrollTo({ top: 0, behavior: "smooth" });
 
       if (cita.equipoInteres || cita.observacion){
-        alert("Interés: " + (cita.equipoInteres || "-") + (cita.observacion ? ("\nObservación: " + cita.observacion) : ""));
+        mostrarAvisoPersonalizado("Interés: " + (cita.equipoInteres || "-") + (cita.observacion ? ("\nObservación: " + cita.observacion) : ""));
       }
     });
   }
@@ -7944,16 +7944,16 @@ if (location.protocol === "file:") {
 
     var vendidoEl = document.querySelector('input[name=vendido]:checked');
     if (!vendidoEl){
-      alert("Indique si se vendió o no.");
+      mostrarAvisoPersonalizado("Indique si se vendió o no.");
       return;
     }
     var vendido = vendidoEl.value;
     if (vendido === "NO" && !$("motivo").value){
-      alert("Seleccione un motivo.");
+      mostrarAvisoPersonalizado("Seleccione un motivo.");
       return;
     }
     if (vendido === "NO" && $("motivo").value === "OTRO" && !$("motivoOtro").value.trim()){
-      alert("Especifique el motivo en el campo de texto.");
+      mostrarAvisoPersonalizado("Especifique el motivo en el campo de texto.");
       return;
     }
 
@@ -8063,6 +8063,7 @@ if (location.protocol === "file:") {
   // onAceptar, que solo corre si se presiona "Aceptar".
   function confirmarPersonalizado(mensaje, onAceptar){
     $("textoConfirmar").textContent = mensaje;
+    $("btnConfirmarCancelar").classList.remove("oculto"); // por si quedo oculto de un aviso() anterior
     $("modalConfirmar").classList.remove("oculto");
 
     function limpiar(){
@@ -8074,6 +8075,21 @@ if (location.protocol === "file:") {
     function cancelar(){ limpiar(); }
     $("btnConfirmarAceptar").addEventListener("click", aceptar);
     $("btnConfirmarCancelar").addEventListener("click", cancelar);
+  }
+
+  // Reemplaza alert() nativo del navegador (mismo motivo que confirmarPersonalizado): reusa
+  // el mismo modal, solo que sin el boton Cancelar — un simple aviso con "Aceptar".
+  function mostrarAvisoPersonalizado(mensaje){
+    $("textoConfirmar").textContent = mensaje;
+    $("btnConfirmarCancelar").classList.add("oculto");
+    $("modalConfirmar").classList.remove("oculto");
+
+    function limpiar(){
+      $("modalConfirmar").classList.add("oculto");
+      $("btnConfirmarAceptar").removeEventListener("click", aceptar);
+    }
+    function aceptar(){ limpiar(); }
+    $("btnConfirmarAceptar").addEventListener("click", aceptar);
   }
 
 })();
