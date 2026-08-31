@@ -111,6 +111,11 @@
   .caja-resultado.visible{ display:block; }
   .caja-resultado .linea{ display:flex; justify-content:space-between; padding:3px 0; }
   .caja-resultado .linea b{ color:var(--azul); }
+  .modal-confirmar-caja{ max-width:380px; }
+  .modal-confirmar-texto{ font-size:14px; line-height:1.5; color:var(--texto); margin-bottom:18px; }
+  .modal-confirmar-botones{ display:flex; gap:10px; justify-content:flex-end; }
+  .modal-confirmar-botones .btn{ width:auto; padding:9px 18px; }
+  .modal-confirmar-botones .btn-mini{ padding:9px 18px; font-size:13px; }
   .linea-recomendado{
     margin-top:6px; padding:6px 8px; border-radius:6px; background:#e6f7ec; color:var(--verde);
     font-size:12px; font-weight:700;
@@ -1917,6 +1922,16 @@ if (location.protocol === "file:") {
 </div>
 
 <div class="toast-tipificacion oculto" id="toastTipificacion"></div>
+
+<div class="modal-overlay oculto" id="modalConfirmar">
+  <div class="modal-caja modal-confirmar-caja">
+    <div class="modal-confirmar-texto" id="textoConfirmar"></div>
+    <div class="modal-confirmar-botones">
+      <button type="button" class="btn-mini" id="btnConfirmarCancelar">Cancelar</button>
+      <button type="button" class="btn" id="btnConfirmarAceptar">Aceptar</button>
+    </div>
+  </div>
+</div>
 
 <div class="modal-overlay oculto" id="modalAgendar">
   <div class="modal-caja">
@@ -3922,9 +3937,10 @@ if (location.protocol === "file:") {
     }
 
     $("btnDescartarBorrador").addEventListener("click", function(){
-      if (!confirm("¿Descartar la llamada en progreso y empezar un formulario nuevo?")) return;
-      cerrarBorradorRemoto(draftId);
-      limpiarFormularioCompleto();
+      confirmarPersonalizado("¿Descartar la llamada en progreso y empezar un formulario nuevo?", function(){
+        cerrarBorradorRemoto(draftId);
+        limpiarFormularioCompleto();
+      });
     });
 
     // dispara autoguardado ante cualquier cambio del formulario
@@ -4363,17 +4379,18 @@ if (location.protocol === "file:") {
   $("btnAbrirNegativa2").addEventListener("click", function(){ abrirPanelNegativa(this); });
 
   $("btnNoQuiere").addEventListener("click", function(){
-    if (!confirm("¿Confirma que el cliente NO acepta continuar la llamada, a pesar del rebate?")) return;
-    negativaResultado = "NO_QUIERE";
-    habilitar("fs-venta");
-    var rNo = document.querySelector('input[name=vendido][value=NO]');
-    if (rNo) rNo.checked = true;
-    $("campoMotivo").classList.remove("oculto");
-    $("motivo").value = "OBJECION_NO_SUPERADA";
-    $("campoMotivoOtro").classList.add("oculto");
-    actualizarBitacoraBoton();
-    guardarProgreso();
-    $("fs-venta").scrollIntoView({ behavior: "smooth", block: "start" });
+    confirmarPersonalizado("¿Confirma que el cliente NO acepta continuar la llamada, a pesar del rebate?", function(){
+      negativaResultado = "NO_QUIERE";
+      habilitar("fs-venta");
+      var rNo = document.querySelector('input[name=vendido][value=NO]');
+      if (rNo) rNo.checked = true;
+      $("campoMotivo").classList.remove("oculto");
+      $("motivo").value = "OBJECION_NO_SUPERADA";
+      $("campoMotivoOtro").classList.add("oculto");
+      actualizarBitacoraBoton();
+      guardarProgreso();
+      $("fs-venta").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   });
 
   $("btnBitacoraRebate").addEventListener("click", function(){
@@ -7690,37 +7707,37 @@ if (location.protocol === "file:") {
     var citas = cargarCitasLocal();
     var cita = citas.find(function(c){ return c.id === id; });
     if (!cita) return;
-    if (!confirm("¿Tomar este caso? Se reemplazará el formulario actual con los datos guardados de esta cita.")) return;
+    confirmarPersonalizado("¿Tomar este caso? Se reemplazará el formulario actual con los datos guardados de esta cita.", function(){
+      limpiarFormularioCompleto();
+      var restaurado = false;
+      if (cita.formSnapshot){
+        try{
+          restaurarBorrador(JSON.parse(cita.formSnapshot));
+          restaurado = true;
+        }catch(err){ /* snapshot invalido, sigue con el precargado basico de abajo */ }
+      }
+      if (!restaurado){
+        $("guionAni").value = cita.cel || "";
+        $("guionAniReferencia").value = cita.celReferencia || "";
+        $("guionNombreCliente").value = cita.nombre || "";
+        guardarProgreso();
+      }
 
-    limpiarFormularioCompleto();
-    var restaurado = false;
-    if (cita.formSnapshot){
-      try{
-        restaurarBorrador(JSON.parse(cita.formSnapshot));
-        restaurado = true;
-      }catch(err){ /* snapshot invalido, sigue con el precargado basico de abajo */ }
-    }
-    if (!restaurado){
-      $("guionAni").value = cita.cel || "";
-      $("guionAniReferencia").value = cita.celReferencia || "";
-      $("guionNombreCliente").value = cita.nombre || "";
-      guardarProgreso();
-    }
+      cita.estado = "TOMADO";
+      guardarCitasLocal(citas);
+      enviarActualizacionEstadoAgenda(cita.id, "TOMADO");
+      casoAgendadoActivoId = cita.id;
 
-    cita.estado = "TOMADO";
-    guardarCitasLocal(citas);
-    enviarActualizacionEstadoAgenda(cita.id, "TOMADO");
-    casoAgendadoActivoId = cita.id;
+      actualizarBadgeCasos();
+      renderAlertasCasos();
+      renderModalCasos();
+      $("modalCasosAgendados").classList.add("oculto");
+      window.scrollTo({ top: 0, behavior: "smooth" });
 
-    actualizarBadgeCasos();
-    renderAlertasCasos();
-    renderModalCasos();
-    $("modalCasosAgendados").classList.add("oculto");
-    window.scrollTo({ top: 0, behavior: "smooth" });
-
-    if (cita.equipoInteres || cita.observacion){
-      alert("Interés: " + (cita.equipoInteres || "-") + (cita.observacion ? ("\nObservación: " + cita.observacion) : ""));
-    }
+      if (cita.equipoInteres || cita.observacion){
+        alert("Interés: " + (cita.equipoInteres || "-") + (cita.observacion ? ("\nObservación: " + cita.observacion) : ""));
+      }
+    });
   }
 
   function marcarConcretado(id){
@@ -8032,6 +8049,25 @@ if (location.protocol === "file:") {
     t.classList.remove("oculto");
     clearTimeout(t._timerOculto);
     t._timerOculto = setTimeout(function(){ t.classList.add("oculto"); }, ms || 2500);
+  }
+
+  // Reemplaza confirm() nativo del navegador (feo, no se puede estilizar) por un modal
+  // propio con el diseño de la pagina. A diferencia de confirm(), no bloquea la ejecucion:
+  // el codigo que antes iba despues de "if (!confirm(...)) return;" ahora va dentro de
+  // onAceptar, que solo corre si se presiona "Aceptar".
+  function confirmarPersonalizado(mensaje, onAceptar){
+    $("textoConfirmar").textContent = mensaje;
+    $("modalConfirmar").classList.remove("oculto");
+
+    function limpiar(){
+      $("modalConfirmar").classList.add("oculto");
+      $("btnConfirmarAceptar").removeEventListener("click", aceptar);
+      $("btnConfirmarCancelar").removeEventListener("click", cancelar);
+    }
+    function aceptar(){ limpiar(); onAceptar(); }
+    function cancelar(){ limpiar(); }
+    $("btnConfirmarAceptar").addEventListener("click", aceptar);
+    $("btnConfirmarCancelar").addEventListener("click", cancelar);
   }
 
 })();
