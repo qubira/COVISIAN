@@ -2960,8 +2960,12 @@ if (location.protocol === "file:") {
   // en cada uno de ellos.
   function actualizarCosto(){
     actualizarCostoInterno();
-    actualizarResumen();
+    // actualizarSimuladorFinanciamiento() puede corregir ultimoCostoCalculado.pagoMensual
+    // (cuando la cuota base todavia supera el Cap. Financiamiento, ver ese comentario) — va
+    // ANTES de actualizarResumen() para que el RESUMEN/CONTRATO ya lean la cifra corregida,
+    // no la original que excedia el tope.
     actualizarSimuladorFinanciamiento();
+    actualizarResumen();
     renderComparar(); // la columna COSTO de "Comparar equipos" tambien depende del PLAN
   }
 
@@ -3005,28 +3009,73 @@ if (location.protocol === "file:") {
         '<div class="linea"><span style="color:var(--gris);">Sin cuotas: aplica solo a la modalidad FINANCIADO.</span></div>';
       return;
     }
-    var inicialTxt = ultimoCostoCalculado.cuotaInicialTexto || "-";
-    var cuota = ultimoCostoCalculado.pagoMensual;
     var planNum = parseFloat(ultimoCostoCalculado.planUsado || $("plan").value);
+    var cuota = ultimoCostoCalculado.pagoMensual;
+    var cuotaInicialBaseOriginal = (ultimoCostoCalculado.cuotaInicial !== "" && ultimoCostoCalculado.cuotaInicial != null) ? ultimoCostoCalculado.cuotaInicial : 0;
+
+    // La cuota base (con la inicial ya ajustada por Cap. Financiamiento via el redondeo
+    // comercial de construirResultadoFinanciamiento) puede TODAVIA quedar unos soles arriba
+    // del cap — ese redondeo a "termina en 9" no siempre cae justo. La regla del negocio es
+    // estricta: la Cuota Mensual NUNCA debe superar el Cap. Financiamiento, ni por S/1. Si
+    // pasa, se recalcula sola con la Inicial Mayor exacta que la deja en el tope, y esa pasa
+    // a ser la cuota REAL — se sobreescribe ultimoCostoCalculado para que CONTRATO/RESUMEN/
+    // GUARDAR usen la cifra corregida en vez de la que excedia el limite.
+    var cap = parseFloat($("capFinanciamiento").value);
+    var excedeCap = !isNaN(cap) && cap > 0 && typeof cuota === "number" && cuota > cap;
+    var cuotaOriginal = cuota;
+    var ci2Auto = null;
+
+    if (excedeCap){
+      ci2Auto = total - cap * CUOTAS_FINANCIAMIENTO;
+      if (ci2Auto > cuotaInicialBaseOriginal && ci2Auto < total){
+        cuota = cap; // (total - ci2Auto) / CUOTAS_FINANCIAMIENTO da exactamente el cap, por construccion
+        ultimoCostoCalculado.pagoMensual = cuota;
+        ultimoCostoCalculado.cuotaInicial = ci2Auto;
+        ultimoCostoCalculado.cuotaInicialTexto = "S/ " + ci2Auto.toFixed(2);
+      } else {
+        // caso raro donde ni la Inicial Mayor exacta cae en un rango valido (ej. el cap es
+        // tan chico que la inicial requerida supera el Total a Pagar): se avisa en vez de
+        // forzar un numero que calcularOpcionInicialMayor() terminaria rechazando igual.
+        excedeCap = false;
+        ci2Auto = null;
+      }
+    }
+
+    var inicialTxt = ultimoCostoCalculado.cuotaInicialTexto || "-";
     var pagoMesTxt = (cuota !== "" && cuota != null && !isNaN(planNum))
       ? ("S/ " + (planNum + cuota).toFixed(2)) : "-";
+    var celdaCuotaMensual = excedeCap
+      ? ('<span style="text-decoration:line-through;color:var(--gris);">S/ ' + cuotaOriginal.toFixed(2) + '</span> ' +
+         '<span style="color:var(--rojo);">S/ ' + cuota.toFixed(2) + '</span>')
+      : (cuota !== "" && cuota != null ? ("S/ " + cuota.toFixed(2)) : "-");
+
     // grid 2x2 igual al simulador real: Total a Pagar | Cuota Mensual / Cuota Inicial a Pagar | Pago Mensual (CF+Cuota)
     cont.innerHTML =
       '<div class="precio-equipo-grid">' +
         '<div class="linea"><span class="linea-titulo-rojo">Total a Pagar</span><b>S/ ' + total.toFixed(2) + '</b></div>' +
-        '<div class="linea"><span class="linea-titulo-rojo">Cuota Mensual</span><b>' + (cuota !== "" && cuota != null ? ("S/ " + cuota.toFixed(2)) : "-") + '</b></div>' +
+        '<div class="linea"><span class="linea-titulo-rojo">Cuota Mensual</span><b>' + celdaCuotaMensual + '</b></div>' +
         '<div class="linea"><span class="linea-titulo-rojo">Cuota Inicial a Pagar</span><b>' + inicialTxt + '</b></div>' +
         '<div class="linea"><span class="linea-titulo-rojo">Pago Mensual (CF+Cuota)</span><b>' + pagoMesTxt + '</b></div>' +
       '</div>' +
+      (excedeCap ? ('<div class="linea"><span style="color:var(--rojo);">⚠ La cuota base (S/ ' + cuotaOriginal.toFixed(2) +
+        ') superaba el Cap. Financiamiento (S/ ' + cap.toFixed(2) + '); se ajustó sola con una Inicial Mayor de S/ ' +
+        ci2Auto.toFixed(2) + '.</span></div>') : "") +
       (ultimoCostoCalculado.advertenciaFinanciamiento ? ('<div class="linea"><span style="color:var(--rojo);">⚠ ' + ultimoCostoCalculado.advertenciaFinanciamiento + '</span></div>') : "") +
       notaCuotas;
 
     // deja disponibles los valores base para las OPCIONES ADICIONALES (inicial mayor / pago menor)
+    // — cuotaInicialBase usa SIEMPRE la original (no la ya corregida arriba), porque
+    // calcularOpcionInicialMayor() exige que la inicial nueva sea MAYOR a esta base.
     ultimoSimuladorBase = {
       total: total,
-      cuotaInicialBase: (ultimoCostoCalculado.cuotaInicial !== "" && ultimoCostoCalculado.cuotaInicial != null) ? ultimoCostoCalculado.cuotaInicial : 0,
+      cuotaInicialBase: cuotaInicialBaseOriginal,
       plan: planNum
     };
+
+    if (excedeCap && ci2Auto != null){
+      $("opcInicialMayor").value = ci2Auto.toFixed(2);
+      calcularOpcionInicialMayor();
+    }
   }
 
   var ultimoSimuladorBase = null;
@@ -3054,9 +3103,29 @@ if (location.protocol === "file:") {
     }
     var cuotaMensual = (ultimoSimuladorBase.total - ci2) / CUOTAS_FINANCIAMIENTO;
     var pagoMensual = cuotaMensual + ultimoSimuladorBase.plan;
+    var cap = parseFloat($("capFinanciamiento").value);
+    // la regla es estricta: la Cuota Mensual no debe superar el Cap. Financiamiento ni por
+    // S/1 — si el monto de inicial que se recalculo a mano todavia no alcanza, se avisa
+    // (mismo aviso que dispara el ajuste automatico de arriba).
+    var avisoCap = (!isNaN(cap) && cap > 0 && cuotaMensual > cap)
+      ? '<div class="linea" style="color:var(--rojo);font-size:11.5px;">⚠ Esta Cuota Mensual todavía supera el Cap. Financiamiento (S/ ' + cap.toFixed(2) + '). Ingresa una Cuota Inicial mayor.</div>'
+      : "";
     out.innerHTML =
       '<div class="linea"><span class="linea-titulo-rojo">Cuota Mensual</span><b>S/ ' + cuotaMensual.toFixed(1) + '</b></div>' +
-      '<div class="linea"><span class="linea-titulo-rojo">Pago Mensual (CF+Cuota)</span><b>S/ ' + pagoMensual.toFixed(1) + '</b></div>';
+      '<div class="linea"><span class="linea-titulo-rojo">Pago Mensual (CF+Cuota)</span><b>S/ ' + pagoMensual.toFixed(1) + '</b></div>' +
+      avisoCap;
+
+    // "Inicial Mayor" pasa a ser la cifra REAL del contrato (no solo una calculadora aparte):
+    // se sobreescribe ultimoCostoCalculado y se refresca RESUMEN/CONTRATO para que ambos
+    // lean el monto ya ajustado, tanto si esto lo disparo el ajuste automatico como si el
+    // asesor lo recalculo a mano.
+    if (ultimoCostoCalculado){
+      ultimoCostoCalculado.pagoMensual = cuotaMensual;
+      ultimoCostoCalculado.cuotaInicial = ci2;
+      ultimoCostoCalculado.cuotaInicialTexto = "S/ " + ci2.toFixed(2);
+      actualizarResumen();
+      actualizarContrato();
+    }
   }
 
   // "Si el cliente desea pagar menos al mes" (btnCal_Click del simulador real): a partir de
