@@ -674,6 +674,17 @@
   .panel-tiempo-nota{ text-align:center; font-size:10.5px; color:var(--gris); padding:0 10px 10px; }
   body.tema-oscuro .panel-flotante-tiempo{ background:#1c2029; }
 
+  /* El contabilizador permanente puede estar abierto a la vez que el de gestion (no son
+     excluyentes) — se posiciona mas abajo por defecto para que no aparezcan exactamente
+     encimados el uno sobre el otro la primera vez que se abren los dos. */
+  #panelTiempoPermanente{ top:260px; }
+  .btn-reiniciar-tiempo-permanente{
+    display:block; width:calc(100% - 20px); margin:0 10px 10px; padding:5px;
+    border:1.5px solid var(--rojo); background:#fdecea; color:var(--rojo);
+    border-radius:6px; font-size:11px; font-weight:700; cursor:pointer;
+  }
+  body.tema-oscuro .btn-reiniciar-tiempo-permanente{ background:#3a1512; border-color:#7a3a34; color:#ff8a7d; }
+
   /* Panel de alertas de llamada agendada: arrastrable (mismo patron que
      .panel-flotante-tiempo) y minimizable a solo su encabezado, para que no se quede
      tapando algo fijo en un lugar de la pantalla. */
@@ -1020,6 +1031,7 @@ if (location.protocol === "file:") {
 <div class="popover-elegir-tiempo oculto" id="popoverElegirTiempo">
   <button type="button" class="btn-opcion-tiempo" id="btnTiempoInterno">🖥️ Reloj interno<small>Se queda en esta página, lo puedes arrastrar dentro de ella</small></button>
   <button type="button" class="btn-opcion-tiempo" id="btnTiempoExterno">🪟 Reloj externo<small>Ventana aparte, la puedes mover a cualquier parte de la pantalla</small></button>
+  <button type="button" class="btn-opcion-tiempo" id="btnTiempoPermanente">♾️ Contabilizador permanente<small>No se reinicia al guardar un caso, sigue sumando toda la jornada</small></button>
 </div>
 
 <div class="panel-flotante-tiempo oculto" id="panelTiempoGestion">
@@ -1029,6 +1041,16 @@ if (location.protocol === "file:") {
   </div>
   <div class="panel-tiempo-valor" id="panelTiempoValor">00:00</div>
   <div class="panel-tiempo-nota" id="panelTiempoNota">Inicio: --:--</div>
+</div>
+
+<div class="panel-flotante-tiempo oculto" id="panelTiempoPermanente">
+  <div class="panel-tiempo-header" id="panelTiempoPermanenteHeader">
+    <span>♾️ Contabilizador permanente</span>
+    <button type="button" class="btn-cerrar-mini" id="btnCerrarPanelTiempoPermanente" title="Cerrar (el contador sigue corriendo)">✕</button>
+  </div>
+  <div class="panel-tiempo-valor" id="panelTiempoPermanenteValor">00:00</div>
+  <div class="panel-tiempo-nota" id="panelTiempoPermanenteNota">Inicio: --:--</div>
+  <button type="button" class="btn-reiniciar-tiempo-permanente" id="btnReiniciarTiempoPermanente" title="Poner el contador en cero (por ejemplo, al empezar un nuevo turno)">↺ Reiniciar</button>
 </div>
 
 <div class="banner-sin-datos oculto" id="bannerSinDatos">
@@ -7149,7 +7171,60 @@ if (location.protocol === "file:") {
       "width=220,height=150,resizable=yes,scrollbars=no");
   }
 
+  // ---- Contabilizador PERMANENTE: a diferencia del de arriba, nunca lo toca
+  // detenerYReiniciarTiempoGestion() (que solo resetea tiempoGestionInicioTs) -- sigue
+  // sumando aunque se guarde/cierre una llamada, y se restaura desde localStorage al recargar
+  // la pagina para que de verdad sea "permanente" y no solo "no se reinicia al guardar".
+  var LS_TIEMPO_PERMANENTE_INICIO = "tiempo_permanente_inicio_ts";
+  var tiempoPermanenteInicioTs = null;
+  var tiempoPermanenteIntervaloInterno = null;
+
+  function formatearHoraDeTs(ts){
+    var d = new Date(ts);
+    return d.getHours().toString().padStart(2, "0") + ":" + d.getMinutes().toString().padStart(2, "0") + ":" + d.getSeconds().toString().padStart(2, "0");
+  }
+
+  function iniciarTiempoPermanenteSiHaceFalta(){
+    if (tiempoPermanenteInicioTs) return;
+    tiempoPermanenteInicioTs = Date.now();
+    try{ localStorage.setItem(LS_TIEMPO_PERMANENTE_INICIO, String(tiempoPermanenteInicioTs)); }catch(err){}
+  }
+
+  function actualizarPanelTiempoPermanente(){
+    if (!tiempoPermanenteInicioTs){
+      $("panelTiempoPermanenteValor").textContent = "00:00";
+      return;
+    }
+    $("panelTiempoPermanenteValor").textContent = formatearTranscurridoGestion(Date.now() - tiempoPermanenteInicioTs);
+  }
+
+  function mostrarPanelTiempoPermanente(){
+    $("panelTiempoPermanenteNota").textContent = "Inicio: " + formatearHoraDeTs(tiempoPermanenteInicioTs);
+    actualizarPanelTiempoPermanente();
+    clearInterval(tiempoPermanenteIntervaloInterno);
+    tiempoPermanenteIntervaloInterno = setInterval(actualizarPanelTiempoPermanente, 1000);
+    $("panelTiempoPermanente").classList.remove("oculto");
+  }
+
+  // Unica forma de poner el contador en cero -- a proposito no se limpia solo con nada del
+  // flujo normal de llamadas, para que de verdad sea "permanente" hasta que el agente decida
+  // arrancar de nuevo (ej. al iniciar un turno nuevo).
+  function reiniciarTiempoPermanente(){
+    confirmarPersonalizado("¿Reiniciar el contabilizador permanente a 00:00? El tiempo acumulado se perderá.", function(){
+      tiempoPermanenteInicioTs = Date.now();
+      try{ localStorage.setItem(LS_TIEMPO_PERMANENTE_INICIO, String(tiempoPermanenteInicioTs)); }catch(err){}
+      $("panelTiempoPermanenteNota").textContent = "Inicio: " + formatearHoraDeTs(tiempoPermanenteInicioTs);
+      actualizarPanelTiempoPermanente();
+    });
+  }
+
   function initContabilizarTiempo(){
+    // restaura el contador permanente si ya venia corriendo de antes de recargar la pagina
+    // (localStorage, igual que el reloj de gestion comparte con la ventana externa).
+    try{
+      var tsGuardado = parseInt(localStorage.getItem(LS_TIEMPO_PERMANENTE_INICIO), 10);
+      if (!isNaN(tsGuardado) && tsGuardado > 0) tiempoPermanenteInicioTs = tsGuardado;
+    }catch(err){}
     $("btnContabilizarTiempo").addEventListener("click", function(e){
       e.stopPropagation();
       var pop = $("popoverElegirTiempo");
@@ -7177,11 +7252,24 @@ if (location.protocol === "file:") {
       iniciarTiempoGestionSiHaceFalta();
       abrirRelojExterno();
     });
+    $("btnTiempoPermanente").addEventListener("click", function(){
+      $("popoverElegirTiempo").classList.add("oculto");
+      iniciarTiempoPermanenteSiHaceFalta();
+      mostrarPanelTiempoPermanente();
+    });
     $("btnCerrarPanelTiempo").addEventListener("click", function(){
       // solo oculta el panel — el cronometro sigue corriendo por dentro, se puede volver a
       // abrir con el boton del encabezado sin que se haya perdido el tiempo.
       $("panelTiempoGestion").classList.add("oculto");
       clearInterval(tiempoGestionIntervaloInterno);
+    });
+    $("btnCerrarPanelTiempoPermanente").addEventListener("click", function(){
+      $("panelTiempoPermanente").classList.add("oculto");
+      clearInterval(tiempoPermanenteIntervaloInterno);
+    });
+    $("btnReiniciarTiempoPermanente").addEventListener("click", function(e){
+      e.stopPropagation();
+      reiniciarTiempoPermanente();
     });
 
     // Arrastrar el panel interno por su encabezado (mismo patron que la ventana del mapa
@@ -7211,6 +7299,33 @@ if (location.protocol === "file:") {
     });
     header.addEventListener("pointerup", function(){ arrastrando = false; });
     header.addEventListener("pointercancel", function(){ arrastrando = false; });
+
+    // Mismo patron de arrastre, para el panel del contabilizador permanente (variables
+    // propias para no pisar el estado de arrastre del panel de gestion de arriba).
+    var panel2 = $("panelTiempoPermanente");
+    var header2 = $("panelTiempoPermanenteHeader");
+    var arrastrando2 = false, offsetX2 = 0, offsetY2 = 0;
+    header2.addEventListener("pointerdown", function(e){
+      if (e.target.closest(".btn-cerrar-mini")) return;
+      var rect = panel2.getBoundingClientRect();
+      arrastrando2 = true;
+      offsetX2 = e.clientX - rect.left;
+      offsetY2 = e.clientY - rect.top;
+      panel2.style.top = rect.top + "px";
+      panel2.style.left = rect.left + "px";
+      panel2.style.right = "auto";
+      header2.setPointerCapture(e.pointerId);
+      e.preventDefault();
+    });
+    header2.addEventListener("pointermove", function(e){
+      if (!arrastrando2) return;
+      var maxX = window.innerWidth - panel2.offsetWidth;
+      var maxY = window.innerHeight - panel2.offsetHeight;
+      panel2.style.left = Math.min(Math.max(0, e.clientX - offsetX2), Math.max(0, maxX)) + "px";
+      panel2.style.top = Math.min(Math.max(0, e.clientY - offsetY2), Math.max(0, maxY)) + "px";
+    });
+    header2.addEventListener("pointerup", function(){ arrastrando2 = false; });
+    header2.addEventListener("pointercancel", function(){ arrastrando2 = false; });
   }
 
   // ============ CAMBIOS HISTORICOS DE STOCK (equipos/colores agregados o eliminados) ============
