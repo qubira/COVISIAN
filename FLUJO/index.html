@@ -663,9 +663,10 @@
     background:transparent; border:none; color:#fff; cursor:pointer; font-size:13px;
     padding:0; line-height:1; flex-shrink:0;
   }
+  .panel-tiempo-header-botones{ display:flex; align-items:center; gap:8px; flex-shrink:0; }
   .panel-tiempo-valor{
     font-size:30px; font-weight:800; text-align:center; padding:12px 8px 4px;
-    color:var(--texto); font-variant-numeric:tabular-nums; transition:color .3s, background .3s;
+    color:var(--texto); font-variant-numeric:tabular-nums; transition:color .3s, background .3s, font-size .15s, padding .15s;
   }
   .panel-tiempo-valor.alerta-tipificar{
     color:#fff; background:var(--rojo); animation:pulsoTiempoGestion 1s ease-in-out infinite;
@@ -673,6 +674,19 @@
   @keyframes pulsoTiempoGestion{ 0%,100%{ opacity:1; } 50%{ opacity:.55; } }
   .panel-tiempo-nota{ text-align:center; font-size:10.5px; color:var(--gris); padding:0 10px 10px; }
   body.tema-oscuro .panel-flotante-tiempo{ background:#1c2029; }
+
+  /* Minimizado: a diferencia del patron de "Casos agendados"/"Datos del equipo" (que oculta
+     TODO el contenido y deja solo el encabezado), aca el valor del tiempo se queda visible
+     -- achicado, sin la nota "Inicio:" ni el boton Reiniciar -- porque el pedido puntual es
+     poder seguir viendo el tiempo correr aunque el panel este minimizado. */
+  .panel-flotante-tiempo.minimizado{ width:auto; }
+  .panel-flotante-tiempo.minimizado .panel-tiempo-nota,
+  .panel-flotante-tiempo.minimizado .btn-reiniciar-tiempo-permanente{
+    display:none;
+  }
+  .panel-flotante-tiempo.minimizado .panel-tiempo-valor{
+    font-size:15px; padding:4px 10px;
+  }
 
   /* El contabilizador permanente puede estar abierto a la vez que el de gestion (no son
      excluyentes) — se posiciona mas abajo por defecto para que no aparezcan exactamente
@@ -1037,7 +1051,10 @@ if (location.protocol === "file:") {
 <div class="panel-flotante-tiempo oculto" id="panelTiempoGestion">
   <div class="panel-tiempo-header" id="panelTiempoHeader">
     <span>⏱ Tiempo de gestión</span>
-    <button type="button" class="btn-cerrar-mini" id="btnCerrarPanelTiempo" title="Cerrar (el contador sigue corriendo)">✕</button>
+    <div class="panel-tiempo-header-botones">
+      <button type="button" class="btn-cerrar-mini" id="btnMinimizarPanelTiempo" title="Minimizar (el tiempo se sigue viendo)">▁</button>
+      <button type="button" class="btn-cerrar-mini" id="btnCerrarPanelTiempo" title="Cerrar (el contador sigue corriendo)">✕</button>
+    </div>
   </div>
   <div class="panel-tiempo-valor" id="panelTiempoValor">00:00</div>
   <div class="panel-tiempo-nota" id="panelTiempoNota">Inicio: --:--</div>
@@ -1046,7 +1063,10 @@ if (location.protocol === "file:") {
 <div class="panel-flotante-tiempo oculto" id="panelTiempoPermanente">
   <div class="panel-tiempo-header" id="panelTiempoPermanenteHeader">
     <span>♾️ Contabilizador permanente</span>
-    <button type="button" class="btn-cerrar-mini" id="btnCerrarPanelTiempoPermanente" title="Cerrar (el contador sigue corriendo)">✕</button>
+    <div class="panel-tiempo-header-botones">
+      <button type="button" class="btn-cerrar-mini" id="btnMinimizarPanelTiempoPermanente" title="Minimizar (el tiempo se sigue viendo)">▁</button>
+      <button type="button" class="btn-cerrar-mini" id="btnCerrarPanelTiempoPermanente" title="Cerrar (el contador sigue corriendo)">✕</button>
+    </div>
   </div>
   <div class="panel-tiempo-valor" id="panelTiempoPermanenteValor">00:00</div>
   <div class="panel-tiempo-nota" id="panelTiempoPermanenteNota">Inicio: --:--</div>
@@ -7256,6 +7276,20 @@ if (location.protocol === "file:") {
       $("popoverElegirTiempo").classList.add("oculto");
       iniciarTiempoPermanenteSiHaceFalta();
       mostrarPanelTiempoPermanente();
+    });
+    $("btnMinimizarPanelTiempo").addEventListener("click", function(e){
+      e.stopPropagation();
+      var panel = $("panelTiempoGestion");
+      var minimizado = panel.classList.toggle("minimizado");
+      this.textContent = minimizado ? "▲" : "▁";
+      this.title = minimizado ? "Expandir" : "Minimizar (el tiempo se sigue viendo)";
+    });
+    $("btnMinimizarPanelTiempoPermanente").addEventListener("click", function(e){
+      e.stopPropagation();
+      var panel = $("panelTiempoPermanente");
+      var minimizado = panel.classList.toggle("minimizado");
+      this.textContent = minimizado ? "▲" : "▁";
+      this.title = minimizado ? "Expandir" : "Minimizar (el tiempo se sigue viendo)";
     });
     $("btnCerrarPanelTiempo").addEventListener("click", function(){
       // solo oculta el panel — el cronometro sigue corriendo por dentro, se puede volver a
