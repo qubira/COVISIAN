@@ -3033,6 +3033,14 @@ if (location.protocol === "file:") {
         ultimoCostoCalculado.pagoMensual = cuota;
         ultimoCostoCalculado.cuotaInicial = ci2Auto;
         ultimoCostoCalculado.cuotaInicialTexto = "S/ " + ci2Auto.toFixed(2);
+        // el guion "CALIFICA FINANCIADO" (seccion COSTO) se pinto UNA vez en
+        // actualizarCostoInterno() con los montos originales, antes de este ajuste — hay que
+        // repintarlo con la inicial/cuota ya corregidas o se queda mostrando el monto viejo
+        // que excedia el cap.
+        pintarGuionCosto(ultimoCostoCalculado.convenio, equipoActual, total, cuota, {
+          textoInicial: ultimoCostoCalculado.cuotaInicialTexto,
+          advertencia: ultimoCostoCalculado.advertenciaFinanciamiento || null
+        });
       } else {
         // caso raro donde ni la Inicial Mayor exacta cae en un rango valido (ej. el cap es
         // tan chico que la inicial requerida supera el Total a Pagar): se avisa en vez de
@@ -3131,6 +3139,10 @@ if (location.protocol === "file:") {
       ultimoCostoCalculado.pagoMensual = cuotaMensual;
       ultimoCostoCalculado.cuotaInicial = ci2;
       ultimoCostoCalculado.cuotaInicialTexto = "S/ " + ci2.toFixed(2);
+      pintarGuionCosto(ultimoCostoCalculado.convenio, equipoActual, ultimoSimuladorBase.total, cuotaMensual, {
+        textoInicial: ultimoCostoCalculado.cuotaInicialTexto,
+        advertencia: ultimoCostoCalculado.advertenciaFinanciamiento || null
+      });
       actualizarResumen();
       actualizarContrato();
     }
