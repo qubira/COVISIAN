@@ -31,14 +31,14 @@
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEMO00G06AZS0",
-"modelo": "MOTOROLA G06 AZUL XT25352 128GB",
+"codigoSap": "TMGPEZTA3664NES0",
+"modelo": "ZTE BLADE A36 64GB NEGRO",
 "estado": "DISPONIBLE"
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEZTA3664NES0",
-"modelo": "ZTE BLADE A36 64GB NEGRO",
+"codigoSap": "TMGPEMO00G06AZS0",
+"modelo": "MOTOROLA G06 AZUL XT25352 128GB",
 "estado": "DISPONIBLE"
 },
 {
@@ -61,12 +61,6 @@
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEXIREN15MOS0",
-"modelo": "XIAOMI REDMI NOTE 15 MORADO 256GB LTE",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LIMA",
 "codigoSap": "TMGPESAA3762GRS0",
 "modelo": "SAMSUNG GXY A37 GRIS SM-A376B 256GB 5G",
 "estado": "DISPONIBLE"
@@ -79,20 +73,8 @@
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEHN00X5DPLS0",
-"modelo": "HONOR X5D PLATA NAA-LX3 128GB",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LIMA",
-"codigoSap": "TMGPEMOT2621NES0",
-"modelo": "MOTOROLA G67 GRIS XT2621 256GB",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LIMA",
-"codigoSap": "TMGPEHN00X5DAZS0",
-"modelo": "HONOR X5D AZUL NAA-LX3 128GB",
+"codigoSap": "TMGPEXIREN15MOS0",
+"modelo": "XIAOMI REDMI NOTE 15 MORADO 256GB LTE",
 "estado": "DISPONIBLE"
 },
 {
@@ -109,20 +91,32 @@
 },
 {
 "zona": "LIMA",
+"codigoSap": "TMGPEHN00X5DPLS0",
+"modelo": "HONOR X5D PLATA NAA-LX3 128GB",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LIMA",
+"codigoSap": "TMGPEMOT2621NES0",
+"modelo": "MOTOROLA G67 GRIS XT2621 256GB",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LIMA",
 "codigoSap": "TMGPEHNMGC8LNESP",
 "modelo": "HONOR MAGIC 8 LITE NEGRO 512GB 5G C/P",
 "estado": "DISPONIBLE"
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEXIREN15NES0",
-"modelo": "XIAOMI REDMI NOTE 15 NEGRO 256GB LTE",
+"codigoSap": "TMGPEHN00X5DAZS0",
+"modelo": "HONOR X5D AZUL NAA-LX3 128GB",
 "estado": "DISPONIBLE"
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPESAA0751NES0",
-"modelo": "SAMSUNG GXY A07 NEGRO SM-A075M 128GB",
+"codigoSap": "TMGPEMO00G77NES0",
+"modelo": "MOTOROLA G77 NEGRO XT2621 256GB",
 "estado": "DISPONIBLE"
 },
 {
@@ -139,12 +133,6 @@
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEMO00G77NES0",
-"modelo": "MOTOROLA G77 NEGRO XT2621 256GB",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LIMA",
 "codigoSap": "TMGPEAP16128NES0",
 "modelo": "IPHONE 16 NEGRO MYE73BE/A 128GB",
 "estado": "DISPONIBLE"
@@ -157,14 +145,20 @@
 },
 {
 "zona": "LIMA",
+"codigoSap": "TMGPESAA0751NES0",
+"modelo": "SAMSUNG GXY A07 NEGRO SM-A075M 128GB",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LIMA",
 "codigoSap": "TMGPESAA27S2NES0",
 "modelo": "SAMSUNG GXY A27 NEGRO SM-A276B 256GB 5G",
 "estado": "DISPONIBLE"
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEMO00G77ESS0",
-"modelo": "MOTOROLA G77 ESMERALDA XT2621 256GB",
+"codigoSap": "TMGPEXIREN15NES0",
+"modelo": "XIAOMI REDMI NOTE 15 NEGRO 256GB LTE",
 "estado": "DISPONIBLE"
 },
 {
@@ -175,14 +169,8 @@
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEXIR15P5AZS0",
-"modelo": "XIAOMI REDMI NOTE 15 PRO AZUL 512 5G",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LIMA",
-"codigoSap": "TMGPEZTA57P1NES0",
-"modelo": "ZTE BLADE A57 PRO NEGRO 128GB",
+"codigoSap": "TMGPEMO00G77ESS0",
+"modelo": "MOTOROLA G77 ESMERALDA XT2621 256GB",
 "estado": "DISPONIBLE"
 },
 {
@@ -193,20 +181,20 @@
 },
 {
 "zona": "LIMA",
+"codigoSap": "TMGPEZTA57P1NES0",
+"modelo": "ZTE BLADE A57 PRO NEGRO 128GB",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LIMA",
+"codigoSap": "TMGPEXIR15P5AZS0",
+"modelo": "XIAOMI REDMI NOTE 15 PRO AZUL 512 5G",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LIMA",
 "codigoSap": "TMGPEAP17256NES0",
 "modelo": "IPHONE 17 NEGRO MG6J4BE/A 256GB",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LIMA",
-"codigoSap": "TMGPEAP16PR1NES0",
-"modelo": "IPHONE 16 PRO NEGRO MYND3BE/A 128GB",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LIMA",
-"codigoSap": "TMGPEZTNV80MNES0",
-"modelo": "ZTE NUBIA V80 MAX NEGRO 256GB",
 "estado": "DISPONIBLE"
 },
 {
@@ -219,6 +207,12 @@
 "zona": "LIMA",
 "codigoSap": "TMGPEAP17256AZS0",
 "modelo": "IPHONE 17 AZUL MG6L4BE/A 256GB",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LIMA",
+"codigoSap": "TMGPEAP16PR1NES0",
+"modelo": "IPHONE 16 PRO NEGRO MYND3BE/A 128GB",
 "estado": "DISPONIBLE"
 },
 {
@@ -247,8 +241,14 @@
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEOP00A6KMOS0",
-"modelo": "OPPO A6K MORADO 256GB LTE",
+"codigoSap": "TMGPEAP17PR2AZS0",
+"modelo": "IPHONE 17 PRO AZUL MG8J4BE/A 256GB",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LIMA",
+"codigoSap": "TMGPEAP17PM2NAS0",
+"modelo": "IPHONE 17 PRO MAX NARANJA MFYN4BE/A 256G",
 "estado": "DISPONIBLE"
 },
 {
@@ -265,18 +265,6 @@
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEAP17PR2AZS0",
-"modelo": "IPHONE 17 PRO AZUL MG8J4BE/A 256GB",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LIMA",
-"codigoSap": "TMGPEAP17PM2NAS0",
-"modelo": "IPHONE 17 PRO MAX NARANJA MFYN4BE/A 256G",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LIMA",
 "codigoSap": "TMGPEAP17PR2NAS0",
 "modelo": "IPHONE 17 PRO NARANJA MG8H4BE/A 256GB",
 "estado": "DISPONIBLE"
@@ -289,14 +277,8 @@
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEAP17256BLS0",
-"modelo": "IPHONE 17 BLANCO MG6K4BE/A 256GB",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LIMA",
-"codigoSap": "TMGPEHN600S2PLSP",
-"modelo": "HONOR 600 SMART PLATA 256GB 5G C/PACK",
+"codigoSap": "TMGPEAP16MY1NES0",
+"modelo": "CAMP-IPHONE 16 NEGRO MYE73BE/A 128GB",
 "estado": "DISPONIBLE"
 },
 {
@@ -307,8 +289,26 @@
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEAP16MY1NES0",
-"modelo": "CAMP-IPHONE 16 NEGRO MYE73BE/A 128GB",
+"codigoSap": "TMGPEHN600S2PLSP",
+"modelo": "HONOR 600 SMART PLATA 256GB 5G C/PACK",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LIMA",
+"codigoSap": "TMGPEZTNV80MNES0",
+"modelo": "ZTE NUBIA V80 MAX NEGRO 256GB",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LIMA",
+"codigoSap": "TMGPEOP00A6KMOS0",
+"modelo": "OPPO A6K MORADO 256GB LTE",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LIMA",
+"codigoSap": "TMGPEAP17256BLS0",
+"modelo": "IPHONE 17 BLANCO MG6K4BE/A 256GB",
 "estado": "DISPONIBLE"
 },
 {
@@ -325,8 +325,8 @@
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPESAS942BNES0",
-"modelo": "SAMSUNG GXY S26 NEGRO 256GB SMS942 5G",
+"codigoSap": "TMGPEOPRE16FVNSD",
+"modelo": "OPPO RENO 16F VINO 256GB 5G C/PROM",
 "estado": "DISPONIBLE"
 },
 {
@@ -337,14 +337,32 @@
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEOPRE16FVNSD",
-"modelo": "OPPO RENO 16F VINO 256GB 5G C/PROM",
+"codigoSap": "TMGPEOPA6PROAZSD",
+"modelo": "OPPO A6 PRO AZUL 256GB 5G C/CAMP",
 "estado": "DISPONIBLE"
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEOPA6PROAZSD",
-"modelo": "OPPO A6 PRO AZUL 256GB 5G C/CAMP",
+"codigoSap": "TMGPESAS942BNES0",
+"modelo": "SAMSUNG GXY S26 NEGRO 256GB SMS942 5G",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LIMA",
+"codigoSap": "TMGPEOPRE162VNSD",
+"modelo": "OPPO RENO 16 VINO 256GB 5G C/PROM",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LIMA",
+"codigoSap": "TMGPEOP00A6XGRS0",
+"modelo": "OPPO A6X GRIS 256GB 5G",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LIMA",
+"codigoSap": "TMGPEOPA6PROAZSP",
+"modelo": "OPPO A6 PRO AZUL 256GB 5G C/PACK",
 "estado": "DISPONIBLE"
 },
 {
@@ -361,38 +379,8 @@
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEOPRE162VNSD",
-"modelo": "OPPO RENO 16 VINO 256GB 5G C/PROM",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LIMA",
-"codigoSap": "TMGPEOPA6PROAZSP",
-"modelo": "OPPO A6 PRO AZUL 256GB 5G C/PACK",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LIMA",
-"codigoSap": "TMGPEOP00A6XGRS0",
-"modelo": "OPPO A6X GRIS 256GB 5G",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LIMA",
-"codigoSap": "TMGPEXIR15PPAZSC",
-"modelo": "XIAOMI REDMI NOTE 15 PRO+ AZUL 512G C/C",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LIMA",
 "codigoSap": "TMGPEXIR15PPNES0",
 "modelo": "XIAOMI REDMI NOTE 15 PRO+ NEGRO 512GB",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LIMA",
-"codigoSap": "TMGPEZTNAIR5DOSC",
-"modelo": "ZTE NUBIA AIR DORADO 512GB 5G C/C",
 "estado": "DISPONIBLE"
 },
 {
@@ -403,8 +391,14 @@
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEMOED70FCES0",
-"modelo": "MOTOROLA EDGE 70 FUSION 256G CELESTE",
+"codigoSap": "TMGPEXIR15PPAZSC",
+"modelo": "XIAOMI REDMI NOTE 15 PRO+ AZUL 512G C/C",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LIMA",
+"codigoSap": "TMGPEZTNAIR5DOSC",
+"modelo": "ZTE NUBIA AIR DORADO 512GB 5G C/C",
 "estado": "DISPONIBLE"
 },
 {
@@ -415,44 +409,14 @@
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEHNX6EL2NES0",
-"modelo": "HONOR X6E NEGRO LBU-LX3 256GB",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LIMA",
-"codigoSap": "TMGPEOPRE16FVNSP",
-"modelo": "OPPO RENO 16F VINO 256GB 5G C/PACK",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LIMA",
-"codigoSap": "TMGPEAPIP16PNEPA",
-"modelo": "PACK-IPHONE 16 PRO MAX 256GB NEGRO",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LIMA",
 "codigoSap": "TMGPEXIR15PPAZS0",
 "modelo": "XIAOMI REDMI NOTE 15 PRO+ AZUL 512GB",
 "estado": "DISPONIBLE"
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEMO070E5GRS0",
-"modelo": "CAMP-MOTOROLA EDGE 70 512G GRIS",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LIMA",
-"codigoSap": "TMGPEOP00A6XMOS0",
-"modelo": "OPPO A6X MORADO 256GB 5G",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LIMA",
-"codigoSap": "TMGPEOPRE14FAZSP",
-"modelo": "OPPO RENO 14F AZUL 256GB 5G C/PACK",
+"codigoSap": "TMGPEHNX6EL2NES0",
+"modelo": "HONOR X6E NEGRO LBU-LX3 256GB",
 "estado": "DISPONIBLE"
 },
 {
@@ -469,38 +433,20 @@
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPESAS948BNES0",
-"modelo": "SAMSUNG GXY S26 ULTRA NGRO 256G S948B 5G",
+"codigoSap": "TMGPEMO070E5GRS0",
+"modelo": "CAMP-MOTOROLA EDGE 70 512G GRIS",
 "estado": "DISPONIBLE"
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEAPAIRE2NES0",
-"modelo": "IPHONE AIR NEGRO MG2L4BE/A 256GB ESIM",
+"codigoSap": "TMGPEOPRE16FVNSP",
+"modelo": "OPPO RENO 16F VINO 256GB 5G C/PACK",
 "estado": "DISPONIBLE"
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEOPRE14FVESP",
-"modelo": "OPPO RENO 14F VERDE 256GB 5G C/PACK",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LIMA",
-"codigoSap": "TMGPEXIP17T5NESP",
-"modelo": "XIAOMI 17T PRO NEGRO 512GB C/PACK",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LIMA",
-"codigoSap": "TMGPEAPAIRE2ORS0",
-"modelo": "IPHONE AIR ORO MG2N4BE/A 256GB ESIM",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LIMA",
-"codigoSap": "TMGPEZTNV80PBLS0",
-"modelo": "ZTE NUBIA V80 PRO BLANCO 256GB",
+"codigoSap": "TMGPEOPRE14FAZSP",
+"modelo": "OPPO RENO 14F AZUL 256GB 5G C/PACK",
 "estado": "DISPONIBLE"
 },
 {
@@ -511,8 +457,38 @@
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEKLAUDITWSAZ",
-"modelo": "KLIPXTREME AUDIFONO TWS KTE250 AZUL DLV",
+"codigoSap": "TMGPEAPAIRE2ORS0",
+"modelo": "IPHONE AIR ORO MG2N4BE/A 256GB ESIM",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LIMA",
+"codigoSap": "TMGPEXIP17T5NESP",
+"modelo": "XIAOMI 17T PRO NEGRO 512GB C/PACK",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LIMA",
+"codigoSap": "TMGPEMOED70FCES0",
+"modelo": "MOTOROLA EDGE 70 FUSION 256G CELESTE",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LIMA",
+"codigoSap": "TMGPESAS948BNES0",
+"modelo": "SAMSUNG GXY S26 ULTRA NGRO 256G S948B 5G",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LIMA",
+"codigoSap": "TMGPEOPRE14FVESP",
+"modelo": "OPPO RENO 14F VERDE 256GB 5G C/PACK",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LIMA",
+"codigoSap": "TMGPEOP00A6XMOS0",
+"modelo": "OPPO A6X MORADO 256GB 5G",
 "estado": "DISPONIBLE"
 },
 {
@@ -529,8 +505,14 @@
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEAP17256VES0",
-"modelo": "IPHONE 17 VERDE MG6N4BE/A 256GB",
+"codigoSap": "TMGPEHN0600LGRS0",
+"modelo": "HONOR 600E GRIS LNA-NX3 512GB",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LIMA",
+"codigoSap": "TMGPEKLAUDITWSAZ",
+"modelo": "KLIPXTREME AUDIFONO TWS KTE250 AZUL DLV",
 "estado": "DISPONIBLE"
 },
 {
@@ -553,26 +535,50 @@
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEHN0600LGRS0",
-"modelo": "HONOR 600E GRIS LNA-NX3 512GB",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LIMA",
 "codigoSap": "TMGPEZTNAIR5NES0",
 "modelo": "ZTE NUBIA AIR NEGRO 512GB 5G",
 "estado": "DISPONIBLE"
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEOP000A5VES0",
-"modelo": "OPPO A5 VERDE 256GB",
+"codigoSap": "TMGPEAPAIRE2NES0",
+"modelo": "IPHONE AIR NEGRO MG2L4BE/A 256GB ESIM",
 "estado": "DISPONIBLE"
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEAP15128NES0",
-"modelo": "IPHONE 15 NEGRO MTP03BE/A 128GB",
+"codigoSap": "TMGPEZTNAIR5DOSP",
+"modelo": "ZTE NUBIA AIR DORADO 512GB 5G C/P",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LIMA",
+"codigoSap": "TMGPEZTNAIR5NESP",
+"modelo": "ZTE NUBIA AIR NEGRO 512GB 5G C/P",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LIMA",
+"codigoSap": "TMGPEAP17PM5AZS0",
+"modelo": "IPHONE 17 PRO MAX AZUL MFYU4BE/A 512GB",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LIMA",
+"codigoSap": "TMGPEAP17256VES0",
+"modelo": "IPHONE 17 VERDE MG6N4BE/A 256GB",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LIMA",
+"codigoSap": "TMGPEXIA17T5AZSP",
+"modelo": "XIAOMI 17T AZUL 512GB C/PACK",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LIMA",
+"codigoSap": "TMGPEZTNV80PBLS0",
+"modelo": "ZTE NUBIA V80 PRO BLANCO 256GB",
 "estado": "DISPONIBLE"
 },
 {
@@ -589,32 +595,8 @@
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEAP17PM5AZS0",
-"modelo": "IPHONE 17 PRO MAX AZUL MFYU4BE/A 512GB",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LIMA",
-"codigoSap": "TMGPEZTNAIR5NESP",
-"modelo": "ZTE NUBIA AIR NEGRO 512GB 5G C/P",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LIMA",
-"codigoSap": "TMGPEZTNAIR5DOSP",
-"modelo": "ZTE NUBIA AIR DORADO 512GB 5G C/P",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LIMA",
-"codigoSap": "TMGPEXIA17T5AZSP",
-"modelo": "XIAOMI 17T AZUL 512GB C/PACK",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LIMA",
-"codigoSap": "TMGPEHN0600LGRSP",
-"modelo": "HONOR 600E GRIS LNA-NX3 512GB C/PACK",
+"codigoSap": "TMGPEOP000A5VES0",
+"modelo": "OPPO A5 VERDE 256GB",
 "estado": "DISPONIBLE"
 },
 {
@@ -637,32 +619,20 @@
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEOPR14FSNES0",
-"modelo": "OPPO RENO 14F NEGRO 256GB 5G C/SW",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LIMA",
 "codigoSap": "TMGPEAP17PM5PLS0",
 "modelo": "IPHONE 17 PRO MAX PLATA MFYQ4BE/A 512GB",
 "estado": "DISPONIBLE"
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEZTNAIR5NESC",
-"modelo": "ZTE NUBIA AIR NEGRO 512GB 5G C/C",
+"codigoSap": "TMGPEOPR14FSNES0",
+"modelo": "OPPO RENO 14F NEGRO 256GB 5G C/SW",
 "estado": "DISPONIBLE"
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEMOEDG70GRSP",
-"modelo": "MOTOROLA EDGE 70 512G GRIS C/P",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LIMA",
-"codigoSap": "TMGPEAPIP161BLPA",
-"modelo": "PACK-IPHONE 16 128GB BLANCO",
+"codigoSap": "TMGPEHN0600LGRSP",
+"modelo": "HONOR 600E GRIS LNA-NX3 512GB C/PACK",
 "estado": "DISPONIBLE"
 },
 {
@@ -673,20 +643,26 @@
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEHNX7E2LNESP",
-"modelo": "HONOR X7E NEGRO LAB-LX3 256GB LTE C/PACK",
+"codigoSap": "TMGPEZTNAIR5NESC",
+"modelo": "ZTE NUBIA AIR NEGRO 512GB 5G C/C",
 "estado": "DISPONIBLE"
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEXIR14PPMOS0",
-"modelo": "XIAOMI REDMI NOTE 14 PRO+ MORADO 256GB",
-"estado": "ULTIMAS UNIDADES"
+"codigoSap": "TMGPEAPIP161BLPA",
+"modelo": "PACK-IPHONE 16 128GB BLANCO",
+"estado": "DISPONIBLE"
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPESAA27S2NESP",
-"modelo": "SAMSUNG GXY A27 NEGRO SMA276B 256GB C/P",
+"codigoSap": "TMGPEMOEDG70GRSP",
+"modelo": "MOTOROLA EDGE 70 512G GRIS C/P",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LIMA",
+"codigoSap": "TMGPEAP16PL1NES0",
+"modelo": "IPHONE 16 PLUS NEGRO MXVU3BE/A 128GB",
 "estado": "ULTIMAS UNIDADES"
 },
 {
@@ -697,14 +673,14 @@
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEHNX6EL2DOS0",
-"modelo": "HONOR X6E DORADO LBU-LX3 256GB",
+"codigoSap": "TMGPESAA27S2NESP",
+"modelo": "SAMSUNG GXY A27 NEGRO SMA276B 256GB C/P",
 "estado": "ULTIMAS UNIDADES"
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEAPAIRE2BLS0",
-"modelo": "IPHONE AIR BLANCO MG2M4BE/A 256GB ESIM",
+"codigoSap": "TMGPEHNX6EL2DOS0",
+"modelo": "HONOR X6E DORADO LBU-LX3 256GB",
 "estado": "ULTIMAS UNIDADES"
 },
 {
@@ -715,8 +691,8 @@
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEAP16PL1NES0",
-"modelo": "IPHONE 16 PLUS NEGRO MXVU3BE/A 128GB",
+"codigoSap": "TMGPEXIR14PPMOS0",
+"modelo": "XIAOMI REDMI NOTE 14 PRO+ MORADO 256GB",
 "estado": "ULTIMAS UNIDADES"
 },
 {
@@ -733,8 +709,8 @@
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEXIP17T5AZSP",
-"modelo": "XIAOMI 17T PRO AZUL 512GB C/PACK",
+"codigoSap": "TMGPEHNX7E2LNESP",
+"modelo": "HONOR X7E NEGRO LAB-LX3 256GB LTE C/PACK",
 "estado": "ULTIMAS UNIDADES"
 },
 {
@@ -745,14 +721,14 @@
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEXIR14PPAZS0",
-"modelo": "XIAOMI REDMI NOTE 14 PRO+ AZUL 256GB",
+"codigoSap": "TMGPEAPIP16PNEPA",
+"modelo": "PACK-IPHONE 16 PRO MAX 256GB NEGRO",
 "estado": "ULTIMAS UNIDADES"
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEHN600V5NESP",
-"modelo": "HONOR 600 NEGRO VKJ-NX9 512GB C/PACK",
+"codigoSap": "TMGPEXIR14PPAZS0",
+"modelo": "XIAOMI REDMI NOTE 14 PRO+ AZUL 256GB",
 "estado": "ULTIMAS UNIDADES"
 },
 {
@@ -763,26 +739,8 @@
 },
 {
 "zona": "LIMA",
-"codigoSap": "TMGPEHNMGC8LNES0",
-"modelo": "HONOR MAGIC 8 LITE NEGRO 512GB 5G",
-"estado": "ULTIMAS UNIDADES"
-},
-{
-"zona": "LIMA",
-"codigoSap": "TMGPEXIA17T5NESP",
-"modelo": "XIAOMI 17T NEGRO 512GB C/PACK",
-"estado": "ULTIMAS UNIDADES"
-},
-{
-"zona": "LIMA",
-"codigoSap": "TMGPEAP12815NEBL",
-"modelo": "PACK - IPHONE 15 NEGRO MTP03BE/A 128GB",
-"estado": "ULTIMAS UNIDADES"
-},
-{
-"zona": "LIMA",
-"codigoSap": "TMGPEMOEDG70GRS0",
-"modelo": "MOTOROLA EDGE 70 512G GRIS",
+"codigoSap": "TMGPEXIP17T5AZSP",
+"modelo": "XIAOMI 17T PRO AZUL 512GB C/PACK",
 "estado": "ULTIMAS UNIDADES"
 },
 {
@@ -793,8 +751,44 @@
 },
 {
 "zona": "LIMA",
+"codigoSap": "TMGPEXIA17T5NESP",
+"modelo": "XIAOMI 17T NEGRO 512GB C/PACK",
+"estado": "ULTIMAS UNIDADES"
+},
+{
+"zona": "LIMA",
+"codigoSap": "TMGPEMOEDG70GRS0",
+"modelo": "MOTOROLA EDGE 70 512G GRIS",
+"estado": "ULTIMAS UNIDADES"
+},
+{
+"zona": "LIMA",
+"codigoSap": "TMGPEAP12815NEBL",
+"modelo": "PACK - IPHONE 15 NEGRO MTP03BE/A 128GB",
+"estado": "ULTIMAS UNIDADES"
+},
+{
+"zona": "LIMA",
+"codigoSap": "TMGPEHN600V5NESP",
+"modelo": "HONOR 600 NEGRO VKJ-NX9 512GB C/PACK",
+"estado": "ULTIMAS UNIDADES"
+},
+{
+"zona": "LIMA",
 "codigoSap": "TMGPEAP17MG2VES0",
 "modelo": "CAMP-IPHONE 17 VERDE MG6N4BE/A 256GB",
+"estado": "ULTIMAS UNIDADES"
+},
+{
+"zona": "LIMA",
+"codigoSap": "TMGPEAPAIRE2BLS0",
+"modelo": "IPHONE AIR BLANCO MG2M4BE/A 256GB ESIM",
+"estado": "ULTIMAS UNIDADES"
+},
+{
+"zona": "LIMA",
+"codigoSap": "TMGPEAP15128NES0",
+"modelo": "IPHONE 15 NEGRO MTP03BE/A 128GB",
 "estado": "ULTIMAS UNIDADES"
 },
 {
@@ -835,14 +829,8 @@
 },
 {
 "zona": "PROVINCIAS",
-"codigoSap": "TMGPEXIREN15MOS0",
-"modelo": "XIAOMI REDMI NOTE 15 MORADO 256GB LTE",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "PROVINCIAS",
-"codigoSap": "TMGPEZTA3664NES0",
-"modelo": "ZTE BLADE A36 64GB NEGRO",
+"codigoSap": "TMGPEMOG17L1ARS0",
+"modelo": "MOTOROLA G17 ARANDANO XT2623 128GB",
 "estado": "DISPONIBLE"
 },
 {
@@ -853,8 +841,14 @@
 },
 {
 "zona": "PROVINCIAS",
-"codigoSap": "TMGPEMOG17L1ARS0",
-"modelo": "MOTOROLA G17 ARANDANO XT2623 128GB",
+"codigoSap": "TMGPEHN00X5DPLS0",
+"modelo": "HONOR X5D PLATA NAA-LX3 128GB",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "PROVINCIAS",
+"codigoSap": "TMGPEXIREN15MOS0",
+"modelo": "XIAOMI REDMI NOTE 15 MORADO 256GB LTE",
 "estado": "DISPONIBLE"
 },
 {
@@ -865,8 +859,8 @@
 },
 {
 "zona": "PROVINCIAS",
-"codigoSap": "TMGPEHN00X5DPLS0",
-"modelo": "HONOR X5D PLATA NAA-LX3 128GB",
+"codigoSap": "TMGPEZTA3664NES0",
+"modelo": "ZTE BLADE A36 64GB NEGRO",
 "estado": "DISPONIBLE"
 },
 {
@@ -877,14 +871,14 @@
 },
 {
 "zona": "PROVINCIAS",
-"codigoSap": "TMGPEZTNV80MNES0",
-"modelo": "ZTE NUBIA V80 MAX NEGRO 256GB",
+"codigoSap": "TMGPEAP17PM2PLS0",
+"modelo": "IPHONE 17 PRO MAX PLATA MFYM4BE/A 256GB",
 "estado": "DISPONIBLE"
 },
 {
 "zona": "PROVINCIAS",
-"codigoSap": "TMGPEAP17PM2PLS0",
-"modelo": "IPHONE 17 PRO MAX PLATA MFYM4BE/A 256GB",
+"codigoSap": "TMGPEZTNV80MNES0",
+"modelo": "ZTE NUBIA V80 MAX NEGRO 256GB",
 "estado": "DISPONIBLE"
 },
 {
@@ -895,32 +889,14 @@
 },
 {
 "zona": "PROVINCIAS",
-"codigoSap": "TMGPESAS948BNES0",
-"modelo": "SAMSUNG GXY S26 ULTRA NGRO 256G S948B 5G",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "PROVINCIAS",
 "codigoSap": "TMGPEAP16128NES0",
 "modelo": "IPHONE 16 NEGRO MYE73BE/A 128GB",
 "estado": "DISPONIBLE"
 },
 {
 "zona": "PROVINCIAS",
-"codigoSap": "TMGPEMOT2621NES0",
-"modelo": "MOTOROLA G67 GRIS XT2621 256GB",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "PROVINCIAS",
-"codigoSap": "TMGPEXIR15P5NES0",
-"modelo": "XIAOMI REDMI NOTE 15 PRO NEGRO 512 5G",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "PROVINCIAS",
-"codigoSap": "TMGPEOP00A6XGRS0",
-"modelo": "OPPO A6X GRIS 256GB 5G",
+"codigoSap": "TMGPESAS948BNES0",
+"modelo": "SAMSUNG GXY S26 ULTRA NGRO 256G S948B 5G",
 "estado": "DISPONIBLE"
 },
 {
@@ -931,8 +907,20 @@
 },
 {
 "zona": "PROVINCIAS",
-"codigoSap": "TMGPEHNMGC8LNES0",
-"modelo": "HONOR MAGIC 8 LITE NEGRO 512GB 5G",
+"codigoSap": "TMGPEXIR15P5NES0",
+"modelo": "XIAOMI REDMI NOTE 15 PRO NEGRO 512 5G",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "PROVINCIAS",
+"codigoSap": "TMGPEMOT2621NES0",
+"modelo": "MOTOROLA G67 GRIS XT2621 256GB",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "PROVINCIAS",
+"codigoSap": "TMGPEOP00A6XGRS0",
+"modelo": "OPPO A6X GRIS 256GB 5G",
 "estado": "DISPONIBLE"
 },
 {
@@ -949,6 +937,18 @@
 },
 {
 "zona": "PROVINCIAS",
+"codigoSap": "TMGPEHNMGC8LNESP",
+"modelo": "HONOR MAGIC 8 LITE NEGRO 512GB 5G C/P",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "PROVINCIAS",
+"codigoSap": "TMGPEAP15128NES0",
+"modelo": "IPHONE 15 NEGRO MTP03BE/A 128GB",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "PROVINCIAS",
 "codigoSap": "TMGPEAP17PM2NAS0",
 "modelo": "IPHONE 17 PRO MAX NARANJA MFYN4BE/A 256G",
 "estado": "DISPONIBLE"
@@ -961,20 +961,8 @@
 },
 {
 "zona": "PROVINCIAS",
-"codigoSap": "TMGPEAP15128NES0",
-"modelo": "IPHONE 15 NEGRO MTP03BE/A 128GB",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "PROVINCIAS",
-"codigoSap": "TMGPEHNMGC8LNESP",
-"modelo": "HONOR MAGIC 8 LITE NEGRO 512GB 5G C/P",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "PROVINCIAS",
-"codigoSap": "TMGPEOPA6PRORSSP",
-"modelo": "OPPO A6 PRO ROSADO 256GB 5G C/PACK",
+"codigoSap": "TMGPEXIR15PPNES0",
+"modelo": "XIAOMI REDMI NOTE 15 PRO+ NEGRO 512GB",
 "estado": "DISPONIBLE"
 },
 {
@@ -985,20 +973,14 @@
 },
 {
 "zona": "PROVINCIAS",
+"codigoSap": "TMGPEOPA6PRORSSP",
+"modelo": "OPPO A6 PRO ROSADO 256GB 5G C/PACK",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "PROVINCIAS",
 "codigoSap": "TMGPEZTA3664VES0",
 "modelo": "ZTE BLADE A36 64GB VERDE",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "PROVINCIAS",
-"codigoSap": "TMGPEXIR15PPNES0",
-"modelo": "XIAOMI REDMI NOTE 15 PRO+ NEGRO 512GB",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "PROVINCIAS",
-"codigoSap": "TMGPEXIA17T5NESP",
-"modelo": "XIAOMI 17T NEGRO 512GB C/PACK",
 "estado": "DISPONIBLE"
 },
 {
@@ -1009,26 +991,8 @@
 },
 {
 "zona": "PROVINCIAS",
-"codigoSap": "TMGPEXIP17T5AZSP",
-"modelo": "XIAOMI 17T PRO AZUL 512GB C/PACK",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "PROVINCIAS",
-"codigoSap": "TMGPEZTNAIR5NES0",
-"modelo": "ZTE NUBIA AIR NEGRO 512GB 5G",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "PROVINCIAS",
-"codigoSap": "TMGPEAP17256VES0",
-"modelo": "IPHONE 17 VERDE MG6N4BE/A 256GB",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "PROVINCIAS",
-"codigoSap": "TMGPEZTNV80MPLS0",
-"modelo": "ZTE NUBIA V80 MAX PLATA 256GB",
+"codigoSap": "TMGPESAA27S2NESP",
+"modelo": "SAMSUNG GXY A27 NEGRO SMA276B 256GB C/P",
 "estado": "DISPONIBLE"
 },
 {
@@ -1039,20 +1003,38 @@
 },
 {
 "zona": "PROVINCIAS",
-"codigoSap": "TMGPESAA27S2NESP",
-"modelo": "SAMSUNG GXY A27 NEGRO SMA276B 256GB C/P",
+"codigoSap": "TMGPEZTNAIR5NES0",
+"modelo": "ZTE NUBIA AIR NEGRO 512GB 5G",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "PROVINCIAS",
+"codigoSap": "TMGPEZTNV80MPLS0",
+"modelo": "ZTE NUBIA V80 MAX PLATA 256GB",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "PROVINCIAS",
+"codigoSap": "TMGPEAP17256VES0",
+"modelo": "IPHONE 17 VERDE MG6N4BE/A 256GB",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "PROVINCIAS",
+"codigoSap": "TMGPEXIP17T5AZSP",
+"modelo": "XIAOMI 17T PRO AZUL 512GB C/PACK",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "PROVINCIAS",
+"codigoSap": "TMGPEXIA17T5NESP",
+"modelo": "XIAOMI 17T NEGRO 512GB C/PACK",
 "estado": "DISPONIBLE"
 },
 {
 "zona": "PROVINCIAS",
 "codigoSap": "TMGPEXIRA71PVES0",
 "modelo": "XIAOMI REDMI A7 PRO VERDE 128GB",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "PROVINCIAS",
-"codigoSap": "TMGPEHN600V5NESP",
-"modelo": "HONOR 600 NEGRO VKJ-NX9 512GB C/PACK",
 "estado": "DISPONIBLE"
 },
 {
@@ -1069,6 +1051,12 @@
 },
 {
 "zona": "PROVINCIAS",
+"codigoSap": "TMGPEHN600V5NESP",
+"modelo": "HONOR 600 NEGRO VKJ-NX9 512GB C/PACK",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "PROVINCIAS",
 "codigoSap": "TMGPEAP17256NES0",
 "modelo": "IPHONE 17 NEGRO MG6J4BE/A 256GB",
 "estado": "DISPONIBLE"
@@ -1081,6 +1069,12 @@
 },
 {
 "zona": "PROVINCIAS",
+"codigoSap": "TMGPEXIA17T5AZSP",
+"modelo": "XIAOMI 17T AZUL 512GB C/PACK",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "PROVINCIAS",
 "codigoSap": "TMGPEZTNAIR5DOSP",
 "modelo": "ZTE NUBIA AIR DORADO 512GB 5G C/P",
 "estado": "DISPONIBLE"
@@ -1089,12 +1083,6 @@
 "zona": "PROVINCIAS",
 "codigoSap": "TMGPEXIRA71PAZS0",
 "modelo": "XIAOMI REDMI A7 PRO AZUL 128GB",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "PROVINCIAS",
-"codigoSap": "TMGPEXIA17T5AZSP",
-"modelo": "XIAOMI 17T AZUL 512GB C/PACK",
 "estado": "DISPONIBLE"
 },
 {
@@ -1117,14 +1105,14 @@
 },
 {
 "zona": "PROVINCIAS",
-"codigoSap": "TMGPEMOEDG70GRS0",
-"modelo": "MOTOROLA EDGE 70 512G GRIS",
+"codigoSap": "TMGPEZTNAIR5NESP",
+"modelo": "ZTE NUBIA AIR NEGRO 512GB 5G C/P",
 "estado": "ULTIMAS UNIDADES"
 },
 {
 "zona": "PROVINCIAS",
-"codigoSap": "TMGPEZTNAIR5NESP",
-"modelo": "ZTE NUBIA AIR NEGRO 512GB 5G C/P",
+"codigoSap": "TMGPEMOEDG70GRS0",
+"modelo": "MOTOROLA EDGE 70 512G GRIS",
 "estado": "ULTIMAS UNIDADES"
 },
 {
@@ -1171,14 +1159,8 @@
 },
 {
 "zona": "AREQUIPA",
-"codigoSap": "TMGPEXIR15P5NES0",
-"modelo": "XIAOMI REDMI NOTE 15 PRO NEGRO 512 5G",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "AREQUIPA",
-"codigoSap": "TMGPESAA1761NES0",
-"modelo": "SAMSUNG GXY A17 NEGRO SM-A176B 128GB 5G",
+"codigoSap": "TMGPEZTA3664NES0",
+"modelo": "ZTE BLADE A36 64GB NEGRO",
 "estado": "DISPONIBLE"
 },
 {
@@ -1189,8 +1171,8 @@
 },
 {
 "zona": "AREQUIPA",
-"codigoSap": "TMGPEZTA3664NES0",
-"modelo": "ZTE BLADE A36 64GB NEGRO",
+"codigoSap": "TMGPEXIR15P5NES0",
+"modelo": "XIAOMI REDMI NOTE 15 PRO NEGRO 512 5G",
 "estado": "DISPONIBLE"
 },
 {
@@ -1201,26 +1183,8 @@
 },
 {
 "zona": "AREQUIPA",
-"codigoSap": "TMGPEXIR15P5TIS0",
-"modelo": "XIAOMI REDMI NOTE 15 PRO TITANIO 512 5G",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "AREQUIPA",
-"codigoSap": "TMGPESAA3762GRS0",
-"modelo": "SAMSUNG GXY A37 GRIS SM-A376B 256GB 5G",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "AREQUIPA",
-"codigoSap": "TMGPEMOT2621NES0",
-"modelo": "MOTOROLA G67 GRIS XT2621 256GB",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "AREQUIPA",
-"codigoSap": "TMGPEXIRA71PVES0",
-"modelo": "XIAOMI REDMI A7 PRO VERDE 128GB",
+"codigoSap": "TMGPESAA1761NES0",
+"modelo": "SAMSUNG GXY A17 NEGRO SM-A176B 128GB 5G",
 "estado": "DISPONIBLE"
 },
 {
@@ -1231,14 +1195,26 @@
 },
 {
 "zona": "AREQUIPA",
-"codigoSap": "TMGPEXIREN15MOS0",
-"modelo": "XIAOMI REDMI NOTE 15 MORADO 256GB LTE",
+"codigoSap": "TMGPESAA3762GRS0",
+"modelo": "SAMSUNG GXY A37 GRIS SM-A376B 256GB 5G",
 "estado": "DISPONIBLE"
 },
 {
 "zona": "AREQUIPA",
-"codigoSap": "TMGPEXIRA71PAZS0",
-"modelo": "XIAOMI REDMI A7 PRO AZUL 128GB",
+"codigoSap": "TMGPEXIRA71PVES0",
+"modelo": "XIAOMI REDMI A7 PRO VERDE 128GB",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "AREQUIPA",
+"codigoSap": "TMGPEXIR15P5TIS0",
+"modelo": "XIAOMI REDMI NOTE 15 PRO TITANIO 512 5G",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "AREQUIPA",
+"codigoSap": "TMGPEMOT2621NES0",
+"modelo": "MOTOROLA G67 GRIS XT2621 256GB",
 "estado": "DISPONIBLE"
 },
 {
@@ -1255,14 +1231,26 @@
 },
 {
 "zona": "AREQUIPA",
-"codigoSap": "TMGPEOPA6PROAZSP",
-"modelo": "OPPO A6 PRO AZUL 256GB 5G C/PACK",
+"codigoSap": "TMGPEXIREN15MOS0",
+"modelo": "XIAOMI REDMI NOTE 15 MORADO 256GB LTE",
 "estado": "DISPONIBLE"
 },
 {
 "zona": "AREQUIPA",
 "codigoSap": "TMGPEAP15128NES0",
 "modelo": "IPHONE 15 NEGRO MTP03BE/A 128GB",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "AREQUIPA",
+"codigoSap": "TMGPEOPA6PROAZSP",
+"modelo": "OPPO A6 PRO AZUL 256GB 5G C/PACK",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "AREQUIPA",
+"codigoSap": "TMGPEXIRA71PAZS0",
+"modelo": "XIAOMI REDMI A7 PRO AZUL 128GB",
 "estado": "DISPONIBLE"
 },
 {
@@ -1279,14 +1267,8 @@
 },
 {
 "zona": "AREQUIPA",
-"codigoSap": "TMGPESAA27S2NES0",
-"modelo": "SAMSUNG GXY A27 NEGRO SM-A276B 256GB 5G",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "AREQUIPA",
-"codigoSap": "TMGPEMOED70FAZS0",
-"modelo": "MOTOROLA EDGE 70 FUSION 256G AZUL",
+"codigoSap": "TMGPEZTA57P1NES0",
+"modelo": "ZTE BLADE A57 PRO NEGRO 128GB",
 "estado": "DISPONIBLE"
 },
 {
@@ -1297,8 +1279,8 @@
 },
 {
 "zona": "AREQUIPA",
-"codigoSap": "TMGPEHNMGC8LNESP",
-"modelo": "HONOR MAGIC 8 LITE NEGRO 512GB 5G C/P",
+"codigoSap": "TMGPEMOED70FAZS0",
+"modelo": "MOTOROLA EDGE 70 FUSION 256G AZUL",
 "estado": "DISPONIBLE"
 },
 {
@@ -1309,20 +1291,14 @@
 },
 {
 "zona": "AREQUIPA",
-"codigoSap": "TMGPEZTA57P1NES0",
-"modelo": "ZTE BLADE A57 PRO NEGRO 128GB",
+"codigoSap": "TMGPESAA27S2NES0",
+"modelo": "SAMSUNG GXY A27 NEGRO SM-A276B 256GB 5G",
 "estado": "DISPONIBLE"
 },
 {
 "zona": "AREQUIPA",
 "codigoSap": "TMGPEHN600S2PLSP",
 "modelo": "HONOR 600 SMART PLATA 256GB 5G C/PACK",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "AREQUIPA",
-"codigoSap": "TMGPEHNX6EL2NES0",
-"modelo": "HONOR X6E NEGRO LBU-LX3 256GB",
 "estado": "DISPONIBLE"
 },
 {
@@ -1339,20 +1315,20 @@
 },
 {
 "zona": "AREQUIPA",
+"codigoSap": "TMGPESAS942BNES0",
+"modelo": "SAMSUNG GXY S26 NEGRO 256GB SMS942 5G",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "AREQUIPA",
 "codigoSap": "TMGPEAP17256NES0",
 "modelo": "IPHONE 17 NEGRO MG6J4BE/A 256GB",
 "estado": "DISPONIBLE"
 },
 {
 "zona": "AREQUIPA",
-"codigoSap": "TMGPEZTA3664VES0",
-"modelo": "ZTE BLADE A36 64GB VERDE",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "AREQUIPA",
-"codigoSap": "TMGPEHNMGC8LNES0",
-"modelo": "HONOR MAGIC 8 LITE NEGRO 512GB 5G",
+"codigoSap": "TMGPEHNX7E2LNES0",
+"modelo": "HONOR X7E NEGRO LAB-LX3 256GB LTE",
 "estado": "DISPONIBLE"
 },
 {
@@ -1363,8 +1339,8 @@
 },
 {
 "zona": "AREQUIPA",
-"codigoSap": "TMGPEXIR15PPNES0",
-"modelo": "XIAOMI REDMI NOTE 15 PRO+ NEGRO 512GB",
+"codigoSap": "TMGPEZTA3664VES0",
+"modelo": "ZTE BLADE A36 64GB VERDE",
 "estado": "DISPONIBLE"
 },
 {
@@ -1387,20 +1363,26 @@
 },
 {
 "zona": "AREQUIPA",
-"codigoSap": "TMGPESAS942BNES0",
-"modelo": "SAMSUNG GXY S26 NEGRO 256GB SMS942 5G",
+"codigoSap": "TMGPEXIR15PPNES0",
+"modelo": "XIAOMI REDMI NOTE 15 PRO+ NEGRO 512GB",
 "estado": "DISPONIBLE"
 },
 {
 "zona": "AREQUIPA",
-"codigoSap": "TMGPEHNX7E2LNES0",
-"modelo": "HONOR X7E NEGRO LAB-LX3 256GB LTE",
-"estado": "DISPONIBLE"
+"codigoSap": "TMGPEAP16128NES0",
+"modelo": "IPHONE 16 NEGRO MYE73BE/A 128GB",
+"estado": "ULTIMAS UNIDADES"
 },
 {
 "zona": "AREQUIPA",
 "codigoSap": "TMGPEOP00A6XMOS0",
 "modelo": "OPPO A6X MORADO 256GB 5G",
+"estado": "ULTIMAS UNIDADES"
+},
+{
+"zona": "AREQUIPA",
+"codigoSap": "TMGPEHNX6EL2NES0",
+"modelo": "HONOR X6E NEGRO LBU-LX3 256GB",
 "estado": "ULTIMAS UNIDADES"
 },
 {
@@ -1417,36 +1399,6 @@
 },
 {
 "zona": "AREQUIPA",
-"codigoSap": "TMGPEHNX6EL2NESP",
-"modelo": "HONOR X6E NEGRO LBU-LX3 256GB C/PACK",
-"estado": "ULTIMAS UNIDADES"
-},
-{
-"zona": "AREQUIPA",
-"codigoSap": "TMGPEAP17256VES0",
-"modelo": "IPHONE 17 VERDE MG6N4BE/A 256GB",
-"estado": "ULTIMAS UNIDADES"
-},
-{
-"zona": "AREQUIPA",
-"codigoSap": "TMGPEAP16128NES0",
-"modelo": "IPHONE 16 NEGRO MYE73BE/A 128GB",
-"estado": "ULTIMAS UNIDADES"
-},
-{
-"zona": "AREQUIPA",
-"codigoSap": "TMGPEZTNV80MPLS0",
-"modelo": "ZTE NUBIA V80 MAX PLATA 256GB",
-"estado": "ULTIMAS UNIDADES"
-},
-{
-"zona": "AREQUIPA",
-"codigoSap": "TMGPEZTNV80PNES0",
-"modelo": "ZTE NUBIA V80 PRO NEGRO 256GB",
-"estado": "ULTIMAS UNIDADES"
-},
-{
-"zona": "AREQUIPA",
 "codigoSap": "TMGPEXIR15PPAZSC",
 "modelo": "XIAOMI REDMI NOTE 15 PRO+ AZUL 512G C/C",
 "estado": "ULTIMAS UNIDADES"
@@ -1459,8 +1411,32 @@
 },
 {
 "zona": "AREQUIPA",
-"codigoSap": "TMGPEXIR15PPAZS0",
-"modelo": "XIAOMI REDMI NOTE 15 PRO+ AZUL 512GB",
+"codigoSap": "TMGPEZTNAIR5DOSP",
+"modelo": "ZTE NUBIA AIR DORADO 512GB 5G C/P",
+"estado": "ULTIMAS UNIDADES"
+},
+{
+"zona": "AREQUIPA",
+"codigoSap": "TMGPEAP17256VES0",
+"modelo": "IPHONE 17 VERDE MG6N4BE/A 256GB",
+"estado": "ULTIMAS UNIDADES"
+},
+{
+"zona": "AREQUIPA",
+"codigoSap": "TMGPEZTNV80PNES0",
+"modelo": "ZTE NUBIA V80 PRO NEGRO 256GB",
+"estado": "ULTIMAS UNIDADES"
+},
+{
+"zona": "AREQUIPA",
+"codigoSap": "TMGPEHNMGC8LNESP",
+"modelo": "HONOR MAGIC 8 LITE NEGRO 512GB 5G C/P",
+"estado": "ULTIMAS UNIDADES"
+},
+{
+"zona": "AREQUIPA",
+"codigoSap": "TMGPEZTNV80MPLS0",
+"modelo": "ZTE NUBIA V80 MAX PLATA 256GB",
 "estado": "ULTIMAS UNIDADES"
 },
 {
@@ -1471,8 +1447,20 @@
 },
 {
 "zona": "AREQUIPA",
-"codigoSap": "TMGPEZTNAIR5DOSP",
-"modelo": "ZTE NUBIA AIR DORADO 512GB 5G C/P",
+"codigoSap": "TMGPEZTNPV80BLS0",
+"modelo": "CAMP-ZTE NUBIA V80 PRO BLANCO 256GB",
+"estado": "ULTIMAS UNIDADES"
+},
+{
+"zona": "AREQUIPA",
+"codigoSap": "TMGPEXIR15PPAZS0",
+"modelo": "XIAOMI REDMI NOTE 15 PRO+ AZUL 512GB",
+"estado": "ULTIMAS UNIDADES"
+},
+{
+"zona": "AREQUIPA",
+"codigoSap": "TMGPEHNX6EL2NESP",
+"modelo": "HONOR X6E NEGRO LBU-LX3 256GB C/PACK",
 "estado": "ULTIMAS UNIDADES"
 },
 {
@@ -1483,26 +1471,14 @@
 },
 {
 "zona": "AREQUIPA",
-"codigoSap": "TMGPEZTNPV80BLS0",
-"modelo": "CAMP-ZTE NUBIA V80 PRO BLANCO 256GB",
-"estado": "ULTIMAS UNIDADES"
-},
-{
-"zona": "AREQUIPA",
-"codigoSap": "TMGPEAP16MY1NES0",
-"modelo": "CAMP-IPHONE 16 NEGRO MYE73BE/A 128GB",
+"codigoSap": "TMGPEAP17PR2PLS0",
+"modelo": "IPHONE 17 PRO PLATA MG8G4BE/A 256GB",
 "estado": "ULTIMAS UNIDADES"
 },
 {
 "zona": "AREQUIPA",
 "codigoSap": "TMGPEOPA6PRORSSD",
 "modelo": "OPPO A6 PRO ROSADO 256GB 5G C/CAMP",
-"estado": "ULTIMAS UNIDADES"
-},
-{
-"zona": "AREQUIPA",
-"codigoSap": "TMGPEAP17PR2PLS0",
-"modelo": "IPHONE 17 PRO PLATA MG8G4BE/A 256GB",
 "estado": "ULTIMAS UNIDADES"
 },
 {
@@ -1531,14 +1507,20 @@
 },
 {
 "zona": "AREQUIPA",
+"codigoSap": "TMGPEHN00X5DPLS0",
+"modelo": "HONOR X5D PLATA NAA-LX3 128GB",
+"estado": "ULTIMAS UNIDADES"
+},
+{
+"zona": "AREQUIPA",
 "codigoSap": "TMGPEHN0600LGRSP",
 "modelo": "HONOR 600E GRIS LNA-NX3 512GB C/PACK",
 "estado": "ULTIMAS UNIDADES"
 },
 {
 "zona": "AREQUIPA",
-"codigoSap": "TMGPEHN00X5DPLS0",
-"modelo": "HONOR X5D PLATA NAA-LX3 128GB",
+"codigoSap": "TMGPEAP16MY1NES0",
+"modelo": "CAMP-IPHONE 16 NEGRO MYE73BE/A 128GB",
 "estado": "ULTIMAS UNIDADES"
 },
 {
@@ -1555,14 +1537,14 @@
 },
 {
 "zona": "LA LIBERTAD",
-"codigoSap": "TMGPESAA0751NES0",
-"modelo": "SAMSUNG GXY A07 NEGRO SM-A075M 128GB",
+"codigoSap": "TMGPEXIR15P5TIS0",
+"modelo": "XIAOMI REDMI NOTE 15 PRO TITANIO 512 5G",
 "estado": "DISPONIBLE"
 },
 {
 "zona": "LA LIBERTAD",
-"codigoSap": "TMGPESAA1761NES0",
-"modelo": "SAMSUNG GXY A17 NEGRO SM-A176B 128GB 5G",
+"codigoSap": "TMGPESAA0751NES0",
+"modelo": "SAMSUNG GXY A07 NEGRO SM-A075M 128GB",
 "estado": "DISPONIBLE"
 },
 {
@@ -1573,20 +1555,8 @@
 },
 {
 "zona": "LA LIBERTAD",
-"codigoSap": "TMGPEXIR15P5TIS0",
-"modelo": "XIAOMI REDMI NOTE 15 PRO TITANIO 512 5G",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LA LIBERTAD",
 "codigoSap": "TMGPEXIREN15NES0",
 "modelo": "XIAOMI REDMI NOTE 15 NEGRO 256GB LTE",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LA LIBERTAD",
-"codigoSap": "TMGPEHN00X5DAZS0",
-"modelo": "HONOR X5D AZUL NAA-LX3 128GB",
 "estado": "DISPONIBLE"
 },
 {
@@ -1597,26 +1567,20 @@
 },
 {
 "zona": "LA LIBERTAD",
+"codigoSap": "TMGPESAA1761NES0",
+"modelo": "SAMSUNG GXY A17 NEGRO SM-A176B 128GB 5G",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LA LIBERTAD",
 "codigoSap": "TMGPEXIR15P5NES0",
 "modelo": "XIAOMI REDMI NOTE 15 PRO NEGRO 512 5G",
 "estado": "DISPONIBLE"
 },
 {
 "zona": "LA LIBERTAD",
-"codigoSap": "TMGPEHN00X5DPLS0",
-"modelo": "HONOR X5D PLATA NAA-LX3 128GB",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LA LIBERTAD",
-"codigoSap": "TMGPEZTA3664VES0",
-"modelo": "ZTE BLADE A36 64GB VERDE",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LA LIBERTAD",
-"codigoSap": "TMGPEXIREN15MOS0",
-"modelo": "XIAOMI REDMI NOTE 15 MORADO 256GB LTE",
+"codigoSap": "TMGPEHN00X5DAZS0",
+"modelo": "HONOR X5D AZUL NAA-LX3 128GB",
 "estado": "DISPONIBLE"
 },
 {
@@ -1627,8 +1591,32 @@
 },
 {
 "zona": "LA LIBERTAD",
+"codigoSap": "TMGPEXIREN15MOS0",
+"modelo": "XIAOMI REDMI NOTE 15 MORADO 256GB LTE",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LA LIBERTAD",
+"codigoSap": "TMGPEZTA3664VES0",
+"modelo": "ZTE BLADE A36 64GB VERDE",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LA LIBERTAD",
+"codigoSap": "TMGPESAA3762GRS0",
+"modelo": "SAMSUNG GXY A37 GRIS SM-A376B 256GB 5G",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LA LIBERTAD",
 "codigoSap": "TMGPEHN0600LVESP",
 "modelo": "HONOR 600E VERDE LNA-NX3 512GB C/PACK",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LA LIBERTAD",
+"codigoSap": "TMGPEHN00X5DPLS0",
+"modelo": "HONOR X5D PLATA NAA-LX3 128GB",
 "estado": "DISPONIBLE"
 },
 {
@@ -1639,8 +1627,14 @@
 },
 {
 "zona": "LA LIBERTAD",
-"codigoSap": "TMGPESAA3762GRS0",
-"modelo": "SAMSUNG GXY A37 GRIS SM-A376B 256GB 5G",
+"codigoSap": "TMGPEXIR15PPAZSC",
+"modelo": "XIAOMI REDMI NOTE 15 PRO+ AZUL 512G C/C",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LA LIBERTAD",
+"codigoSap": "TMGPEZTA57P1NES0",
+"modelo": "ZTE BLADE A57 PRO NEGRO 128GB",
 "estado": "DISPONIBLE"
 },
 {
@@ -1663,26 +1657,20 @@
 },
 {
 "zona": "LA LIBERTAD",
-"codigoSap": "TMGPEZTA57P1NES0",
-"modelo": "ZTE BLADE A57 PRO NEGRO 128GB",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LA LIBERTAD",
-"codigoSap": "TMGPEXIR15PPAZSC",
-"modelo": "XIAOMI REDMI NOTE 15 PRO+ AZUL 512G C/C",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LA LIBERTAD",
-"codigoSap": "TMGPEMOT2621NES0",
-"modelo": "MOTOROLA G67 GRIS XT2621 256GB",
+"codigoSap": "TMGPEXIR15P5AZS0",
+"modelo": "XIAOMI REDMI NOTE 15 PRO AZUL 512 5G",
 "estado": "DISPONIBLE"
 },
 {
 "zona": "LA LIBERTAD",
 "codigoSap": "TMGPEMOED70FAZS0",
 "modelo": "MOTOROLA EDGE 70 FUSION 256G AZUL",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LA LIBERTAD",
+"codigoSap": "TMGPEMOT2621NES0",
+"modelo": "MOTOROLA G67 GRIS XT2621 256GB",
 "estado": "DISPONIBLE"
 },
 {
@@ -1699,12 +1687,6 @@
 },
 {
 "zona": "LA LIBERTAD",
-"codigoSap": "TMGPEXIR15P5AZS0",
-"modelo": "XIAOMI REDMI NOTE 15 PRO AZUL 512 5G",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LA LIBERTAD",
 "codigoSap": "TMGPEHNX6EL2NES0",
 "modelo": "HONOR X6E NEGRO LBU-LX3 256GB",
 "estado": "DISPONIBLE"
@@ -1717,8 +1699,8 @@
 },
 {
 "zona": "LA LIBERTAD",
-"codigoSap": "TMGPEHN600S2PLSP",
-"modelo": "HONOR 600 SMART PLATA 256GB 5G C/PACK",
+"codigoSap": "TMGPESAA27S2NES0",
+"modelo": "SAMSUNG GXY A27 NEGRO SM-A276B 256GB 5G",
 "estado": "DISPONIBLE"
 },
 {
@@ -1729,14 +1711,8 @@
 },
 {
 "zona": "LA LIBERTAD",
-"codigoSap": "TMGPESAA27S2NES0",
-"modelo": "SAMSUNG GXY A27 NEGRO SM-A276B 256GB 5G",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LA LIBERTAD",
-"codigoSap": "TMGPEZTNV80MNES0",
-"modelo": "ZTE NUBIA V80 MAX NEGRO 256GB",
+"codigoSap": "TMGPEOP00A6XGRS0",
+"modelo": "OPPO A6X GRIS 256GB 5G",
 "estado": "DISPONIBLE"
 },
 {
@@ -1747,32 +1723,8 @@
 },
 {
 "zona": "LA LIBERTAD",
-"codigoSap": "TMGPEMO00G77ESS0",
-"modelo": "MOTOROLA G77 ESMERALDA XT2621 256GB",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LA LIBERTAD",
 "codigoSap": "TMGPEAP17256AZS0",
 "modelo": "IPHONE 17 AZUL MG6L4BE/A 256GB",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LA LIBERTAD",
-"codigoSap": "TMGPEOP00A6XGRS0",
-"modelo": "OPPO A6X GRIS 256GB 5G",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LA LIBERTAD",
-"codigoSap": "TMGPEZTNAIR5DOSC",
-"modelo": "ZTE NUBIA AIR DORADO 512GB 5G C/C",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LA LIBERTAD",
-"codigoSap": "TSPE4128234R8102",
-"modelo": "USIM 4G 128K 2/3/4FF R8",
 "estado": "DISPONIBLE"
 },
 {
@@ -1783,14 +1735,14 @@
 },
 {
 "zona": "LA LIBERTAD",
-"codigoSap": "TMGPESAA5762AZS0",
-"modelo": "SAMSUNG GXY A57 AZUL SM-A576B 256G 5G",
+"codigoSap": "TSPE4128234R8102",
+"modelo": "USIM 4G 128K 2/3/4FF R8",
 "estado": "DISPONIBLE"
 },
 {
 "zona": "LA LIBERTAD",
-"codigoSap": "TMGPEHNX7E2LNES0",
-"modelo": "HONOR X7E NEGRO LAB-LX3 256GB LTE",
+"codigoSap": "TMGPEZTNAIR5DOSC",
+"modelo": "ZTE NUBIA AIR DORADO 512GB 5G C/C",
 "estado": "DISPONIBLE"
 },
 {
@@ -1801,20 +1753,26 @@
 },
 {
 "zona": "LA LIBERTAD",
+"codigoSap": "TMGPEHNX7E2LNES0",
+"modelo": "HONOR X7E NEGRO LAB-LX3 256GB LTE",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LA LIBERTAD",
 "codigoSap": "TMGPEOP00A6XMOS0",
 "modelo": "OPPO A6X MORADO 256GB 5G",
 "estado": "ULTIMAS UNIDADES"
 },
 {
 "zona": "LA LIBERTAD",
-"codigoSap": "TMGPEOP000A5BLS0",
-"modelo": "OPPO A5 BLANCO 256GB",
+"codigoSap": "TMGPEHN600S2PLSP",
+"modelo": "HONOR 600 SMART PLATA 256GB 5G C/PACK",
 "estado": "ULTIMAS UNIDADES"
 },
 {
 "zona": "LA LIBERTAD",
-"codigoSap": "TMGPESAS947BNES0",
-"modelo": "SAMSUNG GXY S26 PLUS NEGRO 256GB S947 5G",
+"codigoSap": "TMGPEAP17256BLS0",
+"modelo": "IPHONE 17 BLANCO MG6K4BE/A 256GB",
 "estado": "ULTIMAS UNIDADES"
 },
 {
@@ -1831,14 +1789,14 @@
 },
 {
 "zona": "LA LIBERTAD",
-"codigoSap": "TMGPEHNMGC8LNES0",
-"modelo": "HONOR MAGIC 8 LITE NEGRO 512GB 5G",
+"codigoSap": "TMGPEOP000A5BLS0",
+"modelo": "OPPO A5 BLANCO 256GB",
 "estado": "ULTIMAS UNIDADES"
 },
 {
 "zona": "LA LIBERTAD",
-"codigoSap": "TMGPEMOG17L1ARS0",
-"modelo": "MOTOROLA G17 ARANDANO XT2623 128GB",
+"codigoSap": "TMGPESAS947BNES0",
+"modelo": "SAMSUNG GXY S26 PLUS NEGRO 256GB S947 5G",
 "estado": "ULTIMAS UNIDADES"
 },
 {
@@ -1849,20 +1807,38 @@
 },
 {
 "zona": "LA LIBERTAD",
-"codigoSap": "TMGPEHNX7E2LNESP",
-"modelo": "HONOR X7E NEGRO LAB-LX3 256GB LTE C/PACK",
+"codigoSap": "TMGPEMOG17L1ARS0",
+"modelo": "MOTOROLA G17 ARANDANO XT2623 128GB",
 "estado": "ULTIMAS UNIDADES"
 },
 {
 "zona": "LA LIBERTAD",
-"codigoSap": "TMGPEAP17256BLS0",
-"modelo": "IPHONE 17 BLANCO MG6K4BE/A 256GB",
+"codigoSap": "TMGPESAA5762AZS0",
+"modelo": "SAMSUNG GXY A57 AZUL SM-A576B 256G 5G",
+"estado": "ULTIMAS UNIDADES"
+},
+{
+"zona": "LA LIBERTAD",
+"codigoSap": "TMGPEMO00G77ESS0",
+"modelo": "MOTOROLA G77 ESMERALDA XT2621 256GB",
+"estado": "ULTIMAS UNIDADES"
+},
+{
+"zona": "LA LIBERTAD",
+"codigoSap": "TMGPEZTNV80MNES0",
+"modelo": "ZTE NUBIA V80 MAX NEGRO 256GB",
 "estado": "ULTIMAS UNIDADES"
 },
 {
 "zona": "LA LIBERTAD",
 "codigoSap": "TMGPEZTNAIR5NES0",
 "modelo": "ZTE NUBIA AIR NEGRO 512GB 5G",
+"estado": "ULTIMAS UNIDADES"
+},
+{
+"zona": "LA LIBERTAD",
+"codigoSap": "TMGPEHNX7E2LNESP",
+"modelo": "HONOR X7E NEGRO LAB-LX3 256GB LTE C/PACK",
 "estado": "ULTIMAS UNIDADES"
 },
 {
@@ -1933,32 +1909,14 @@
 },
 {
 "zona": "LAMBAYEQUE",
-"codigoSap": "TMGPESAA1761NES0",
-"modelo": "SAMSUNG GXY A17 NEGRO SM-A176B 128GB 5G",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LAMBAYEQUE",
-"codigoSap": "TMGPEXIREN15NES0",
-"modelo": "XIAOMI REDMI NOTE 15 NEGRO 256GB LTE",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LAMBAYEQUE",
 "codigoSap": "TMGPEMOED70FAZS0",
 "modelo": "MOTOROLA EDGE 70 FUSION 256G AZUL",
 "estado": "DISPONIBLE"
 },
 {
 "zona": "LAMBAYEQUE",
-"codigoSap": "TMGPEXIRA71PAZS0",
-"modelo": "XIAOMI REDMI A7 PRO AZUL 128GB",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LAMBAYEQUE",
-"codigoSap": "TMGPEXIRA71PNES0",
-"modelo": "XIAOMI REDMI A7 PRO NEGRO 128GB",
+"codigoSap": "TMGPESAA1761NES0",
+"modelo": "SAMSUNG GXY A17 NEGRO SM-A176B 128GB 5G",
 "estado": "DISPONIBLE"
 },
 {
@@ -1969,8 +1927,14 @@
 },
 {
 "zona": "LAMBAYEQUE",
-"codigoSap": "TMGPEXIR15P5TIS0",
-"modelo": "XIAOMI REDMI NOTE 15 PRO TITANIO 512 5G",
+"codigoSap": "TMGPEXIRA71PNES0",
+"modelo": "XIAOMI REDMI A7 PRO NEGRO 128GB",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LAMBAYEQUE",
+"codigoSap": "TMGPEXIRA71PAZS0",
+"modelo": "XIAOMI REDMI A7 PRO AZUL 128GB",
 "estado": "DISPONIBLE"
 },
 {
@@ -1981,8 +1945,14 @@
 },
 {
 "zona": "LAMBAYEQUE",
-"codigoSap": "TMGPEAP15128NES0",
-"modelo": "IPHONE 15 NEGRO MTP03BE/A 128GB",
+"codigoSap": "TMGPEXIR15P5TIS0",
+"modelo": "XIAOMI REDMI NOTE 15 PRO TITANIO 512 5G",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LAMBAYEQUE",
+"codigoSap": "TMGPEXIREN15NES0",
+"modelo": "XIAOMI REDMI NOTE 15 NEGRO 256GB LTE",
 "estado": "DISPONIBLE"
 },
 {
@@ -1993,26 +1963,14 @@
 },
 {
 "zona": "LAMBAYEQUE",
+"codigoSap": "TMGPEAP15128NES0",
+"modelo": "IPHONE 15 NEGRO MTP03BE/A 128GB",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LAMBAYEQUE",
 "codigoSap": "TMGPEHNMGC8LNESP",
 "modelo": "HONOR MAGIC 8 LITE NEGRO 512GB 5G C/P",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LAMBAYEQUE",
-"codigoSap": "TMGPEXIREN15MOS0",
-"modelo": "XIAOMI REDMI NOTE 15 MORADO 256GB LTE",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LAMBAYEQUE",
-"codigoSap": "TMGPEZTA57P1NES0",
-"modelo": "ZTE BLADE A57 PRO NEGRO 128GB",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LAMBAYEQUE",
-"codigoSap": "TMGPEHNX7E2LNESP",
-"modelo": "HONOR X7E NEGRO LAB-LX3 256GB LTE C/PACK",
 "estado": "DISPONIBLE"
 },
 {
@@ -2029,20 +1987,26 @@
 },
 {
 "zona": "LAMBAYEQUE",
+"codigoSap": "TMGPEZTA57P1NES0",
+"modelo": "ZTE BLADE A57 PRO NEGRO 128GB",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LAMBAYEQUE",
+"codigoSap": "TMGPEXIREN15MOS0",
+"modelo": "XIAOMI REDMI NOTE 15 MORADO 256GB LTE",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LAMBAYEQUE",
 "codigoSap": "TMGPEXIR15PPNES0",
 "modelo": "XIAOMI REDMI NOTE 15 PRO+ NEGRO 512GB",
 "estado": "DISPONIBLE"
 },
 {
 "zona": "LAMBAYEQUE",
-"codigoSap": "TMGPESAA0751NES0",
-"modelo": "SAMSUNG GXY A07 NEGRO SM-A075M 128GB",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LAMBAYEQUE",
-"codigoSap": "TMGPESAA3762GRS0",
-"modelo": "SAMSUNG GXY A37 GRIS SM-A376B 256GB 5G",
+"codigoSap": "TMGPEHNX7E2LNESP",
+"modelo": "HONOR X7E NEGRO LAB-LX3 256GB LTE C/PACK",
 "estado": "DISPONIBLE"
 },
 {
@@ -2053,14 +2017,14 @@
 },
 {
 "zona": "LAMBAYEQUE",
-"codigoSap": "TMGPEMOG17L1ARS0",
-"modelo": "MOTOROLA G17 ARANDANO XT2623 128GB",
+"codigoSap": "TMGPEXIR15P5NES0",
+"modelo": "XIAOMI REDMI NOTE 15 PRO NEGRO 512 5G",
 "estado": "DISPONIBLE"
 },
 {
 "zona": "LAMBAYEQUE",
-"codigoSap": "TMGPEXIR15P5NES0",
-"modelo": "XIAOMI REDMI NOTE 15 PRO NEGRO 512 5G",
+"codigoSap": "TMGPESAA3762GRS0",
+"modelo": "SAMSUNG GXY A37 GRIS SM-A376B 256GB 5G",
 "estado": "DISPONIBLE"
 },
 {
@@ -2071,8 +2035,14 @@
 },
 {
 "zona": "LAMBAYEQUE",
-"codigoSap": "TMGPEHNMGC8LNES0",
-"modelo": "HONOR MAGIC 8 LITE NEGRO 512GB 5G",
+"codigoSap": "TMGPEMOG17L1ARS0",
+"modelo": "MOTOROLA G17 ARANDANO XT2623 128GB",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LAMBAYEQUE",
+"codigoSap": "TMGPESAA0751NES0",
+"modelo": "SAMSUNG GXY A07 NEGRO SM-A075M 128GB",
 "estado": "DISPONIBLE"
 },
 {
@@ -2107,8 +2077,20 @@
 },
 {
 "zona": "LAMBAYEQUE",
+"codigoSap": "TMGPESAS942BNES0",
+"modelo": "SAMSUNG GXY S26 NEGRO 256GB SMS942 5G",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LAMBAYEQUE",
 "codigoSap": "TMGPEHNX7E2LNES0",
 "modelo": "HONOR X7E NEGRO LAB-LX3 256GB LTE",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "LAMBAYEQUE",
+"codigoSap": "TMGPEZTNAIR5DOSP",
+"modelo": "ZTE NUBIA AIR DORADO 512GB 5G C/P",
 "estado": "DISPONIBLE"
 },
 {
@@ -2137,32 +2119,14 @@
 },
 {
 "zona": "LAMBAYEQUE",
-"codigoSap": "TMGPEHN00X5DPLS0",
-"modelo": "HONOR X5D PLATA NAA-LX3 128GB",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LAMBAYEQUE",
-"codigoSap": "TMGPESAS942BNES0",
-"modelo": "SAMSUNG GXY S26 NEGRO 256GB SMS942 5G",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LAMBAYEQUE",
 "codigoSap": "TMGPEZTNPV80BLS0",
 "modelo": "CAMP-ZTE NUBIA V80 PRO BLANCO 256GB",
 "estado": "DISPONIBLE"
 },
 {
 "zona": "LAMBAYEQUE",
-"codigoSap": "TMGPEZTNAIR5DOSP",
-"modelo": "ZTE NUBIA AIR DORADO 512GB 5G C/P",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "LAMBAYEQUE",
-"codigoSap": "TMGPEAP17256BLS0",
-"modelo": "IPHONE 17 BLANCO MG6K4BE/A 256GB",
+"codigoSap": "TMGPEAP17256NES0",
+"modelo": "IPHONE 17 NEGRO MG6J4BE/A 256GB",
 "estado": "ULTIMAS UNIDADES"
 },
 {
@@ -2173,8 +2137,8 @@
 },
 {
 "zona": "LAMBAYEQUE",
-"codigoSap": "TMGPEAP17256NES0",
-"modelo": "IPHONE 17 NEGRO MG6J4BE/A 256GB",
+"codigoSap": "TMGPESAS947BNES0",
+"modelo": "SAMSUNG GXY S26 PLUS NEGRO 256GB S947 5G",
 "estado": "ULTIMAS UNIDADES"
 },
 {
@@ -2191,50 +2155,26 @@
 },
 {
 "zona": "LAMBAYEQUE",
-"codigoSap": "TMGPEMOT2621NES0",
-"modelo": "MOTOROLA G67 GRIS XT2621 256GB",
-"estado": "ULTIMAS UNIDADES"
-},
-{
-"zona": "LAMBAYEQUE",
-"codigoSap": "TMGPESAS947BNES0",
-"modelo": "SAMSUNG GXY S26 PLUS NEGRO 256GB S947 5G",
-"estado": "ULTIMAS UNIDADES"
-},
-{
-"zona": "LAMBAYEQUE",
-"codigoSap": "TMGPEHNX6EL2NESP",
-"modelo": "HONOR X6E NEGRO LBU-LX3 256GB C/PACK",
-"estado": "ULTIMAS UNIDADES"
-},
-{
-"zona": "LAMBAYEQUE",
 "codigoSap": "TMGPEZTNAIR5NES0",
 "modelo": "ZTE NUBIA AIR NEGRO 512GB 5G",
 "estado": "ULTIMAS UNIDADES"
 },
 {
 "zona": "LAMBAYEQUE",
+"codigoSap": "TMGPEMOT2621NES0",
+"modelo": "MOTOROLA G67 GRIS XT2621 256GB",
+"estado": "ULTIMAS UNIDADES"
+},
+{
+"zona": "LAMBAYEQUE",
+"codigoSap": "TMGPEAP17256BLS0",
+"modelo": "IPHONE 17 BLANCO MG6K4BE/A 256GB",
+"estado": "ULTIMAS UNIDADES"
+},
+{
+"zona": "LAMBAYEQUE",
 "codigoSap": "TMGPEMO00G77NES0",
 "modelo": "MOTOROLA G77 NEGRO XT2621 256GB",
-"estado": "ULTIMAS UNIDADES"
-},
-{
-"zona": "LAMBAYEQUE",
-"codigoSap": "TMGPEOPA6PRORSSD",
-"modelo": "OPPO A6 PRO ROSADO 256GB 5G C/CAMP",
-"estado": "ULTIMAS UNIDADES"
-},
-{
-"zona": "LAMBAYEQUE",
-"codigoSap": "TMGPEOPA6PROAZSD",
-"modelo": "OPPO A6 PRO AZUL 256GB 5G C/CAMP",
-"estado": "ULTIMAS UNIDADES"
-},
-{
-"zona": "LAMBAYEQUE",
-"codigoSap": "TMGPEAPAIRE2AZS0",
-"modelo": "IPHONE AIR AZUL MG2P4BE/A 256GB ESIM",
 "estado": "ULTIMAS UNIDADES"
 },
 {
@@ -2251,6 +2191,18 @@
 },
 {
 "zona": "LAMBAYEQUE",
+"codigoSap": "TMGPEOPA6PRORSSD",
+"modelo": "OPPO A6 PRO ROSADO 256GB 5G C/CAMP",
+"estado": "ULTIMAS UNIDADES"
+},
+{
+"zona": "LAMBAYEQUE",
+"codigoSap": "TMGPEOPA6PROAZSD",
+"modelo": "OPPO A6 PRO AZUL 256GB 5G C/CAMP",
+"estado": "ULTIMAS UNIDADES"
+},
+{
+"zona": "LAMBAYEQUE",
 "codigoSap": "TMGPEAP17256VES0",
 "modelo": "IPHONE 17 VERDE MG6N4BE/A 256GB",
 "estado": "ULTIMAS UNIDADES"
@@ -2263,14 +2215,20 @@
 },
 {
 "zona": "LAMBAYEQUE",
-"codigoSap": "TMGPEMOG17L1RSS0",
-"modelo": "MOTOROLA G17 ROSA XT2623 128GB",
+"codigoSap": "TMGPEAPAIRE2AZS0",
+"modelo": "IPHONE AIR AZUL MG2P4BE/A 256GB ESIM",
 "estado": "ULTIMAS UNIDADES"
 },
 {
 "zona": "LAMBAYEQUE",
 "codigoSap": "TMGPEAP17PM2AZS0",
 "modelo": "IPHONE 17 PRO MAX AZUL MFYP4BE/A 256GB",
+"estado": "ULTIMAS UNIDADES"
+},
+{
+"zona": "LAMBAYEQUE",
+"codigoSap": "TMGPEMOG17L1RSS0",
+"modelo": "MOTOROLA G17 ROSA XT2623 128GB",
 "estado": "ULTIMAS UNIDADES"
 },
 {
@@ -2287,6 +2245,12 @@
 },
 {
 "zona": "LAMBAYEQUE",
+"codigoSap": "TMGPEHN00X5DPLS0",
+"modelo": "HONOR X5D PLATA NAA-LX3 128GB",
+"estado": "ULTIMAS UNIDADES"
+},
+{
+"zona": "LAMBAYEQUE",
 "codigoSap": "TMGPEOP000A5VES0",
 "modelo": "OPPO A5 VERDE 256GB",
 "estado": "ULTIMAS UNIDADES"
@@ -2299,14 +2263,14 @@
 },
 {
 "zona": "PIURA",
-"codigoSap": "TMGPESAA1651NES0",
-"modelo": "SAMSUNG GXY A16 NEGRO SM-A165M 128GB LTE",
+"codigoSap": "TMGPESAA0751NES0",
+"modelo": "SAMSUNG GXY A07 NEGRO SM-A075M 128GB",
 "estado": "DISPONIBLE"
 },
 {
 "zona": "PIURA",
-"codigoSap": "TMGPESAA0751NES0",
-"modelo": "SAMSUNG GXY A07 NEGRO SM-A075M 128GB",
+"codigoSap": "TMGPESAA1651NES0",
+"modelo": "SAMSUNG GXY A16 NEGRO SM-A165M 128GB LTE",
 "estado": "DISPONIBLE"
 },
 {
@@ -2353,20 +2317,14 @@
 },
 {
 "zona": "PIURA",
-"codigoSap": "TMGPEMOG17L1ARS0",
-"modelo": "MOTOROLA G17 ARANDANO XT2623 128GB",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "PIURA",
 "codigoSap": "TMGPEHNX7E2LNES0",
 "modelo": "HONOR X7E NEGRO LAB-LX3 256GB LTE",
 "estado": "DISPONIBLE"
 },
 {
 "zona": "PIURA",
-"codigoSap": "TMGPEXIREN15MOS0",
-"modelo": "XIAOMI REDMI NOTE 15 MORADO 256GB LTE",
+"codigoSap": "TMGPEMOG17L1ARS0",
+"modelo": "MOTOROLA G17 ARANDANO XT2623 128GB",
 "estado": "DISPONIBLE"
 },
 {
@@ -2383,6 +2341,12 @@
 },
 {
 "zona": "PIURA",
+"codigoSap": "TMGPESAA27S2NES0",
+"modelo": "SAMSUNG GXY A27 NEGRO SM-A276B 256GB 5G",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "PIURA",
 "codigoSap": "TMGPEAP15128NES0",
 "modelo": "IPHONE 15 NEGRO MTP03BE/A 128GB",
 "estado": "DISPONIBLE"
@@ -2395,20 +2359,20 @@
 },
 {
 "zona": "PIURA",
-"codigoSap": "TMGPESAA27S2NES0",
-"modelo": "SAMSUNG GXY A27 NEGRO SM-A276B 256GB 5G",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "PIURA",
-"codigoSap": "TMGPEHN600S2PLSP",
-"modelo": "HONOR 600 SMART PLATA 256GB 5G C/PACK",
+"codigoSap": "TMGPEXIREN15MOS0",
+"modelo": "XIAOMI REDMI NOTE 15 MORADO 256GB LTE",
 "estado": "DISPONIBLE"
 },
 {
 "zona": "PIURA",
 "codigoSap": "TMGPEMO00G77NES0",
 "modelo": "MOTOROLA G77 NEGRO XT2621 256GB",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "PIURA",
+"codigoSap": "TMGPEZTA57P1NES0",
+"modelo": "ZTE BLADE A57 PRO NEGRO 128GB",
 "estado": "DISPONIBLE"
 },
 {
@@ -2425,14 +2389,8 @@
 },
 {
 "zona": "PIURA",
-"codigoSap": "TMGPEZTA57P1NES0",
-"modelo": "ZTE BLADE A57 PRO NEGRO 128GB",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "PIURA",
-"codigoSap": "TMGPEZTA3664VES0",
-"modelo": "ZTE BLADE A36 64GB VERDE",
+"codigoSap": "TMGPEHN600S2PLSP",
+"modelo": "HONOR 600 SMART PLATA 256GB 5G C/PACK",
 "estado": "DISPONIBLE"
 },
 {
@@ -2443,14 +2401,8 @@
 },
 {
 "zona": "PIURA",
-"codigoSap": "TMGPESAA27S2RSS0",
-"modelo": "SAMSUNG GXY A27 ROSA SM-A276B 256GB 5G",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "PIURA",
-"codigoSap": "TMGPEOPA6PROAZSD",
-"modelo": "OPPO A6 PRO AZUL 256GB 5G C/CAMP",
+"codigoSap": "TMGPEOP00A6XGRS0",
+"modelo": "OPPO A6X GRIS 256GB 5G",
 "estado": "DISPONIBLE"
 },
 {
@@ -2461,50 +2413,8 @@
 },
 {
 "zona": "PIURA",
-"codigoSap": "TMGPEXIR15P5NES0",
-"modelo": "XIAOMI REDMI NOTE 15 PRO NEGRO 512 5G",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "PIURA",
-"codigoSap": "TMGPEMO00G77ESS0",
-"modelo": "MOTOROLA G77 ESMERALDA XT2621 256GB",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "PIURA",
-"codigoSap": "TMGPEHNMGC8LNES0",
-"modelo": "HONOR MAGIC 8 LITE NEGRO 512GB 5G",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "PIURA",
-"codigoSap": "TMGPEHNMGC8LNESP",
-"modelo": "HONOR MAGIC 8 LITE NEGRO 512GB 5G C/P",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "PIURA",
-"codigoSap": "TMGPEZTNV80PNES0",
-"modelo": "ZTE NUBIA V80 PRO NEGRO 256GB",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "PIURA",
-"codigoSap": "TMGPEOP00A6XGRS0",
-"modelo": "OPPO A6X GRIS 256GB 5G",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "PIURA",
-"codigoSap": "TMGPEZTNAIR5DOSC",
-"modelo": "ZTE NUBIA AIR DORADO 512GB 5G C/C",
-"estado": "DISPONIBLE"
-},
-{
-"zona": "PIURA",
-"codigoSap": "TMGPEXIR15P5TIS0",
-"modelo": "XIAOMI REDMI NOTE 15 PRO TITANIO 512 5G",
+"codigoSap": "TMGPEOPA6PROAZSD",
+"modelo": "OPPO A6 PRO AZUL 256GB 5G C/CAMP",
 "estado": "DISPONIBLE"
 },
 {
@@ -2515,26 +2425,62 @@
 },
 {
 "zona": "PIURA",
+"codigoSap": "TMGPEZTA3664VES0",
+"modelo": "ZTE BLADE A36 64GB VERDE",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "PIURA",
+"codigoSap": "TMGPEMO00G77ESS0",
+"modelo": "MOTOROLA G77 ESMERALDA XT2621 256GB",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "PIURA",
+"codigoSap": "TMGPEZTNV80PNES0",
+"modelo": "ZTE NUBIA V80 PRO NEGRO 256GB",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "PIURA",
+"codigoSap": "TMGPEZTNAIR5DOSC",
+"modelo": "ZTE NUBIA AIR DORADO 512GB 5G C/C",
+"estado": "DISPONIBLE"
+},
+{
+"zona": "PIURA",
 "codigoSap": "TMGPESAS947BNES0",
 "modelo": "SAMSUNG GXY S26 PLUS NEGRO 256GB S947 5G",
 "estado": "ULTIMAS UNIDADES"
 },
 {
 "zona": "PIURA",
+"codigoSap": "TMGPESAA27S2RSS0",
+"modelo": "SAMSUNG GXY A27 ROSA SM-A276B 256GB 5G",
+"estado": "ULTIMAS UNIDADES"
+},
+{
+"zona": "PIURA",
+"codigoSap": "TMGPEZTNAIR5NESP",
+"modelo": "ZTE NUBIA AIR NEGRO 512GB 5G C/P",
+"estado": "ULTIMAS UNIDADES"
+},
+{
+"zona": "PIURA",
+"codigoSap": "TMGPEAP17256AZS0",
+"modelo": "IPHONE 17 AZUL MG6L4BE/A 256GB",
+"estado": "ULTIMAS UNIDADES"
+},
+{
+"zona": "PIURA",
+"codigoSap": "TMGPEZTNAIR5DOSP",
+"modelo": "ZTE NUBIA AIR DORADO 512GB 5G C/P",
+"estado": "ULTIMAS UNIDADES"
+},
+{
+"zona": "PIURA",
 "codigoSap": "TMGPEAP17256BLS0",
 "modelo": "IPHONE 17 BLANCO MG6K4BE/A 256GB",
-"estado": "ULTIMAS UNIDADES"
-},
-{
-"zona": "PIURA",
-"codigoSap": "TMGPEAP17256NES0",
-"modelo": "IPHONE 17 NEGRO MG6J4BE/A 256GB",
-"estado": "ULTIMAS UNIDADES"
-},
-{
-"zona": "PIURA",
-"codigoSap": "TMGPEZTNV80MPLS0",
-"modelo": "ZTE NUBIA V80 MAX PLATA 256GB",
 "estado": "ULTIMAS UNIDADES"
 },
 {
@@ -2551,32 +2497,14 @@
 },
 {
 "zona": "PIURA",
-"codigoSap": "TMGPEMOED70FAZS0",
-"modelo": "MOTOROLA EDGE 70 FUSION 256G AZUL",
+"codigoSap": "TMGPEHNMGC8LNESP",
+"modelo": "HONOR MAGIC 8 LITE NEGRO 512GB 5G C/P",
 "estado": "ULTIMAS UNIDADES"
 },
 {
 "zona": "PIURA",
-"codigoSap": "TMGPEHN0600LGRSP",
-"modelo": "HONOR 600E GRIS LNA-NX3 512GB C/PACK",
-"estado": "ULTIMAS UNIDADES"
-},
-{
-"zona": "PIURA",
-"codigoSap": "TMGPEZTNAIR5NESP",
-"modelo": "ZTE NUBIA AIR NEGRO 512GB 5G C/P",
-"estado": "ULTIMAS UNIDADES"
-},
-{
-"zona": "PIURA",
-"codigoSap": "TMGPEZTNAIR5DOSP",
-"modelo": "ZTE NUBIA AIR DORADO 512GB 5G C/P",
-"estado": "ULTIMAS UNIDADES"
-},
-{
-"zona": "PIURA",
-"codigoSap": "TMGPEAP17256AZS0",
-"modelo": "IPHONE 17 AZUL MG6L4BE/A 256GB",
+"codigoSap": "TMGPEZTNV80MPLS0",
+"modelo": "ZTE NUBIA V80 MAX PLATA 256GB",
 "estado": "ULTIMAS UNIDADES"
 },
 {
@@ -2587,8 +2515,32 @@
 },
 {
 "zona": "PIURA",
-"codigoSap": "TMGPEZTNPV80BLS0",
-"modelo": "CAMP-ZTE NUBIA V80 PRO BLANCO 256GB",
+"codigoSap": "TMGPEHN0600LGRSP",
+"modelo": "HONOR 600E GRIS LNA-NX3 512GB C/PACK",
+"estado": "ULTIMAS UNIDADES"
+},
+{
+"zona": "PIURA",
+"codigoSap": "TMGPEXIR15P5TIS0",
+"modelo": "XIAOMI REDMI NOTE 15 PRO TITANIO 512 5G",
+"estado": "ULTIMAS UNIDADES"
+},
+{
+"zona": "PIURA",
+"codigoSap": "TMGPEMOED70FAZS0",
+"modelo": "MOTOROLA EDGE 70 FUSION 256G AZUL",
+"estado": "ULTIMAS UNIDADES"
+},
+{
+"zona": "PIURA",
+"codigoSap": "TMGPEAP17256NES0",
+"modelo": "IPHONE 17 NEGRO MG6J4BE/A 256GB",
+"estado": "ULTIMAS UNIDADES"
+},
+{
+"zona": "PIURA",
+"codigoSap": "TMGPEHN00X5DPLS0",
+"modelo": "HONOR X5D PLATA NAA-LX3 128GB",
 "estado": "ULTIMAS UNIDADES"
 },
 {
@@ -2599,14 +2551,20 @@
 },
 {
 "zona": "PIURA",
-"codigoSap": "TMGPESAS948BNES0",
-"modelo": "SAMSUNG GXY S26 ULTRA NGRO 256G S948B 5G",
+"codigoSap": "TMGPEZTNPV80BLS0",
+"modelo": "CAMP-ZTE NUBIA V80 PRO BLANCO 256GB",
 "estado": "ULTIMAS UNIDADES"
 },
 {
 "zona": "PIURA",
 "codigoSap": "TMGPESAS942BNES0",
 "modelo": "SAMSUNG GXY S26 NEGRO 256GB SMS942 5G",
+"estado": "ULTIMAS UNIDADES"
+},
+{
+"zona": "PIURA",
+"codigoSap": "TMGPESAS948BNES0",
+"modelo": "SAMSUNG GXY S26 ULTRA NGRO 256G S948B 5G",
 "estado": "ULTIMAS UNIDADES"
 }
 ]

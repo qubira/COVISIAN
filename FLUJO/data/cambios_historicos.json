@@ -1,172 +1,44 @@
 {
-"fechaAnterior": "2026-09-01T03:35:47",
-"fechaActual": "2026-09-01T09:53:15",
+"fechaAnterior": "2026-09-01T09:53:16",
+"fechaActual": "2026-09-01T10:15:04",
 "agregados": [
 {
-"zona": "AREQUIPA",
-"modelo": "XIAOMI REDMI NOTE 15 PRO+ NEGRO 512GB"
-},
-{
-"zona": "LA LIBERTAD",
-"modelo": "HONOR 600 SMART PLATA 256GB 5G"
-},
-{
-"zona": "LA LIBERTAD",
-"modelo": "SAMSUNG GXY A07 NEGRO SM-A075M 128GB"
-},
-{
-"zona": "LA LIBERTAD",
-"modelo": "SAMSUNG GXY A57 AZUL SM-A576B 256G 5G"
-},
-{
-"zona": "LA LIBERTAD",
-"modelo": "XIAOMI REDMI NOTE 15 PRO+ NEGRO 512GB"
-},
-{
-"zona": "LAMBAYEQUE",
-"modelo": "XIAOMI REDMI NOTE 15 PRO+ NEGRO 512GB"
-},
-{
-"zona": "LIMA",
-"modelo": "XIAOMI REDMI NOTE 15 PRO+ NEGRO 512GB"
-},
-{
-"zona": "PROVINCIAS",
-"modelo": "SAMSUNG GXY A27 NEGRO SMA276B 256GB C/P"
-},
-{
-"zona": "PROVINCIAS",
-"modelo": "XIAOMI REDMI NOTE 15 PRO+ NEGRO 512GB"
+"zona": "PIURA",
+"modelo": "HONOR X5D PLATA NAA-LX3 128GB"
 }
 ],
 "eliminados": [
 {
 "zona": "AREQUIPA",
-"modelo": "HONOR X5D NEGRO NAA-LX3 128GB"
+"modelo": "HONOR MAGIC 8 LITE NEGRO 512GB 5G"
 },
 {
 "zona": "LA LIBERTAD",
-"modelo": "CAMP-ZTE NUBIA V80 PRO BLANCO 256GB"
-},
-{
-"zona": "LA LIBERTAD",
-"modelo": "HONOR X5D NEGRO NAA-LX3 128GB"
-},
-{
-"zona": "LA LIBERTAD",
-"modelo": "IPHONE 17 PRO PLATA MG8G4BE/A 256GB"
-},
-{
-"zona": "LA LIBERTAD",
-"modelo": "MOTOROLA G54 NEGRO XT2343 256GB"
-},
-{
-"zona": "LA LIBERTAD",
-"modelo": "XIAOMI REDMI NOTE 15 PRO+ CAFE 512G C/C"
+"modelo": "HONOR MAGIC 8 LITE NEGRO 512GB 5G"
 },
 {
 "zona": "LAMBAYEQUE",
-"modelo": "XIAOMI REDMI NOTE 15 PRO+ CAFE 512G C/C"
+"modelo": "HONOR MAGIC 8 LITE NEGRO 512GB 5G"
 },
 {
-"zona": "LIMA",
-"modelo": "HONOR X5D NEGRO NAA-LX3 128GB"
-},
-{
-"zona": "LIMA",
-"modelo": "MOTOROLA G54 NEGRO XT2343 256GB"
-},
-{
-"zona": "LIMA",
-"modelo": "XIAOMI REDMI NOTE 15 PRO+ CAFE 512G C/C"
-},
-{
-"zona": "PIURA",
-"modelo": "HONOR X5D NEGRO NAA-LX3 128GB"
-},
-{
-"zona": "PIURA",
-"modelo": "HONOR X5D PLATA NAA-LX3 128GB"
-},
-{
-"zona": "PIURA",
-"modelo": "XIAOMI REDMI NOTE 15 PRO+ CAFE 512G C/C"
-},
-{
-"zona": "PROVINCIAS",
-"modelo": "CAMP-IPHONE 16 NEGRO MYE73BE/A 128GB"
-},
-{
-"zona": "PROVINCIAS",
-"modelo": "HONOR 600 SMART PLATA 256GB 5G"
-},
-{
-"zona": "PROVINCIAS",
-"modelo": "HONOR 600E VERDE LNA-NX3 512GB C/PACK"
-},
-{
-"zona": "PROVINCIAS",
-"modelo": "HONOR X5D NEGRO NAA-LX3 128GB"
-},
-{
-"zona": "PROVINCIAS",
+"zona": "LAMBAYEQUE",
 "modelo": "HONOR X6E NEGRO LBU-LX3 256GB C/PACK"
 },
 {
-"zona": "PROVINCIAS",
-"modelo": "IPHONE 17 AZUL MG6L4BE/A 256GB"
+"zona": "LIMA",
+"modelo": "HONOR MAGIC 8 LITE NEGRO 512GB 5G"
+},
+{
+"zona": "PIURA",
+"modelo": "HONOR MAGIC 8 LITE NEGRO 512GB 5G"
+},
+{
+"zona": "PIURA",
+"modelo": "XIAOMI REDMI NOTE 15 PRO NEGRO 512 5G"
 },
 {
 "zona": "PROVINCIAS",
-"modelo": "IPHONE 17 PRO MAX AZUL MFYP4BE/A 256GB"
-},
-{
-"zona": "PROVINCIAS",
-"modelo": "IPHONE 17 PRO PLATA MG8G4BE/A 256GB"
-},
-{
-"zona": "PROVINCIAS",
-"modelo": "MOTOROLA G77 ESMERALDA XT2621 256GB"
-},
-{
-"zona": "PROVINCIAS",
-"modelo": "MOTOROLA G77 NEGRO XT2621 256GB"
-},
-{
-"zona": "PROVINCIAS",
-"modelo": "OPPO A6K MORADO 256GB LTE"
-},
-{
-"zona": "PROVINCIAS",
-"modelo": "OPPO RENO 16 BLANCO 256GB 5G C/PROM"
-},
-{
-"zona": "PROVINCIAS",
-"modelo": "OPPO RENO 16F BLANCO 256GB 5G C/PROM"
-},
-{
-"zona": "PROVINCIAS",
-"modelo": "SAMSUNG GXY A27 NEGRO SM-A276B 256GB 5G"
-},
-{
-"zona": "PROVINCIAS",
-"modelo": "SAMSUNG GXY A57 AZUL SM-A576B 256G 5G"
-},
-{
-"zona": "PROVINCIAS",
-"modelo": "XIAOMI REDMI NOTE 15 PRO AZUL 512 5G"
-},
-{
-"zona": "PROVINCIAS",
-"modelo": "XIAOMI REDMI NOTE 15 PRO TITANIO 512 5G"
-},
-{
-"zona": "PROVINCIAS",
-"modelo": "XIAOMI REDMI NOTE 15 PRO+ AZUL 512G C/C"
-},
-{
-"zona": "PROVINCIAS",
-"modelo": "XIAOMI REDMI NOTE 15 PRO+ AZUL 512GB"
+"modelo": "HONOR MAGIC 8 LITE NEGRO 512GB 5G"
 }
 ]
 }
