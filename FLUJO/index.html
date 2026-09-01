@@ -497,6 +497,7 @@
   }
   .btn-colapsar-encabezado:hover{ background:var(--azul-bg); border-color:var(--azul); }
   .encabezado-sticky.colapsado .resumen-tabla{ display:none; }
+  .encabezado-sticky.botones-minimizados .botones-encabezado{ display:none; }
 
   .modal-caja.modal-ancho{ max-width:640px; }
   .modal-caja.modal-planes{ max-width:820px; }
@@ -1100,6 +1101,7 @@ if (location.protocol === "file:") {
     </div>
     <div style="display:flex; gap:5px; flex-shrink:0;">
       <button type="button" class="btn-tema" id="btnTema" title="Cambiar a modo oscuro">🌙</button>
+      <button type="button" class="btn-colapsar-encabezado" id="btnMinimizarBotonesEncabezado" title="Ocultar accesos rápidos">▲</button>
       <button type="button" class="btn-colapsar-encabezado" id="btnColapsarEncabezado" title="Ocultar datos del cliente">▲</button>
     </div>
   </div>
@@ -2685,7 +2687,7 @@ if (location.protocol === "file:") {
     // demas — sin esto, un solo error silencioso podia dejar sin usar, por ejemplo, el
     // buscador de EQUIPO (initAutocomplete) si algo antes de el en la lista fallaba.
     [initCodFinanciamiento, initPlanes, initAutocomplete, initComparar, initStockNacional,
-      initCosto, initSimuladorEquipos, initVerDetalleEquipo, initZoomEquipo, initExpandirMapas, initFiltroAvanzadoDireccion, initAgendarLlamada, initCasosAgendados, initWhatsapp, initAutoguardado, initEncabezadoColapsable, initCambiosHistoricos, initInvalidarValidacionesContrato, initContabilizarTiempo, initResaltarCamposLlenos, initMayusculasAutomaticas, initTipoSubtipoEncabezado, initPlanEncabezado, initCodFinanciamientoEncabezado, initConvenioEncabezado, initColorEquipoAutocomplete, initSuprimirAutocompletePago, precargarCicloContrato, actualizarContrato, actualizarSimuladorFinanciamiento, actualizarEncabezado].forEach(function(fn){
+      initCosto, initSimuladorEquipos, initVerDetalleEquipo, initZoomEquipo, initExpandirMapas, initFiltroAvanzadoDireccion, initAgendarLlamada, initCasosAgendados, initWhatsapp, initAutoguardado, initEncabezadoColapsable, initBotonesEncabezadoMinimizable, initCambiosHistoricos, initInvalidarValidacionesContrato, initContabilizarTiempo, initResaltarCamposLlenos, initMayusculasAutomaticas, initTipoSubtipoEncabezado, initPlanEncabezado, initCodFinanciamientoEncabezado, initConvenioEncabezado, initColorEquipoAutocomplete, initSuprimirAutocompletePago, precargarCicloContrato, actualizarContrato, actualizarSimuladorFinanciamiento, actualizarEncabezado].forEach(function(fn){
       try{ fn(); }catch(err){ console.error("Fallo al inicializar " + fn.name + ":", err); }
     });
   }).catch(function(err){
@@ -3776,6 +3778,29 @@ if (location.protocol === "file:") {
       var colapsado = !cont.classList.contains("colapsado");
       aplicar(colapsado);
       try{ localStorage.setItem(LS_ENCABEZADO_COLAPSADO, colapsado ? "1" : "0"); }catch(err){}
+    });
+  }
+
+  // Mismo patron, para minimizar la fila de accesos rapidos (Agendar/Casos/Planes/.../
+  // WhatsApp) por separado de la tabla de datos del cliente — el boton para volver a
+  // mostrarla se queda afuera de .botones-encabezado (junto a btnTema), asi sigue
+  // accesible aunque la fila este oculta.
+  var LS_BOTONES_ENCABEZADO_MINIMIZADOS = "botones_encabezado_minimizados";
+  function initBotonesEncabezadoMinimizable(){
+    var cont = $("encabezadoSticky");
+    var btn = $("btnMinimizarBotonesEncabezado");
+    function aplicar(minimizado){
+      cont.classList.toggle("botones-minimizados", minimizado);
+      btn.textContent = minimizado ? "▼" : "▲";
+      btn.title = minimizado ? "Mostrar accesos rápidos" : "Ocultar accesos rápidos";
+    }
+    var guardado = false;
+    try{ guardado = localStorage.getItem(LS_BOTONES_ENCABEZADO_MINIMIZADOS) === "1"; }catch(err){}
+    aplicar(guardado);
+    btn.addEventListener("click", function(){
+      var minimizado = !cont.classList.contains("botones-minimizados");
+      aplicar(minimizado);
+      try{ localStorage.setItem(LS_BOTONES_ENCABEZADO_MINIMIZADOS, minimizado ? "1" : "0"); }catch(err){}
     });
   }
 
