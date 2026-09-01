@@ -1136,6 +1136,12 @@ if (location.protocol === "file:") {
         <option value="">-</option>
       </select>
     </div>
+    <div class="rlabel">CONVENIO</div>
+    <div class="rvalor rvalor-select">
+      <select id="rConvenio">
+        <option value="">-</option>
+      </select>
+    </div>
     <div class="rlabel" id="rLabelExpress">EXPRESS</div><div class="rvalor" id="rExpress">-</div>
     <div class="rlabel" id="rLabelRegular">REGULAR</div><div class="rvalor" id="rRegular">-</div>
     <div class="rlabel rfull">UBICACIÓN</div>
@@ -2679,7 +2685,7 @@ if (location.protocol === "file:") {
     // demas — sin esto, un solo error silencioso podia dejar sin usar, por ejemplo, el
     // buscador de EQUIPO (initAutocomplete) si algo antes de el en la lista fallaba.
     [initCodFinanciamiento, initPlanes, initAutocomplete, initComparar, initStockNacional,
-      initCosto, initSimuladorEquipos, initVerDetalleEquipo, initZoomEquipo, initExpandirMapas, initFiltroAvanzadoDireccion, initAgendarLlamada, initCasosAgendados, initWhatsapp, initAutoguardado, initEncabezadoColapsable, initCambiosHistoricos, initInvalidarValidacionesContrato, initContabilizarTiempo, initResaltarCamposLlenos, initMayusculasAutomaticas, initTipoSubtipoEncabezado, initPlanEncabezado, initCodFinanciamientoEncabezado, initColorEquipoAutocomplete, initSuprimirAutocompletePago, precargarCicloContrato, actualizarContrato, actualizarSimuladorFinanciamiento, actualizarEncabezado].forEach(function(fn){
+      initCosto, initSimuladorEquipos, initVerDetalleEquipo, initZoomEquipo, initExpandirMapas, initFiltroAvanzadoDireccion, initAgendarLlamada, initCasosAgendados, initWhatsapp, initAutoguardado, initEncabezadoColapsable, initCambiosHistoricos, initInvalidarValidacionesContrato, initContabilizarTiempo, initResaltarCamposLlenos, initMayusculasAutomaticas, initTipoSubtipoEncabezado, initPlanEncabezado, initCodFinanciamientoEncabezado, initConvenioEncabezado, initColorEquipoAutocomplete, initSuprimirAutocompletePago, precargarCicloContrato, actualizarContrato, actualizarSimuladorFinanciamiento, actualizarEncabezado].forEach(function(fn){
       try{ fn(); }catch(err){ console.error("Fallo al inicializar " + fn.name + ":", err); }
     });
   }).catch(function(err){
@@ -2977,15 +2983,40 @@ if (location.protocol === "file:") {
   // Dibuja los radios de CONVENIO segun lo que traiga la hoja para este TIPO|SUBTIPO. Si solo
   // hay un convenio posible (ej. ALTA solo tiene CONTADO) no tiene sentido mostrar un radio de
   // una sola opcion, asi que se oculta el campo entero y se usa ese unico valor directamente.
+  // Refleja los mismos convenios (y el elegido) en el select #rConvenio del encabezado fijo,
+  // para poder cambiar CONTADO/FINANCIADO desde arriba sin bajar hasta COSTO — ver
+  // initConvenioEncabezado() para el sentido inverso (encabezado -> radios de abajo). Se
+  // deshabilita cuando hay 0 o 1 convenio posible (nada que elegir todavia, o el TIPO/SUBTIPO
+  // solo admite uno, ej. ALTA=CONTADO), igual que el campo de abajo se oculta en ese caso.
+  function sincronizarConvenioEncabezado(convenios, actual){
+    var sel = $("rConvenio");
+    var opciones = [""].concat(convenios);
+    var yaCorrecto = sel.options.length === opciones.length &&
+      Array.prototype.every.call(sel.options, function(o, i){ return o.value === opciones[i]; });
+    if (!yaCorrecto){
+      sel.innerHTML = "";
+      opciones.forEach(function(c){
+        var opt = document.createElement("option");
+        opt.value = c;
+        opt.textContent = c ? (ETIQUETAS_CONVENIO[c] || c) : "-";
+        sel.appendChild(opt);
+      });
+    }
+    sel.value = actual || "";
+    sel.disabled = convenios.length <= 1;
+  }
+
   function poblarRadiosConvenio(convenios, seleccionado){
     var cont = $("radiosConvenio");
     if (convenios.length <= 1){
       cont.innerHTML = "";
       $("campoConvenio").classList.add("oculto");
+      sincronizarConvenioEncabezado(convenios, convenios[0] || "");
       return convenios[0] || "";
     }
     $("campoConvenio").classList.remove("oculto");
     var actual = convenios.indexOf(seleccionado) !== -1 ? seleccionado : convenios[0];
+    sincronizarConvenioEncabezado(convenios, actual);
 
     // Evita reconstruir el DOM si ya esta correcto: esta funcion se llama en casi cada
     // input del formulario, y si un click sobre uno de estos radios coincide con el "blur"
@@ -6853,6 +6884,24 @@ if (location.protocol === "file:") {
 
     $("rTipo").value = $("tipo").value;
     poblarSubtipoEncabezado($("tipo").value, $("subtipo").value);
+  }
+
+  // CONVENIO (CONTADO/FINANCIADO) tambien editable desde el encabezado fijo (#rConvenio),
+  // para no tener que bajar hasta COSTO y volver a subir solo para cambiarlo. Las opciones
+  // de #rConvenio ya se mantienen sincronizadas desde poblarRadiosConvenio() (sentido
+  // abajo -> arriba); aca solo falta el sentido arriba -> abajo: marcar el radio real que
+  // corresponda y dispararle "change" para que actualizarCosto() corra igual que si el
+  // agente hubiera clickeado el radio de abajo a mano.
+  function initConvenioEncabezado(){
+    $("rConvenio").addEventListener("change", function(){
+      var valor = $("rConvenio").value;
+      if (!valor) return;
+      var radio = document.querySelector('input[name=convenioCosto][value="' + valor + '"]');
+      if (!radio) return;
+      radio.checked = true;
+      radio.dispatchEvent(new Event("change", { bubbles: true }));
+      guardarProgreso();
+    });
   }
 
   // CÓDIGO DE FINANCIAMIENTO tambien editable desde el encabezado fijo (#rCodFin),
