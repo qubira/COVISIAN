@@ -6017,10 +6017,13 @@ if (location.protocol === "file:") {
         coincidencias.slice(0, 30).forEach(function(nombre){
           var div = document.createElement("div");
           div.className = "opcion";
-          if (esEquipoPhoenix(nombre)){
-            div.className += " opcion-phoenix";
-            div.innerHTML = "⭐ " + nombre + ' <span class="badge-phoenix">PHOENIX</span>' +
-              (esEquipoBancos(nombre) ? ' <span class="badge-bancos">BANCOS</span>' : "");
+          var esPh = esEquipoPhoenix(nombre);
+          var esBc = esEquipoBancos(nombre);
+          if (esPh || esBc){
+            if (esPh) div.className += " opcion-phoenix";
+            div.innerHTML = (esPh ? "⭐ " : "") + nombre +
+              (esPh ? ' <span class="badge-phoenix">PHOENIX</span>' : "") +
+              (esBc ? ' <span class="badge-bancos">BANCOS</span>' : "");
           } else {
             div.textContent = nombre;
           }
@@ -6203,10 +6206,13 @@ if (location.protocol === "file:") {
     nombres.slice(0, 200).forEach(function(nombre){
       var div = document.createElement("div");
       div.className = "simulador-lista-item";
-      if (esEquipoPhoenix(nombre)){
-        div.className += " opcion-phoenix";
-        div.innerHTML = "⭐ " + nombre + ' <span class="badge-phoenix">PHOENIX</span>' +
-          (esEquipoBancos(nombre) ? ' <span class="badge-bancos">BANCOS</span>' : "");
+      var esPh = esEquipoPhoenix(nombre);
+      var esBc = esEquipoBancos(nombre);
+      if (esPh || esBc){
+        if (esPh) div.className += " opcion-phoenix";
+        div.innerHTML = (esPh ? "⭐ " : "") + nombre +
+          (esPh ? ' <span class="badge-phoenix">PHOENIX</span>' : "") +
+          (esBc ? ' <span class="badge-bancos">BANCOS</span>' : "");
       } else {
         div.textContent = nombre;
       }
