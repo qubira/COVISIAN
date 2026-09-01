@@ -14,6 +14,8 @@
  *  - "editarAgenda"        : boton "Editar" de un caso agendado -> actualiza fecha/hora/
  *                            celReferencia/equipoInteres/tipoCliente/observacion de la fila
  *                            con ese id en "Llamadas Agendadas" (no toca "estado").
+ *  - "eliminarAgenda"      : boton "Eliminar" de un caso agendado -> borra esa fila de
+ *                            "Llamadas Agendadas".
  *  - "tipificacion"        : boton "Tipificar" -> agrega una fila (mismas columnas que
  *                            "Ventas") en la hoja con el nombre exacto de datos.tipificacion
  *                            ("Contacto efectivo" / "No contacto efectivo" / "No contacto"),
@@ -174,6 +176,8 @@ function doPost(e) {
       actualizarEstadoAgenda(datos.id, datos.estado);
     } else if (accion === "editarAgenda") {
       editarAgenda(datos);
+    } else if (accion === "eliminarAgenda") {
+      eliminarAgenda(datos.id);
     } else if (accion === "tipificacion") {
       guardarTipificacion(datos);
     } else {
@@ -264,6 +268,16 @@ function editarAgenda(datos) {
     var col = COLUMNAS_AGENDA.indexOf(campo) + 1;
     hoja.getRange(filaExistente, col).setValue(datos[campo]);
   });
+}
+
+// Boton "Eliminar" de un caso agendado: borra la fila definitivamente (mismo patron que
+// cerrarBorrador con HOJA_BORRADORES).
+function eliminarAgenda(id) {
+  var hoja = obtenerOCrearHoja(HOJA_AGENDA, COLUMNAS_AGENDA);
+  var filaExistente = buscarFilaPorDraftId(hoja, id);
+  if (filaExistente > 0) {
+    hoja.deleteRow(filaExistente);
+  }
 }
 
 // Se llama cuando el agente presiona GUARDAR: la llamada ya no esta "en progreso".

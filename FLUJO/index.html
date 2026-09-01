@@ -714,6 +714,7 @@
   .btn-tomar-caso-item{ border:1.5px solid var(--azul); background:var(--azul-bg); color:var(--azul); }
   .btn-editar-caso-item{ border:1.5px solid #b08900; background:#fff7e0; color:#8a6a00; }
   .btn-concretado-item{ border:1.5px solid var(--verde); background:#e6f7ec; color:var(--verde); }
+  .btn-eliminar-caso-item{ border:1.5px solid var(--rojo); background:#fdecea; color:var(--rojo); }
   .caso-agendado-estado{
     display:inline-block; font-size:10px; font-weight:800; padding:2px 8px; border-radius:10px; margin-left:6px;
   }
@@ -930,12 +931,14 @@
   body.tema-oscuro .btn-no-quiere,
   body.tema-oscuro .tabla-ciclos tr.fila-cambio-eliminado td,
   body.tema-oscuro .rlabel-inactivo, body.tema-oscuro .rvalor-inactivo,
-  body.tema-oscuro .caso-agendado-estado.vencido{
+  body.tema-oscuro .caso-agendado-estado.vencido,
+  body.tema-oscuro .btn-eliminar-caso-item{
     background:#3a1512 !important; border-color:#7a3a34;
   }
   body.tema-oscuro .banner-sin-drive,
   body.tema-oscuro .entrega-aviso-prohibido,
   body.tema-oscuro .color-chip.sin-cobertura-express,
+  body.tema-oscuro .btn-eliminar-caso-item,
   body.tema-oscuro .tabla-ciclos tr.fila-cambio-eliminado td{
     color:#ff8a7d;
   }
@@ -8126,10 +8129,12 @@ if (location.protocol === "file:") {
           '<button type="button" class="btn-tomar-caso-item">▶ Tomar caso</button>' +
           '<button type="button" class="btn-editar-caso-item">✏️ Editar</button>' +
           '<button type="button" class="btn-concretado-item">✔ Concretado</button>' +
+          '<button type="button" class="btn-eliminar-caso-item">🗑️ Eliminar</button>' +
         "</div>";
       div.querySelector(".btn-tomar-caso-item").addEventListener("click", function(){ tomarCaso(c.id); });
       div.querySelector(".btn-editar-caso-item").addEventListener("click", function(){ abrirEdicionCaso(c.id); });
       div.querySelector(".btn-concretado-item").addEventListener("click", function(){ marcarConcretado(c.id); });
+      div.querySelector(".btn-eliminar-caso-item").addEventListener("click", function(){ eliminarCaso(c.id); });
       cont.appendChild(div);
     });
   }
@@ -8185,6 +8190,31 @@ if (location.protocol === "file:") {
     actualizarBadgeCasos();
     renderAlertasCasos();
     renderModalCasos();
+  }
+
+  // Borra la cita definitivamente (localStorage + fila del Sheet via "eliminarAgenda", mismo
+  // patron que cerrarBorrador). A diferencia de "Concretado" (que solo cambia el estado y
+  // conserva el historial), esto es irreversible -- pide confirmacion.
+  function eliminarCaso(id){
+    var citas = cargarCitasLocal();
+    var cita = citas.find(function(c){ return c.id === id; });
+    if (!cita) return;
+    confirmarPersonalizado("¿Eliminar esta cita agendada? Esta acción no se puede deshacer.", function(){
+      citas = citas.filter(function(c){ return c.id !== id; });
+      guardarCitasLocal(citas);
+      if (tieneScriptConfigurado()){
+        fetch(GOOGLE_SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({ accion: "eliminarAgenda", id: id })
+        }).catch(function(){});
+      }
+      if (casoAgendadoActivoId === id) casoAgendadoActivoId = null;
+      actualizarBadgeCasos();
+      renderAlertasCasos();
+      renderModalCasos();
+    });
   }
 
   function initCasosAgendados(){
