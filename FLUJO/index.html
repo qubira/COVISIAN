@@ -7198,6 +7198,10 @@ if (location.protocol === "file:") {
   var LS_TIEMPO_PERMANENTE_INICIO = "tiempo_permanente_inicio_ts";
   var tiempoPermanenteInicioTs = null;
   var tiempoPermanenteIntervaloInterno = null;
+  // mismo aviso "se pone en rojo" que ya tenia el Tiempo de gestion, cada TIEMPO_GESTION_UMBRAL_MS
+  // (5 min) — reutiliza esa misma constante y la clase CSS .alerta-tipificar, con su propio
+  // contador de umbral (independiente del de gestion) para no interferir entre los dos.
+  var tiempoPermanenteUltimoUmbral = 0;
 
   function formatearHoraDeTs(ts){
     var d = new Date(ts);
@@ -7207,6 +7211,7 @@ if (location.protocol === "file:") {
   function iniciarTiempoPermanenteSiHaceFalta(){
     if (tiempoPermanenteInicioTs) return;
     tiempoPermanenteInicioTs = Date.now();
+    tiempoPermanenteUltimoUmbral = 0;
     try{ localStorage.setItem(LS_TIEMPO_PERMANENTE_INICIO, String(tiempoPermanenteInicioTs)); }catch(err){}
   }
 
@@ -7215,7 +7220,19 @@ if (location.protocol === "file:") {
       $("panelTiempoPermanenteValor").textContent = "00:00";
       return;
     }
-    $("panelTiempoPermanenteValor").textContent = formatearTranscurridoGestion(Date.now() - tiempoPermanenteInicioTs);
+    var transcurrido = Date.now() - tiempoPermanenteInicioTs;
+    $("panelTiempoPermanenteValor").textContent = formatearTranscurridoGestion(transcurrido);
+
+    var umbralActual = Math.floor(transcurrido / TIEMPO_GESTION_UMBRAL_MS);
+    if (umbralActual > tiempoPermanenteUltimoUmbral){
+      tiempoPermanenteUltimoUmbral = umbralActual;
+      var valorEl = $("panelTiempoPermanenteValor");
+      valorEl.classList.add("alerta-tipificar");
+      clearTimeout(actualizarPanelTiempoPermanente._t);
+      actualizarPanelTiempoPermanente._t = setTimeout(function(){
+        valorEl.classList.remove("alerta-tipificar");
+      }, TIEMPO_GESTION_ALERTA_DURACION_MS);
+    }
   }
 
   function mostrarPanelTiempoPermanente(){
@@ -7232,6 +7249,8 @@ if (location.protocol === "file:") {
   function reiniciarTiempoPermanente(){
     confirmarPersonalizado("¿Reiniciar el contabilizador permanente a 00:00? El tiempo acumulado se perderá.", function(){
       tiempoPermanenteInicioTs = Date.now();
+      tiempoPermanenteUltimoUmbral = 0;
+      $("panelTiempoPermanenteValor").classList.remove("alerta-tipificar");
       try{ localStorage.setItem(LS_TIEMPO_PERMANENTE_INICIO, String(tiempoPermanenteInicioTs)); }catch(err){}
       $("panelTiempoPermanenteNota").textContent = "Inicio: " + formatearHoraDeTs(tiempoPermanenteInicioTs);
       actualizarPanelTiempoPermanente();
