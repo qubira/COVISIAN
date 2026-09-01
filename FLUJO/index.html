@@ -1494,6 +1494,7 @@ if (location.protocol === "file:") {
       <div class="fila-input-btn">
         <input type="text" id="simEquipoBuscar" placeholder="Ingrese el Equipo a Buscar">
         <button type="button" class="btn-mini" id="btnSimFiltrarTodo">Filtrar todo</button>
+        <button type="button" class="btn-mini" id="btnSimLimpiarFiltro">🧹 Limpiar filtro</button>
       </div>
       <div class="fila" style="margin-top:8px;">
         <div class="campo">
@@ -3984,11 +3985,7 @@ if (location.protocol === "file:") {
     ultimoSimuladorBase = null;
     $("codFinanciamiento").value = "1";
     $("rCodFin").value = "1";
-    $("simEquipoBuscar").value = "";
-    ["filtroSimRam", "filtroSimRom", "filtroSimGama", "filtroSimCamara", "filtroSimBateria",
-      "filtroSimPantalla", "filtroSimMarca", "filtroSimProcesador"].forEach(function(id){ $(id).value = ""; });
-    actualizarOpcionesFiltrosSimulador();
-    $("simListaEquipos").innerHTML = '<div class="simulador-lista-vacio">Escriba, filtre, o presione "Filtrar todo" para ver el catálogo completo.</div>';
+    limpiarFiltrosSimulador();
     $("simTipoAlta").value = "";
     $("simPlanDestino").value = "";
     $("resumenEntregaInfo").innerHTML = "";
@@ -6187,6 +6184,15 @@ if (location.protocol === "file:") {
     });
   }
 
+  // Vacia el cuadro de busqueda y los 8 filtros del Simulador, y vuelve la lista al mensaje
+  // inicial — reutilizada por "🧹 Limpiar filtro" y por limpiarFormularioCompleto().
+  function limpiarFiltrosSimulador(){
+    $("simEquipoBuscar").value = "";
+    CAMPOS_FILTRO_SIMULADOR.forEach(function(f){ $(f.id).value = ""; });
+    actualizarOpcionesFiltrosSimulador();
+    $("simListaEquipos").innerHTML = '<div class="simulador-lista-vacio">Escriba, filtre, o presione "Filtrar todo" para ver el catálogo completo.</div>';
+  }
+
   function initSimuladorEquipos(){
     actualizarOpcionesFiltrosSimulador();
     // ojo: nunca pasar buscarEquiposSimulador directo como handler de evento — el navegador
@@ -6194,6 +6200,7 @@ if (location.protocol === "file:") {
     // rompe el chequeo de "sin filtro" (paso ya vivido y corregido aca mismo).
     $("simEquipoBuscar").addEventListener("input", function(){ buscarEquiposSimulador(); });
     $("btnSimFiltrarTodo").addEventListener("click", function(){ buscarEquiposSimulador(true); });
+    $("btnSimLimpiarFiltro").addEventListener("click", limpiarFiltrosSimulador);
     ["filtroSimRam", "filtroSimRom", "filtroSimGama", "filtroSimCamara", "filtroSimBateria",
       "filtroSimPantalla", "filtroSimMarca", "filtroSimProcesador"].forEach(function(id){
       $(id).addEventListener("change", function(){ buscarEquiposSimulador(); });
