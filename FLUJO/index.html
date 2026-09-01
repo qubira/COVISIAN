@@ -5964,6 +5964,15 @@ if (location.protocol === "file:") {
     var tipo = $("tipo").value;
     var subtipo = $("subtipo").value;
     if (!tipo || !subtipo) return true;
+    // ESPECIALES|PHOENIX (Contado): la etiqueta "canal" ESP_POST_PHOENIX de BaseTerminales
+    // (52 equipos) NO coincide con quien de verdad tiene precio en la hoja ESP_PHOENIX (30
+    // equipos, confirmado identico a DATA.precios["ESPECIALES|PHOENIX (Contado)"].CONTADO) —
+    // la lista mostraba equipos "elegibles" por canal que despues fallaban en COSTO con
+    // "No se encontró el equipo en la tabla de precios de CONTADO". Se filtra por la tabla
+    // de precios real (esEquipoPhoenix) en vez de la etiqueta generica, para este caso puntual.
+    if (tipo === "ESPECIALES" && subtipo === "PHOENIX (Contado)"){
+      return esEquipoPhoenix(nombreEquipo);
+    }
     var regla = REGLA_TIPO_SUBTIPO[tipo + "|" + subtipo];
     if (!regla) return true; // sin regla conocida (ALTA/PREPAGO/OTROS): no se filtra
     var meta = DATA.equiposTipoventa[nombreEquipo];
