@@ -712,6 +712,7 @@
     border-radius:6px; padding:6px 10px; font-size:11.5px; font-weight:700; cursor:pointer;
   }
   .btn-tomar-caso-item{ border:1.5px solid var(--azul); background:var(--azul-bg); color:var(--azul); }
+  .btn-editar-caso-item{ border:1.5px solid #b08900; background:#fff7e0; color:#8a6a00; }
   .btn-concretado-item{ border:1.5px solid var(--verde); background:#e6f7ec; color:var(--verde); }
   .caso-agendado-estado{
     display:inline-block; font-size:10px; font-weight:800; padding:2px 8px; border-radius:10px; margin-left:6px;
@@ -949,6 +950,7 @@
   body.tema-oscuro .btn-negativa,
   body.tema-oscuro .panel-negativa,
   body.tema-oscuro .caso-agendado-estado.pendiente,
+  body.tema-oscuro .btn-editar-caso-item,
   body.tema-oscuro .color-chip.ultimas{
     background:#3a2f0a; border-color:#7a641f; color:#e8c14d;
   }
@@ -1977,7 +1979,7 @@ if (location.protocol === "file:") {
 <div class="modal-overlay oculto" id="modalAgendar">
   <div class="modal-caja">
     <div class="modal-header">
-      <b>Agendar llamada</b>
+      <b id="tituloModalAgendar">Agendar llamada</b>
       <button type="button" class="btn-cerrar" id="btnCerrarAgendar">✕</button>
     </div>
     <div class="campo">
@@ -7572,6 +7574,9 @@ if (location.protocol === "file:") {
     });
 
     $("btnAgendarLlamada").addEventListener("click", function(){
+      editandoCasoId = null;
+      $("tituloModalAgendar").textContent = "Agendar llamada";
+      $("btnGuardarAgenda").textContent = "Guardar cita";
       $("agendaFecha").value = new Date().toISOString().slice(0, 10);
       $("agendaHora").value = "";
       // se pre-llenan con lo que ya haya en el formulario en curso (numero de referencia y
@@ -7591,6 +7596,7 @@ if (location.protocol === "file:") {
 
     $("btnCerrarAgendar").addEventListener("click", function(){
       $("modalAgendar").classList.add("oculto");
+      editandoCasoId = null;
     });
 
     $("btnGuardarAgenda").addEventListener("click", function(){
@@ -7601,6 +7607,11 @@ if (location.protocol === "file:") {
 
       if (!fecha || !hora || !equipoInteres){
         mostrarAvisoPersonalizado("Complete fecha, hora y celular de interés.");
+        return;
+      }
+
+      if (editandoCasoId){
+        guardarEdicionCaso(editandoCasoId, fecha, hora, equipoInteres, observacion);
         return;
       }
 
@@ -7651,6 +7662,80 @@ if (location.protocol === "file:") {
 
       setTimeout(function(){ $("modalAgendar").classList.add("oculto"); }, 1200);
     });
+  }
+
+  // Precarga modalAgendar con los datos de una cita ya existente y lo deja en "modo edicion"
+  // (editandoCasoId != null) — solo toca fecha/hora/numero/equipo/tipoCliente/observacion,
+  // los mismos campos que ya eran editables al crear la cita; "cel" (ANI de la llamada
+  // original) y "nombre" no se tocan porque nunca fueron campos del modal, ni siquiera al
+  // agendar por primera vez.
+  function abrirEdicionCaso(id){
+    var citas = cargarCitasLocal();
+    var cita = citas.find(function(c){ return c.id === id; });
+    if (!cita) return;
+    editandoCasoId = id;
+    $("tituloModalAgendar").textContent = "Editar cita agendada";
+    $("btnGuardarAgenda").textContent = "Guardar cambios";
+    $("agendaFecha").value = cita.fecha || "";
+    $("agendaHora").value = cita.hora || "";
+    $("agendaNumero").value = cita.celReferencia || "";
+    $("agendaEquipo").value = cita.equipoInteres || "";
+    $("agendaTipoCliente").value = cita.tipoCliente || "";
+    $("agendaObservacion").value = cita.observacion || "";
+    $("mensajeAgenda").innerHTML = "";
+    $("modalCasosAgendados").classList.add("oculto");
+    $("modalAgendar").classList.remove("oculto");
+    $("agendaFecha").focus();
+  }
+
+  // Actualiza (no crea) la cita: se guarda local y se sincroniza al Sheet via "editarAgenda"
+  // (accion nueva, upsert por id igual que actualizarEstadoAgenda) — no toca "estado" para no
+  // pisar un TOMADO/CONCRETADO que otro navegador ya haya sincronizado mientras se editaba.
+  function guardarEdicionCaso(id, fecha, hora, equipoInteres, observacion){
+    var citas = cargarCitasLocal();
+    var cita = citas.find(function(c){ return c.id === id; });
+    if (!cita){
+      mostrarAvisoPersonalizado("Esta cita ya no existe (pudo haber sido eliminada).");
+      $("modalAgendar").classList.add("oculto");
+      editandoCasoId = null;
+      return;
+    }
+    cita.fecha = fecha;
+    cita.hora = hora;
+    cita.celReferencia = $("agendaNumero").value.trim();
+    cita.equipoInteres = equipoInteres;
+    cita.tipoCliente = $("agendaTipoCliente").value;
+    cita.observacion = observacion;
+    guardarCitasLocal(citas);
+
+    var mensaje = $("mensajeAgenda");
+    if (tieneScriptConfigurado()){
+      fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({
+          accion: "editarAgenda", id: id, fecha: fecha, hora: hora,
+          celReferencia: cita.celReferencia, equipoInteres: equipoInteres,
+          tipoCliente: cita.tipoCliente, observacion: observacion
+        })
+      }).then(function(){
+        mensaje.innerHTML = '<div class="aviso ok">Cambios guardados y enviados a Drive.</div>';
+      }).catch(function(){
+        mensaje.innerHTML = '<div class="aviso err">Cambios guardados localmente (sin conexión a Drive).</div>';
+      });
+    } else {
+      mensaje.innerHTML = '<div class="aviso info">Cambios guardados localmente (Drive no configurado).</div>';
+    }
+
+    actualizarBadgeCasos();
+    renderAlertasCasos();
+    renderModalCasos();
+    editandoCasoId = null;
+    setTimeout(function(){
+      $("modalAgendar").classList.add("oculto");
+      $("modalCasosAgendados").classList.remove("oculto");
+    }, 900);
   }
 
   // ============ WHATSAPP (enlace wa.me, sin API paga) ============
@@ -7815,6 +7900,11 @@ if (location.protocol === "file:") {
   // CONCRETADO solo si la llamada termina (cerrarLlamada), y se limpia en cualquier reset
   // del formulario para no arrastrar el vinculo a la siguiente llamada.
   var casoAgendadoActivoId = null;
+
+  // editandoCasoId: si no es null, modalAgendar esta en modo "editar" (btnGuardarAgenda
+  // actualiza esta cita en vez de crear una nueva). Se limpia al cerrar el modal o al abrirlo
+  // desde "Agendar llamada" (creacion normal), asi no se arrastra entre usos del modal.
+  var editandoCasoId = null;
 
   function cargarCitasLocal(){
     try{ return JSON.parse(localStorage.getItem("llamadas_agendadas") || "[]"); }
@@ -8034,9 +8124,11 @@ if (location.protocol === "file:") {
         "</div>" +
         '<div class="caso-agendado-acciones">' +
           '<button type="button" class="btn-tomar-caso-item">▶ Tomar caso</button>' +
+          '<button type="button" class="btn-editar-caso-item">✏️ Editar</button>' +
           '<button type="button" class="btn-concretado-item">✔ Concretado</button>' +
         "</div>";
       div.querySelector(".btn-tomar-caso-item").addEventListener("click", function(){ tomarCaso(c.id); });
+      div.querySelector(".btn-editar-caso-item").addEventListener("click", function(){ abrirEdicionCaso(c.id); });
       div.querySelector(".btn-concretado-item").addEventListener("click", function(){ marcarConcretado(c.id); });
       cont.appendChild(div);
     });

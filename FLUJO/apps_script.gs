@@ -11,6 +11,9 @@
  *  - "agendarLlamada"       : boton "Agendar llamada" -> agrega una fila en "Llamadas Agendadas".
  *  - "actualizarEstadoAgenda": botones "Tomar caso"/"Concretado" -> actualiza la columna
  *                            "estado" de la fila con ese id en "Llamadas Agendadas".
+ *  - "editarAgenda"        : boton "Editar" de un caso agendado -> actualiza fecha/hora/
+ *                            celReferencia/equipoInteres/tipoCliente/observacion de la fila
+ *                            con ese id en "Llamadas Agendadas" (no toca "estado").
  *  - "tipificacion"        : boton "Tipificar" -> agrega una fila (mismas columnas que
  *                            "Ventas") en la hoja con el nombre exacto de datos.tipificacion
  *                            ("Contacto efectivo" / "No contacto efectivo" / "No contacto"),
@@ -169,6 +172,8 @@ function doPost(e) {
       guardarAgenda(datos);
     } else if (accion === "actualizarEstadoAgenda") {
       actualizarEstadoAgenda(datos.id, datos.estado);
+    } else if (accion === "editarAgenda") {
+      editarAgenda(datos);
     } else if (accion === "tipificacion") {
       guardarTipificacion(datos);
     } else {
@@ -242,6 +247,23 @@ function actualizarEstadoAgenda(id, estado) {
     var colEstado = COLUMNAS_AGENDA.indexOf("estado") + 1;
     hoja.getRange(filaExistente, colEstado).setValue(estado);
   }
+}
+
+// Boton "Editar" de un caso agendado: actualiza solo los campos que el modal "Agendar
+// llamada" deja editar (los mismos de siempre, tanto al crear como al editar). No toca
+// "estado" a proposito -- si otro navegador ya tomo/concreto el caso mientras este se
+// editaba, esa columna no debe revertirse con el valor local (posiblemente desactualizado)
+// que traiga el POST.
+var CAMPOS_EDITABLES_AGENDA = ["fecha", "hora", "celReferencia", "equipoInteres", "tipoCliente", "observacion"];
+function editarAgenda(datos) {
+  var hoja = obtenerOCrearHoja(HOJA_AGENDA, COLUMNAS_AGENDA);
+  var filaExistente = buscarFilaPorDraftId(hoja, datos.id);
+  if (filaExistente <= 0) return;
+  CAMPOS_EDITABLES_AGENDA.forEach(function (campo) {
+    if (datos[campo] === undefined) return;
+    var col = COLUMNAS_AGENDA.indexOf(campo) + 1;
+    hoja.getRange(filaExistente, col).setValue(datos[campo]);
+  });
 }
 
 // Se llama cuando el agente presiona GUARDAR: la llamada ya no esta "en progreso".
