@@ -506,6 +506,20 @@ def extract_equipos_phoenix():
     return sorted(bloques[0]["precios"].keys())
 
 
+def extract_equipos_bancos():
+    """
+    Lista de equipos que aparecen en la hoja "MP-Cuotas sin intereses" de Visor.xlsb (mismo
+    origen que la etiqueta TIPO|SUBTIPO "OTROS|BANCOS (Cuotas sin intereses)", bloque 0 =
+    PRECIO_TOTAL). Se usa para resaltar en el buscador de EQUIPO cuales tienen la opcion de
+    pago en cuotas sin intereses vigente, al costado del resaltado Phoenix.
+    """
+    with pyxlsb.open_workbook(VISOR_PATH) as wb:
+        bloques = _leer_bloques_hoja_precios(wb, "MP-Cuotas sin intereses")
+    if not bloques:
+        return []
+    return sorted(bloques[0]["precios"].keys())
+
+
 def extract_cod_financiamiento():
     codes = set()
     sheets = ["ALTA PP y PF", "PORTA_GENERICA", "CAEQ_GENERICA", "MP-Cuotas sin intereses",
@@ -712,6 +726,7 @@ def main():
     precios = extract_precios()
     equipos_imagenes = extract_equipos_imagenes()
     equipos_phoenix = extract_equipos_phoenix()
+    equipos_bancos = extract_equipos_bancos()
 
     with open(OUT_DIR + r"\cobertura.json", "w", encoding="utf-8") as f:
         json.dump(cobertura, f, ensure_ascii=False, indent=0)
@@ -739,6 +754,8 @@ def main():
         json.dump(cambios_historicos, f, ensure_ascii=False, indent=0)
     with open(OUT_DIR + r"\equipos_phoenix.json", "w", encoding="utf-8") as f:
         json.dump(equipos_phoenix, f, ensure_ascii=False, indent=0)
+    with open(OUT_DIR + r"\equipos_bancos.json", "w", encoding="utf-8") as f:
+        json.dump(equipos_bancos, f, ensure_ascii=False, indent=0)
 
     _escribir_meta()
 
@@ -756,6 +773,7 @@ def main():
     print("cambios_historicos:", len(cambios_historicos["agregados"]), "agregados,",
           len(cambios_historicos["eliminados"]), "eliminados desde", cambios_historicos["fechaAnterior"])
     print("equipos_phoenix:", len(equipos_phoenix), "equipos con descuento Phoenix")
+    print("equipos_bancos:", len(equipos_bancos), "equipos con cuotas sin intereses (BANCOS)")
 
 
 if __name__ == "__main__":

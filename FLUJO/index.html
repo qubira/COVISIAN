@@ -108,6 +108,10 @@
     display:inline-block; font-size:9.5px; font-weight:800; letter-spacing:.3px; color:#8a6a00;
     background:#ffe58a; border-radius:8px; padding:1px 6px; margin-left:4px; vertical-align:middle;
   }
+  .badge-bancos{
+    display:inline-block; font-size:9.5px; font-weight:800; letter-spacing:.3px; color:#fff;
+    background:var(--azul); border-radius:8px; padding:1px 6px; margin-left:4px; vertical-align:middle;
+  }
   .autocomplete .opcion small{ display:block; color:var(--gris); font-size:11px; }
 
   .caja-resultado{
@@ -2536,7 +2540,7 @@ if (location.protocol === "file:") {
   // Pega aquí la URL del Web App de Google Apps Script (ver GUIA_APPS_SCRIPT.md)
   var GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzXtTACG2tyOQ675d18Xc5nZDPeUfHGkdnzXcD_pN2HcfQSv55PDHa2P8hgLr3cTcEV/exec";
 
-  var DATA = { cobertura: [], specs: [], equiposPlanes: [], codFinanciamiento: [], stock: [], packs: [], planes: [], equiposTipoventa: {}, precios: {}, objeciones: [], regiones: [], gamaFinanciamiento: {}, equiposImagenes: [], cambiosHistoricos: { agregados: [], eliminados: [] }, equiposPhoenix: [] };
+  var DATA = { cobertura: [], specs: [], equiposPlanes: [], codFinanciamiento: [], stock: [], packs: [], planes: [], equiposTipoventa: {}, precios: {}, objeciones: [], regiones: [], gamaFinanciamiento: {}, equiposImagenes: [], cambiosHistoricos: { agregados: [], eliminados: [] }, equiposPhoenix: [], equiposBancos: [] };
 
   var SUBTIPOS = {
     PREPAGO: ["PREPAGO"],
@@ -2604,7 +2608,8 @@ if (location.protocol === "file:") {
     fetch("data/gama_financiamiento.json").then(function(r){ return r.json(); }),
     fetch("data/equipos_imagenes.json").then(function(r){ return r.json(); }),
     fetch("data/cambios_historicos.json").then(function(r){ return r.json(); }),
-    fetch("data/equipos_phoenix.json").then(function(r){ return r.json(); })
+    fetch("data/equipos_phoenix.json").then(function(r){ return r.json(); }),
+    fetch("data/equipos_bancos.json").then(function(r){ return r.json(); })
   ]).then(function(res){
     DATA.cobertura = res[0];
     DATA.specs = res[1];
@@ -2621,6 +2626,7 @@ if (location.protocol === "file:") {
     DATA.equiposImagenes = res[12];
     DATA.cambiosHistoricos = res[13];
     DATA.equiposPhoenix = res[14];
+    DATA.equiposBancos = res[15];
 
     // Cada init() es independiente: si uno falla (dato raro, etc.) no debe tumbar a los
     // demas — sin esto, un solo error silencioso podia dejar sin usar, por ejemplo, el
@@ -5942,6 +5948,18 @@ if (location.protocol === "file:") {
     return !!EQUIPOS_PHOENIX_NORM[norm(nombreEquipo)];
   }
 
+  // Equipos con cuotas sin intereses vigente (hoja "MP-Cuotas sin intereses" de Visor.xlsb,
+  // ver extract_equipos_bancos()) — se resalta al costado del badge Phoenix para diferenciar
+  // los que tienen ademas esa opcion de pago (un equipo puede tener las dos a la vez).
+  var EQUIPOS_BANCOS_NORM = null;
+  function esEquipoBancos(nombreEquipo){
+    if (!EQUIPOS_BANCOS_NORM){
+      EQUIPOS_BANCOS_NORM = {};
+      (DATA.equiposBancos || []).forEach(function(n){ EQUIPOS_BANCOS_NORM[norm(n)] = true; });
+    }
+    return !!EQUIPOS_BANCOS_NORM[norm(nombreEquipo)];
+  }
+
   function equipoCoincideTipoSubtipo(nombreEquipo){
     var tipo = $("tipo").value;
     var subtipo = $("subtipo").value;
@@ -5992,7 +6010,8 @@ if (location.protocol === "file:") {
           div.className = "opcion";
           if (esEquipoPhoenix(nombre)){
             div.className += " opcion-phoenix";
-            div.innerHTML = "⭐ " + nombre + ' <span class="badge-phoenix">PHOENIX</span>';
+            div.innerHTML = "⭐ " + nombre + ' <span class="badge-phoenix">PHOENIX</span>' +
+              (esEquipoBancos(nombre) ? ' <span class="badge-bancos">BANCOS</span>' : "");
           } else {
             div.textContent = nombre;
           }
@@ -6177,7 +6196,8 @@ if (location.protocol === "file:") {
       div.className = "simulador-lista-item";
       if (esEquipoPhoenix(nombre)){
         div.className += " opcion-phoenix";
-        div.innerHTML = "⭐ " + nombre + ' <span class="badge-phoenix">PHOENIX</span>';
+        div.innerHTML = "⭐ " + nombre + ' <span class="badge-phoenix">PHOENIX</span>' +
+          (esEquipoBancos(nombre) ? ' <span class="badge-bancos">BANCOS</span>' : "");
       } else {
         div.textContent = nombre;
       }
