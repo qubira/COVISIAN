@@ -497,7 +497,11 @@
   }
   .btn-colapsar-encabezado:hover{ background:var(--azul-bg); border-color:var(--azul); }
   .encabezado-sticky.colapsado .resumen-tabla{ display:none; }
-  .encabezado-sticky.botones-minimizados .botones-encabezado{ display:none; }
+  /* Minimizado: no oculta los botones, solo el texto de cada uno (queda solo el icono +
+     el contador si tiene, ej. 🔔6) para que la fila ocupe mucho menos espacio sin perder
+     el acceso a ninguna funcion. */
+  .encabezado-sticky.botones-minimizados .btn-agendar span:not(.badge-casos){ display:none; }
+  .encabezado-sticky.botones-minimizados .btn-agendar{ padding:4px 8px; gap:2px; }
 
   .modal-caja.modal-ancho{ max-width:640px; }
   .modal-caja.modal-planes{ max-width:820px; }
@@ -1101,7 +1105,7 @@ if (location.protocol === "file:") {
     </div>
     <div style="display:flex; gap:5px; flex-shrink:0;">
       <button type="button" class="btn-tema" id="btnTema" title="Cambiar a modo oscuro">🌙</button>
-      <button type="button" class="btn-colapsar-encabezado" id="btnMinimizarBotonesEncabezado" title="Ocultar accesos rápidos">▲</button>
+      <button type="button" class="btn-colapsar-encabezado" id="btnMinimizarBotonesEncabezado" title="Minimizar accesos rápidos (dejar solo los iconos)">▲</button>
       <button type="button" class="btn-colapsar-encabezado" id="btnColapsarEncabezado" title="Ocultar datos del cliente">▲</button>
     </div>
   </div>
@@ -3792,7 +3796,7 @@ if (location.protocol === "file:") {
     function aplicar(minimizado){
       cont.classList.toggle("botones-minimizados", minimizado);
       btn.textContent = minimizado ? "▼" : "▲";
-      btn.title = minimizado ? "Mostrar accesos rápidos" : "Ocultar accesos rápidos";
+      btn.title = minimizado ? "Mostrar el texto de los accesos rápidos" : "Minimizar accesos rápidos (dejar solo los iconos)";
     }
     var guardado = false;
     try{ guardado = localStorage.getItem(LS_BOTONES_ENCABEZADO_MINIMIZADOS) === "1"; }catch(err){}
