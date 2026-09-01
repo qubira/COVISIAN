@@ -3075,6 +3075,13 @@ if (location.protocol === "file:") {
     if (excedeCap && ci2Auto != null){
       $("opcInicialMayor").value = ci2Auto.toFixed(2);
       calcularOpcionInicialMayor();
+    } else {
+      // sin esto, el monto e "Inicial Mayor" auto-calculado de un equipo/plan/cap anterior
+      // se quedaba pegado en pantalla aunque el caso actual ya no lo necesite (cuota
+      // mensual dentro del cap) — la casilla debe quedar vacia y sin recalculo mientras no
+      // aplique la condicion.
+      $("opcInicialMayor").value = "";
+      $("resultadoInicialMayor").innerHTML = "";
     }
   }
 
