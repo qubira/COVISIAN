@@ -2880,12 +2880,28 @@ if (location.protocol === "file:") {
     ultimoAvisoCosto = { texto: texto, tipo: tipoAviso || "info" };
   }
 
-  // Guion de venta para el agente, segun califique CONTADO o FINANCIADO. Solo aplica a
-  // esos dos convenios "genericos" (POSTPAGO ALTA/PORTABILIDAD/CAEQ y ESPECIALES) — no a
-  // BANCOS ni a FINANCIADO_PROPIO de Clientes Black, que tienen su propia mecanica.
-  function pintarGuionCosto(convenioSel, equipo, costo, pagoMensual, infoInicial){
+  // Guion de venta para el agente, segun califique CONTADO o FINANCIADO. Aplica a los
+  // convenios "genericos" (POSTPAGO ALTA/PORTABILIDAD/CAEQ y ESPECIALES) y, con texto propio
+  // via esBancosGuion, a OTROS|BANCOS (Cuotas sin intereses) — ahi el "FINANCIADO" no se
+  // cobra en el recibo Movistar sino en la tarjeta a traves del banco, asi que el texto
+  // generico (que menciona "recibo de Movistar" y desalienta financiar) no aplica. No se usa
+  // para FINANCIADO_PROPIO de Clientes Black, que tiene su propia mecanica.
+  function pintarGuionCosto(convenioSel, equipo, costo, pagoMensual, infoInicial, esBancosGuion){
     var el = $("costoGuion");
-    if (convenioSel === "CONTADO"){
+    if (esBancosGuion && convenioSel === "CONTADO"){
+      el.innerHTML =
+        "<b>SI CALIFICA AL CONTADO (BANCOS):</b><br>" +
+        "¡Te felicito! Puedes adquirir el " + equipo + " al contado por S/ " + costo.toFixed(2) + " con tu tarjeta de " +
+        "débito, Yape o Plin, o en cuotas mensuales sin intereses a través de tu banco (elige FINANCIADO arriba).";
+      el.classList.remove("oculto");
+    } else if (esBancosGuion && convenioSel === "FINANCIADO"){
+      el.innerHTML =
+        "<b>CALIFICA CUOTAS SIN INTERESES (BANCOS):</b><br>" +
+        "¡Te felicito! El <b>" + equipo + "</b> lo puedes pagar en cuotas mensuales sin intereses de <b>S/ " +
+        pagoMensual.toFixed(2) + "</b>, sin cuota inicial. Estas cuotas se cargan directamente en tu tarjeta a través " +
+        "de tu banco, <b>no</b> en tu recibo de Movistar.";
+      el.classList.remove("oculto");
+    } else if (convenioSel === "CONTADO"){
       el.innerHTML =
         "<b>SI CALIFICA AL CONTADO:</b><br>" +
         "¡Te felicito! Calificas AL CONTADO. El " + equipo + " a tan solo S/ " + costo.toFixed(2) +
@@ -3027,8 +3043,13 @@ if (location.protocol === "file:") {
     // pasa, se recalcula sola con la Inicial Mayor exacta que la deja en el tope, y esa pasa
     // a ser la cuota REAL — se sobreescribe ultimoCostoCalculado para que CONTRATO/RESUMEN/
     // GUARDAR usen la cifra corregida en vez de la que excedia el limite.
+    // BANCOS (Cuotas sin intereses) no usa Cap. Financiamiento (ver actualizarCostoInterno) —
+    // seccionScoring queda bloqueada, pero su .value puede seguir teniendo un numero de un
+    // TIPO/SUBTIPO anterior con FINANCIADO real; hay que ignorarlo explicitamente aca para
+    // que no dispare el ajuste automatico con un tope que no le corresponde a este caso.
+    var esBancosSim = ($("tipo").value + "|" + $("subtipo").value) === "OTROS|BANCOS (Cuotas sin intereses)";
     var cap = parseFloat($("capFinanciamiento").value);
-    var excedeCap = !isNaN(cap) && cap > 0 && typeof cuota === "number" && cuota > cap;
+    var excedeCap = !esBancosSim && !isNaN(cap) && cap > 0 && typeof cuota === "number" && cuota > cap;
     var cuotaOriginal = cuota;
     var ci2Auto = null;
 
@@ -3218,7 +3239,15 @@ if (location.protocol === "file:") {
       return;
     }
 
+    // BANCOS (Cuotas sin intereses) SI ofrece CONTADO y FINANCIADO como el resto de
+    // TIPO/SUBTIPO, pero con datos propios de la hoja MP-Cuotas sin intereses: CONTADO usa
+    // el bloque PRECIO_TOTAL igual que cualquier CONTADO, y FINANCIADO usa el bloque
+    // CUOTA_MENSUAL directo (sin pasar por calcularFinanciamiento/CÓD FINANCIAMIENTO) con
+    // cuota inicial fija en S/0.00 -- por eso Cargo Fijo Máximo/Cap. Financiamiento/CÓD
+    // (seccionScoring) no aplican aca y se mantienen bloqueados sea cual sea el convenio
+    // elegido.
     var esBancos = (clave === "OTROS|BANCOS (Cuotas sin intereses)");
+    var conveniosRadio = esBancos ? ["CONTADO", "FINANCIADO"] : tabla.convenios;
 
     if (!equipoActual){
       // OJO: aca antes se pasaba "null" a proposito (sin equipo aun no habia nada que
@@ -3226,15 +3255,16 @@ if (location.protocol === "file:") {
       // cualquier input del formulario, cada vez que corria esta rama volvia a pisar
       // el radio CONTADO/FINANCIADO que el agente ya habia elegido, aunque el equipo
       // se elija despues. Hay que leer lo que este marcado ahora mismo y respetarlo.
-      actualizarBloqueoScoring(poblarRadiosConvenio(esBancos ? [] : tabla.convenios,
-        (document.querySelector('input[name=convenioCosto]:checked') || {}).value));
+      var convenioSelVacio = poblarRadiosConvenio(conveniosRadio,
+        (document.querySelector('input[name=convenioCosto]:checked') || {}).value);
+      actualizarBloqueoScoring(esBancos ? "CONTADO" : convenioSelVacio);
       pintarAvisoCosto("Seleccione el equipo en MARCA Y MODELO para calcular el costo.", "info");
       return;
     }
 
-    var convenioSel = poblarRadiosConvenio(esBancos ? [] : tabla.convenios,
+    var convenioSel = poblarRadiosConvenio(conveniosRadio,
       (document.querySelector('input[name=convenioCosto]:checked') || {}).value);
-    actualizarBloqueoScoring(convenioSel);
+    actualizarBloqueoScoring(esBancos ? "CONTADO" : convenioSel);
 
     var planResuelto = planBase;
     var claveP = claveDePlan(planResuelto);
@@ -3245,21 +3275,38 @@ if (location.protocol === "file:") {
     }
 
     if (esBancos){
+      if (!convenioSel){
+        pintarAvisoCosto("No hay convenio disponible para esta combinación.", "err");
+        return;
+      }
       var modeloB = buscarModeloEnTablaPrecios(equipoActual, tabla.precios.PRECIO_TOTAL);
       if (!modeloB){
         pintarAvisoCosto('No se encontró el equipo "' + equipoActual + '" en la tabla de BANCOS (Cuotas sin intereses).', "err");
         return;
       }
-      var total = tabla.precios.PRECIO_TOTAL[modeloB][claveP];
-      var cuota = tabla.precios.CUOTA_MENSUAL[modeloB][claveP];
-      if (total === undefined && cuota === undefined){
-        pintarAvisoCosto("El plan " + etiquetaPlanCosto(planResuelto) + " no tiene precio para este equipo en BANCOS.", "err");
-        return;
+      var totalB = tabla.precios.PRECIO_TOTAL[modeloB][claveP];
+      var cuotaB = tabla.precios.CUOTA_MENSUAL[modeloB][claveP];
+      if (convenioSel === "FINANCIADO"){
+        if (cuotaB === undefined){
+          pintarAvisoCosto("El plan " + etiquetaPlanCosto(planResuelto) + " no tiene cuota mensual para este equipo en BANCOS.", "err");
+          return;
+        }
+        pintarGuionCosto("FINANCIADO", modeloB, totalB, cuotaB, { textoInicial: "S/ 0.00", advertencia: null }, true);
+        ultimoCostoCalculado = {
+          convenio: "FINANCIADO", planUsado: planResuelto, monto: totalB !== undefined ? totalB : "",
+          pagoMensual: cuotaB, cuotaInicial: 0, cuotaInicialTexto: "S/ 0.00", advertenciaFinanciamiento: ""
+        };
+      } else {
+        if (totalB === undefined){
+          pintarAvisoCosto("El plan " + etiquetaPlanCosto(planResuelto) + " no tiene precio de contado para este equipo en BANCOS.", "err");
+          return;
+        }
+        pintarGuionCosto("CONTADO", modeloB, totalB, null, null, true);
+        ultimoCostoCalculado = {
+          convenio: "CONTADO", planUsado: planResuelto, monto: totalB,
+          pagoMensual: "", cuotaInicial: "", cuotaInicialTexto: "", advertenciaFinanciamiento: ""
+        };
       }
-      ultimoCostoCalculado = {
-        convenio: "BANCOS", planUsado: planResuelto,
-        monto: total !== undefined ? total : "", cuotaMensual: cuota !== undefined ? cuota : ""
-      };
       return;
     }
 
@@ -5227,7 +5274,24 @@ if (location.protocol === "file:") {
     } else {
       var color8 = $("resumenColorEquipo").value.trim() || "[color elegido]";
       var plan8 = etiquetaPlanCosto(ultimoCostoCalculado.planUsado || $("plan").value.trim());
-      if (ultimoCostoCalculado.convenio === "FINANCIADO"){
+      // OTROS|BANCOS (Cuotas sin intereses): el FINANCIADO aca no es el financiamiento propio
+      // de Movistar (no hay cargo fijo+cuota en un solo recibo) — es una cuota sin intereses
+      // que se cobra directo en la tarjeta a traves del banco, sin cuota inicial. El texto
+      // generico de 8.1 (recibo Movistar, cargo fijo + cuota) no aplica y confundiria al
+      // cliente sobre donde se le cobra.
+      var esBancos8 = ($("tipo").value + "|" + $("subtipo").value) === "OTROS|BANCOS (Cuotas sin intereses)";
+      if (esBancos8 && ultimoCostoCalculado.convenio === "FINANCIADO"){
+        var cuotaBc8 = (ultimoCostoCalculado.pagoMensual != null && ultimoCostoCalculado.pagoMensual !== "")
+          ? ("S/ " + Number(ultimoCostoCalculado.pagoMensual).toFixed(2)) : "S/ -";
+        equipoEl.innerHTML =
+          "<b>8.3. EQUIPO EN CUOTAS SIN INTERESES (BANCOS)</b> — Para finalizar la renovación del Nro. <b>" + numero +
+          "</b> le detallamos lo siguiente:<br>" +
+          "- El plan elegido es el Plan Mi Movistar <b>" + plan8 + "</b><br>" +
+          "- Con el equipo <b>" + equipoActual + "</b> de color <b>" + color8 + "</b>.<br>" +
+          "- Sin cuota inicial, en cuotas mensuales sin intereses de <b>" + cuotaBc8 + "</b> que se cargarán " +
+          "directamente en su tarjeta a través del banco (no en su recibo Movistar).<br>" +
+          "¿Nos confirma que podemos proceder con la solicitud?";
+      } else if (ultimoCostoCalculado.convenio === "FINANCIADO"){
         var cuota8 = (ultimoCostoCalculado.pagoMensual != null && ultimoCostoCalculado.pagoMensual !== "")
           ? ultimoCostoCalculado.pagoMensual : null;
         var inicial8 = ultimoCostoCalculado.cuotaInicialTexto || "S/ 0.00";
