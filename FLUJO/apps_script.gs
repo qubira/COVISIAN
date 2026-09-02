@@ -5,7 +5,8 @@
  *
  * Maneja 6 tipos de envio (campo "accion" en el POST):
  *  - "venta"               (o sin campo accion): agrega una fila nueva en la hoja "Ventas"
- *                            si datos.vendido="SI", o en la hoja "No venta" si es "NO".
+ *                            si datos.vendido="SI"; si es "NO", agrega la misma fila en
+ *                            "No venta" Y en "No contacto efectivo".
  *  - "borrador"             : autoguardado en progreso -> upsert (crea o actualiza) una fila
  *                            en la hoja "Borradores", identificada por draftId.
  *  - "cerrarBorrador"       : se presiono GUARDAR -> borra esa fila de "Borradores".
@@ -31,9 +32,10 @@
 
 var HOJA_VENTAS = "Ventas";
 var HOJA_NO_VENTA = "No venta";
+var HOJA_NO_CONTACTO_EFECTIVO = "No contacto efectivo";
 var HOJA_BORRADORES = "Borradores";
 var HOJA_AGENDA = "Llamadas Agendadas";
-var TIPIFICACIONES_VALIDAS = ["Contacto efectivo", "No contacto efectivo", "No contacto"];
+var TIPIFICACIONES_VALIDAS = ["Contacto efectivo", HOJA_NO_CONTACTO_EFECTIVO, "No contacto"];
 
 var COLUMNAS_VENTA = [
   "fecha", "guionAni", "guionAniReferencia", "guionDni", "guionEsTitular", "guionNombreCliente", "guionNombreTitular", "guionNumero",
@@ -196,14 +198,21 @@ function doPost(e) {
 
 // GUARDAR: si el agente marco "¿SE VENDIÓ?" = NO, la fila va a la hoja "No venta" en vez de
 // "Ventas" (mismas columnas/COLUMNAS_VENTA, incluida "motivo") — separadas para que los
-// reportes de ventas reales no tengan que filtrar/excluir los "NO" a mano.
+// reportes de ventas reales no tengan que filtrar/excluir los "NO" a mano. Ademas, todo "NO
+// venta" se duplica en "No contacto efectivo" (misma fila, mismas columnas) para que quede
+// contabilizado tambien ahi junto con los que se derivan directo por el boton "Tipificar".
 function guardarVenta(datos) {
-  var nombreHoja = datos.vendido === "NO" ? HOJA_NO_VENTA : HOJA_VENTAS;
-  var hoja = obtenerOCrearHoja(nombreHoja, COLUMNAS_VENTA);
+  var esNoVenta = datos.vendido === "NO";
+  var hoja = obtenerOCrearHoja(esNoVenta ? HOJA_NO_VENTA : HOJA_VENTAS, COLUMNAS_VENTA);
   var fila = COLUMNAS_VENTA.map(function (campo) {
     return datos[campo] !== undefined ? datos[campo] : "";
   });
   hoja.appendRow(fila);
+
+  if (esNoVenta) {
+    var hojaNoContacto = obtenerOCrearHoja(HOJA_NO_CONTACTO_EFECTIVO, COLUMNAS_VENTA);
+    hojaNoContacto.appendRow(fila);
+  }
 }
 
 // Boton "Tipificar": mismo snapshot completo que "venta" (COLUMNAS_VENTA), pero cada
