@@ -6106,6 +6106,15 @@ if (location.protocol === "file:") {
     "ESPECIALES|RETENCION/BLINDAJE (Financiado)": { campo: "canal", valor: ["ESP_POST_RETENCION", "ESP_POST_BLINDAJE"] }
   };
 
+  // Mismo sufijo de canal que tokensEquipo()/tokensStock() ya quitan (ej. "..._POS1" =
+  // mismo equipo fisico, listado aparte para Clientes Black) — las hojas ESP_PHOENIX/
+  // MP-Cuotas sin intereses solo listan el nombre PLANO, asi que sin esto la variante con
+  // sufijo (que SI tiene el mismo precio/descuento, es el mismo producto) se quedaba sin
+  // badge por una comparacion exacta que nunca podia matchear.
+  function normSinSufijoCanal(nombre){
+    return norm(nombre).replace(/_[A-Z0-9]+$/, "");
+  }
+
   // Equipos con descuento Phoenix vigente (hoja "ESP_PHOENIX" de Visor.xlsb, ver
   // extract_equipos_phoenix() en extract_data.py) — se resaltan en el buscador de EQUIPO
   // para que el asesor los detecte de una. Set normalizado (mismo norm() que el resto de
@@ -6116,7 +6125,7 @@ if (location.protocol === "file:") {
       EQUIPOS_PHOENIX_NORM = {};
       (DATA.equiposPhoenix || []).forEach(function(n){ EQUIPOS_PHOENIX_NORM[norm(n)] = true; });
     }
-    return !!EQUIPOS_PHOENIX_NORM[norm(nombreEquipo)];
+    return !!EQUIPOS_PHOENIX_NORM[normSinSufijoCanal(nombreEquipo)];
   }
 
   // Equipos con cuotas sin intereses vigente (hoja "MP-Cuotas sin intereses" de Visor.xlsb,
@@ -6128,7 +6137,7 @@ if (location.protocol === "file:") {
       EQUIPOS_BANCOS_NORM = {};
       (DATA.equiposBancos || []).forEach(function(n){ EQUIPOS_BANCOS_NORM[norm(n)] = true; });
     }
-    return !!EQUIPOS_BANCOS_NORM[norm(nombreEquipo)];
+    return !!EQUIPOS_BANCOS_NORM[normSinSufijoCanal(nombreEquipo)];
   }
 
   function equipoCoincideTipoSubtipo(nombreEquipo){
