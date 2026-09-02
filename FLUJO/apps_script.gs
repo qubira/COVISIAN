@@ -4,7 +4,8 @@
  * Apps Script del propio Sheet — ver GUIA_APPS_SCRIPT.md).
  *
  * Maneja 6 tipos de envio (campo "accion" en el POST):
- *  - "venta"               (o sin campo accion): agrega una fila nueva en la hoja "Ventas".
+ *  - "venta"               (o sin campo accion): agrega una fila nueva en la hoja "Ventas"
+ *                            si datos.vendido="SI", o en la hoja "No venta" si es "NO".
  *  - "borrador"             : autoguardado en progreso -> upsert (crea o actualiza) una fila
  *                            en la hoja "Borradores", identificada por draftId.
  *  - "cerrarBorrador"       : se presiono GUARDAR -> borra esa fila de "Borradores".
@@ -29,6 +30,7 @@
  */
 
 var HOJA_VENTAS = "Ventas";
+var HOJA_NO_VENTA = "No venta";
 var HOJA_BORRADORES = "Borradores";
 var HOJA_AGENDA = "Llamadas Agendadas";
 var TIPIFICACIONES_VALIDAS = ["Contacto efectivo", "No contacto efectivo", "No contacto"];
@@ -192,8 +194,12 @@ function doPost(e) {
   }
 }
 
+// GUARDAR: si el agente marco "¿SE VENDIÓ?" = NO, la fila va a la hoja "No venta" en vez de
+// "Ventas" (mismas columnas/COLUMNAS_VENTA, incluida "motivo") — separadas para que los
+// reportes de ventas reales no tengan que filtrar/excluir los "NO" a mano.
 function guardarVenta(datos) {
-  var hoja = obtenerOCrearHoja(HOJA_VENTAS, COLUMNAS_VENTA);
+  var nombreHoja = datos.vendido === "NO" ? HOJA_NO_VENTA : HOJA_VENTAS;
+  var hoja = obtenerOCrearHoja(nombreHoja, COLUMNAS_VENTA);
   var fila = COLUMNAS_VENTA.map(function (campo) {
     return datos[campo] !== undefined ? datos[campo] : "";
   });
