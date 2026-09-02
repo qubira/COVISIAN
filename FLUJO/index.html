@@ -152,7 +152,7 @@
      cualquier modal que estuviera despues de el en el documento. */
   #modalConfirmar{ z-index:1000; }
   .modal-confirmar-caja{ max-width:380px; }
-  .modal-confirmar-texto{ font-size:14px; line-height:1.5; color:var(--texto); margin-bottom:18px; }
+  .modal-confirmar-texto{ font-size:14px; line-height:1.5; color:var(--texto); margin-bottom:18px; white-space:pre-line; }
   .modal-confirmar-botones{ display:flex; gap:10px; justify-content:flex-end; }
   .modal-confirmar-botones .btn{ width:auto; padding:9px 18px; }
   .modal-confirmar-botones .btn-mini{ padding:9px 18px; font-size:13px; }
@@ -8682,7 +8682,8 @@ if (location.protocol === "file:") {
         '<div class="alerta-caso-detalle"><b>' + (c.nombre || "Cliente") + "</b> · " + c.fecha + " " + c.hora + "<br>" +
         (faltan > 0 ? ("Faltan " + faltan + " min") : "La hora pactada ya se cumplió") +
         (c.equipoInteres ? ("<br>Interés: " + c.equipoInteres) : "") +
-        (c.tipoCliente ? ("<br>Tipo: " + c.tipoCliente) : "") + "</div>" +
+        (c.tipoCliente ? ("<br>Tipo: " + c.tipoCliente) : "") +
+        (c.observacion ? ("<br><b>Obs:</b> " + c.observacion) : "") + "</div>" +
         '<button type="button" class="btn-tomar-caso">▶ Tomar caso</button>';
       div.querySelector(".btn-tomar-caso").addEventListener("click", function(){ tomarCaso(c.id); });
       cont.appendChild(div);
