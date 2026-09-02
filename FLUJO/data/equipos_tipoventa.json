@@ -83,8 +83,7 @@
 ],
 "canal": [
 "ESP_POST_ONLINE",
-"ESP_POST_PHOENIX",
-"ESP_POST_RETENCION"
+"ESP_POST_PHOENIX"
 ]
 },
 "ZTE BLADE A35 64GB LTE": {
@@ -153,8 +152,7 @@
 ],
 "canal": [
 "ESP_POST_ONLINE",
-"ESP_POST_PHOENIX",
-"ESP_POST_RETENCION"
+"ESP_POST_PHOENIX"
 ]
 },
 "HONOR 200 ELI-NX9 512GB 5G": {
@@ -601,8 +599,7 @@
 ],
 "canal": [
 "ESP_POST_ONLINE",
-"ESP_POST_PHOENIX",
-"ESP_POST_RETENCION"
+"ESP_POST_PHOENIX"
 ]
 },
 "SAMSUNG GXY S24 FE SM-S721B 256GB 5G": {
@@ -619,8 +616,7 @@
 ],
 "canal": [
 "ESP_POST_ONLINE",
-"ESP_POST_PHOENIX",
-"ESP_POST_RETENCION"
+"ESP_POST_PHOENIX"
 ]
 },
 "SAMSUNG GXY A16 SM-A166M 128GB 5G": {
@@ -893,8 +889,7 @@
 ],
 "canal": [
 "ESP_POST_ONLINE",
-"ESP_POST_PHOENIX",
-"ESP_POST_RETENCION"
+"ESP_POST_PHOENIX"
 ]
 },
 "PACK-HONOR X8C 256GB": {
@@ -987,8 +982,6 @@
 "PORTA"
 ],
 "canal": [
-"ESP_POST_ONLINE",
-"ESP_POST_PHOENIX",
 "ESP_POST_RETENCION"
 ]
 },
@@ -1162,11 +1155,7 @@
 "CAEQ/MIGRA",
 "PORTA"
 ],
-"canal": [
-"ESP_POST_ONLINE",
-"ESP_POST_PHOENIX",
-"ESP_POST_RETENCION"
-]
+"canal": []
 },
 "MOTOROLA EDGE 70 FUSION 256GB 5G": {
 "tipoVenta": [
@@ -1180,11 +1169,7 @@
 "CAEQ/MIGRA",
 "PORTA"
 ],
-"canal": [
-"ESP_POST_ONLINE",
-"ESP_POST_PHOENIX",
-"ESP_POST_RETENCION"
-]
+"canal": []
 },
 "ZTE NUBIA V80 MAX 256GB LTE": {
 "tipoVenta": [
@@ -1210,8 +1195,6 @@
 "PORTA"
 ],
 "canal": [
-"ESP_POST_ONLINE",
-"ESP_POST_PHOENIX",
 "ESP_POST_RETENCION"
 ]
 },
@@ -1348,11 +1331,7 @@
 "CAEQ/MIGRA",
 "PORTA"
 ],
-"canal": [
-"ESP_POST_ONLINE",
-"ESP_POST_PHOENIX",
-"ESP_POST_RETENCION"
-]
+"canal": []
 },
 "CAMP - IPHONE 15 128GB": {
 "tipoVenta": [
@@ -1397,7 +1376,11 @@
 "CAEQ/MIGRA",
 "PORTA"
 ],
-"canal": []
+"canal": [
+"ESP_POST_ONLINE",
+"ESP_POST_PHOENIX",
+"ESP_POST_RETENCION"
+]
 },
 "HONOR X6E LBU-LX3 256GB LTE": {
 "tipoVenta": [
@@ -1488,26 +1471,6 @@
 "CAEQ/MIGRA"
 ],
 "canal": []
-},
-"XIAOMI 15T 512GB 5G_POS1": {
-"tipoVenta": [
-"CAEQ/MIGRA"
-],
-"canal": [
-"ESP_POST_BLINDAJE",
-"ESP_POST_ONLINE",
-"ESP_POST_PHOENIX"
-]
-},
-"XIAOMI 15T PRO 512GB 5G_POS1": {
-"tipoVenta": [
-"CAEQ/MIGRA"
-],
-"canal": [
-"ESP_POST_BLINDAJE",
-"ESP_POST_ONLINE",
-"ESP_POST_PHOENIX"
-]
 },
 "XIAOMI REDMI NOTE 15 PRO 512GB 5G_POS1": {
 "tipoVenta": [
