@@ -114,6 +114,22 @@
   }
   .autocomplete .opcion small{ display:block; color:var(--gris); font-size:11px; }
 
+  /* Fila de un motivo personalizado (agregado con "+" en el buscador de MOTIVO): igual que
+     .opcion normal pero con iconos editar/eliminar al costado, solo para los agregados por el
+     agente -- los motivos fijos del negocio no traen estos iconos. */
+  .autocomplete .opcion.opcion-motivo{ display:flex; align-items:center; justify-content:space-between; gap:6px; }
+  .opcion-motivo-texto{ flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .opcion-motivo-acciones{ display:flex; gap:4px; flex-shrink:0; }
+  .btn-icono-motivo{
+    background:transparent; border:none; cursor:pointer; font-size:12px; padding:2px 4px;
+    border-radius:4px; line-height:1;
+  }
+  .btn-icono-motivo:hover{ background:rgba(0,0,0,.08); }
+  /* El buscador de MOTIVO dentro del popover "No vendido rápido" necesita liberar el
+     overflow-y:auto del popover mientras su lista esta abierta, o queda recortada -- mismo
+     patron ya usado para PLAN/UBICACIÓN del encabezado. */
+  .popover-region.lista-motivo-abierta{ overflow:visible; }
+
   .caja-resultado{
     margin-top:12px; padding:10px 12px; border-radius:8px; background:var(--azul-bg);
     border:1px solid #c7d7f5; font-size:13.5px; display:none;
@@ -1984,24 +2000,11 @@ if (location.protocol === "file:") {
     <div class="campo oculto" id="campoMotivo">
       <label for="motivo">MOTIVO</label>
       <div class="fila-input-btn">
-        <select id="motivo">
-          <option value="">Seleccione un motivo...</option>
-          <option value="PRECIO">Precio muy alto</option>
-          <option value="NO_INTERESADO">Cliente no interesado</option>
-          <option value="SIN_STOCK">Sin stock del equipo elegido</option>
-          <option value="COBERTURA">No conforme con cobertura / tiempo de entrega</option>
-          <option value="NO_APROBADO">No aprobado (crédito)</option>
-          <option value="DOC_INCOMPLETA">Documentación incompleta</option>
-          <option value="EVALUAR">Cliente desea evaluar otras opciones</option>
-          <option value="OBJECION_NO_SUPERADA">Objeción no superada (rebate)</option>
-        </select>
-        <button type="button" class="btn-mini" id="btnAgregarMotivo" title="Agregar un motivo nuevo a la lista">+</button>
-      </div>
-      <div class="campo oculto" id="campoMotivoNuevo" style="margin-top:8px;">
-        <div class="fila-input-btn">
-          <input type="text" id="motivoNuevoTexto" placeholder="Escriba el motivo nuevo...">
-          <button type="button" class="btn-mini" id="btnConfirmarMotivoNuevo">Agregar</button>
+        <div class="autocomplete" id="ac-motivo" style="flex:1;">
+          <input type="text" id="motivo" placeholder="Escriba para buscar un motivo..." autocomplete="off">
+          <div class="lista" id="lista-motivo"></div>
         </div>
+        <button type="button" class="btn-mini" id="btnAgregarMotivo" title="Guardar el texto escrito como motivo nuevo, para elegirlo rápido la próxima vez">+</button>
       </div>
     </div>
 
@@ -2041,24 +2044,11 @@ if (location.protocol === "file:") {
   <div class="campo">
     <label for="motivoRapido">MOTIVO</label>
     <div class="fila-input-btn">
-      <select id="motivoRapido">
-        <option value="">Seleccione un motivo...</option>
-        <option value="PRECIO">Precio muy alto</option>
-        <option value="NO_INTERESADO">Cliente no interesado</option>
-        <option value="SIN_STOCK">Sin stock del equipo elegido</option>
-        <option value="COBERTURA">No conforme con cobertura / tiempo de entrega</option>
-        <option value="NO_APROBADO">No aprobado (crédito)</option>
-        <option value="DOC_INCOMPLETA">Documentación incompleta</option>
-        <option value="EVALUAR">Cliente desea evaluar otras opciones</option>
-        <option value="OBJECION_NO_SUPERADA">Objeción no superada (rebate)</option>
-      </select>
-      <button type="button" class="btn-mini" id="btnAgregarMotivoRapido" title="Agregar un motivo nuevo a la lista">+</button>
-    </div>
-    <div class="campo oculto" id="campoMotivoRapidoNuevo" style="margin-top:8px;">
-      <div class="fila-input-btn">
-        <input type="text" id="motivoRapidoNuevoTexto" placeholder="Escriba el motivo nuevo...">
-        <button type="button" class="btn-mini" id="btnConfirmarMotivoRapidoNuevo">Agregar</button>
+      <div class="autocomplete" id="ac-motivoRapido" style="flex:1;">
+        <input type="text" id="motivoRapido" placeholder="Escriba para buscar un motivo..." autocomplete="off">
+        <div class="lista" id="lista-motivoRapido"></div>
       </div>
+      <button type="button" class="btn-mini" id="btnAgregarMotivoRapido" title="Guardar el texto escrito como motivo nuevo, para elegirlo rápido la próxima vez">+</button>
     </div>
   </div>
   <button type="button" class="btn" id="btnGuardarNoVentaRapida" style="width:100%; margin-top:10px;">Guardar como NO vendido</button>
@@ -4081,15 +4071,11 @@ if (location.protocol === "file:") {
       if (rVendido) rVendido.checked = true;
       if (estado.vendido === "NO") $("campoMotivo").classList.remove("oculto");
     }
-    // compatibilidad con borradores viejos (de antes de reemplazar "Otro" + texto libre por
-    // "+ agregar motivo nuevo"): si el borrador todavia trae motivo="OTRO" con su texto en
-    // motivoOtro, se da de alta ese texto como motivo personalizado en vez de perderlo.
-    if (estado.motivo === "OTRO" && estado.motivoOtro){
-      agregarOpcionMotivoATodos(estado.motivoOtro);
-      $("motivo").value = estado.motivoOtro.trim().toUpperCase();
-    } else {
-      $("motivo").value = estado.motivo || "";
-    }
+    // compatibilidad con borradores viejos (de antes de reemplazar el <select> por el buscador
+    // de motivo): si el borrador todavia trae motivo="OTRO" con su texto en motivoOtro, se usa
+    // ese texto libre directo; si trae un codigo corto de la epoca del <select> (ej. "PRECIO"),
+    // se muestra tal cual -- no es lo ideal pero se autocorrige en cuanto se guarda o edita.
+    $("motivo").value = (estado.motivo === "OTRO" && estado.motivoOtro) ? estado.motivoOtro.trim() : (estado.motivo || "");
 
     $("contratoFechaNacimiento").value = estado.contratoFechaNacimiento || "";
     $("contratoNombrePadreMadre").value = estado.contratoNombrePadreMadre || "";
@@ -4235,7 +4221,6 @@ if (location.protocol === "file:") {
     $("packAviso").classList.add("oculto");
     $("packAviso").innerHTML = "";
     $("campoMotivo").classList.add("oculto");
-    $("campoMotivoNuevo").classList.add("oculto");
     poblarSubtipo("POSTPAGO", "CAEQ");
     $("mensajeEnvio").innerHTML = "";
     $("bannerRestaurado").classList.add("oculto");
@@ -4776,8 +4761,7 @@ if (location.protocol === "file:") {
       var rNo = document.querySelector('input[name=vendido][value=NO]');
       if (rNo) rNo.checked = true;
       $("campoMotivo").classList.remove("oculto");
-      $("motivo").value = "OBJECION_NO_SUPERADA";
-      $("campoMotivoNuevo").classList.add("oculto");
+      $("motivo").value = "Objeción no superada (rebate)";
       actualizarBitacoraBoton();
       guardarProgreso();
       $("fs-venta").scrollIntoView({ behavior: "smooth", block: "start" });
@@ -5082,15 +5066,14 @@ if (location.protocol === "file:") {
   $("btnNoVentaRapida").addEventListener("click", function(e){
     e.stopPropagation();
     $("motivoRapido").value = "";
-    $("campoMotivoRapidoNuevo").classList.add("oculto");
     abrirPopoverAnclado("btnNoVentaRapida", "popoverNoVentaRapida");
   });
   $("btnCerrarNoVentaRapida").addEventListener("click", function(){
     $("popoverNoVentaRapida").classList.add("oculto");
   });
   $("btnGuardarNoVentaRapida").addEventListener("click", function(){
-    if (!$("motivoRapido").value){
-      mostrarAvisoPersonalizado("Seleccione un motivo.");
+    if (!$("motivoRapido").value.trim()){
+      mostrarAvisoPersonalizado("Escriba o elija un motivo.");
       return;
     }
     var radioNo = document.querySelector('input[name=vendido][value=NO]');
@@ -5137,81 +5120,186 @@ if (location.protocol === "file:") {
     r.addEventListener("change", function(){
       var val = document.querySelector('input[name=vendido]:checked').value;
       var campoMotivo = $("campoMotivo");
-      if (val === "NO"){
-        campoMotivo.classList.remove("oculto");
-      } else {
-        campoMotivo.classList.add("oculto");
-        $("campoMotivoNuevo").classList.add("oculto");
-      }
+      campoMotivo.classList.toggle("oculto", val !== "NO");
     });
   });
 
-  // ============ MOTIVO (NO vendido): "+ agregar motivo nuevo" en vez de "Otro" + texto libre
-  // ============ para no repetir el mismo motivo no listado escrito distinto (con errores de
-  // ============ tipeo) cada vez -- una vez agregado queda disponible como opcion normal, en
-  // ============ los DOS selects (#motivo de RESULTADO y #motivoRapido del boton rapido del
-  // ============ encabezado) y para las proximas llamadas (persistido en localStorage).
+  // ============ MOTIVO (NO vendido): buscador tipo autocompletar (mismo patron que EQUIPO/
+  // ============ PLAN/UBICACIÓN) en vez de un <select> -- escribir filtra la lista para elegir
+  // ============ mas rapido. Un "+" guarda el texto escrito como motivo nuevo (para no repetir/
+  // ============ escribir mal el mismo motivo "no listado" cada vez), y cada motivo asi
+  // ============ agregado trae sus propios iconos ✏️/🗑️ en la lista para corregirlo o
+  // ============ borrarlo despues -- los 8 motivos fijos del negocio no los traen. Se comparte
+  // ============ la MISMA lista entre #motivo (RESULTADO) y #motivoRapido (boton rapido del
+  // ============ encabezado), persistida en localStorage.
+  var MOTIVOS_BASE = [
+    "Precio muy alto",
+    "Cliente no interesado",
+    "Sin stock del equipo elegido",
+    "No conforme con cobertura / tiempo de entrega",
+    "No aprobado (crédito)",
+    "Documentación incompleta",
+    "Cliente desea evaluar otras opciones",
+    "Objeción no superada (rebate)"
+  ];
   var LS_MOTIVOS_PERSONALIZADOS = "motivos_personalizados_no_venta";
+  var motivosPersonalizadosCache = null;
 
-  function agregarOpcionMotivoATodos(texto){
-    var limpio = (texto || "").trim().toUpperCase();
+  function cargarMotivosPersonalizadosCache(){
+    if (motivosPersonalizadosCache) return;
+    try{ motivosPersonalizadosCache = JSON.parse(localStorage.getItem(LS_MOTIVOS_PERSONALIZADOS) || "[]"); }
+    catch(err){ motivosPersonalizadosCache = []; }
+  }
+  function guardarMotivosPersonalizadosCache(){
+    try{ localStorage.setItem(LS_MOTIVOS_PERSONALIZADOS, JSON.stringify(motivosPersonalizadosCache)); }catch(err){}
+  }
+  function motivosCandidatos(){
+    cargarMotivosPersonalizadosCache();
+    return MOTIVOS_BASE.concat(motivosPersonalizadosCache);
+  }
+  function agregarMotivoALaLista(texto){
+    var limpio = (texto || "").trim();
+    if (!limpio) return false;
+    var yaExiste = motivosCandidatos().some(function(m){ return norm(m) === norm(limpio); });
+    if (yaExiste) return false;
+    motivosPersonalizadosCache.push(limpio);
+    guardarMotivosPersonalizadosCache();
+    return true;
+  }
+  function editarMotivoPersonalizado(anterior, nuevo){
+    var limpio = (nuevo || "").trim();
     if (!limpio) return;
-    ["motivo", "motivoRapido"].forEach(function(idSelect){
-      var sel = $(idSelect);
-      var yaExiste = Array.prototype.some.call(sel.options, function(o){ return o.value === limpio; });
-      if (yaExiste) return;
-      var opt = document.createElement("option");
-      opt.value = limpio;
-      opt.textContent = limpio;
-      sel.appendChild(opt);
+    cargarMotivosPersonalizadosCache();
+    var idx = motivosPersonalizadosCache.indexOf(anterior);
+    if (idx === -1) return;
+    motivosPersonalizadosCache[idx] = limpio;
+    guardarMotivosPersonalizadosCache();
+    // si algun campo tenia seleccionado justo el texto viejo, se actualiza al nuevo
+    [$("motivo"), $("motivoRapido")].forEach(function(input){
+      if (input && input.value === anterior) input.value = limpio;
     });
   }
-
-  function guardarMotivoPersonalizadoNuevo(texto){
-    var limpio = (texto || "").trim().toUpperCase();
-    if (!limpio) return;
-    agregarOpcionMotivoATodos(limpio);
-    try{
-      var lista = JSON.parse(localStorage.getItem(LS_MOTIVOS_PERSONALIZADOS) || "[]");
-      if (lista.indexOf(limpio) === -1){
-        lista.push(limpio);
-        localStorage.setItem(LS_MOTIVOS_PERSONALIZADOS, JSON.stringify(lista));
-      }
-    }catch(err){ /* localStorage no disponible */ }
+  function eliminarMotivoPersonalizado(texto){
+    cargarMotivosPersonalizadosCache();
+    motivosPersonalizadosCache = motivosPersonalizadosCache.filter(function(m){ return m !== texto; });
+    guardarMotivosPersonalizadosCache();
   }
 
-  // Wire generico del boton "+" -> revela un input+"Agregar" (Enter tambien confirma), en vez
-  // de un modal aparte -- mismo patron ya usado por el "Otro" que reemplaza.
-  function initAgregarMotivo(idSelect, idBtnMas, idCampoNuevo, idInputNuevo, idBtnConfirmar){
-    $(idBtnMas).addEventListener("click", function(e){
-      e.stopPropagation();
-      $(idCampoNuevo).classList.remove("oculto");
-      $(idInputNuevo).value = "";
-      $(idInputNuevo).focus();
-    });
+  // Devuelve { confirmar } para que el boton "+" externo pueda reusar la MISMA logica de
+  // agregar/editar (Enter dentro del input hace lo mismo).
+  function configurarAutocompleteMotivo(inputId, listaId){
+    var input = $(inputId);
+    var lista = $(listaId);
+    var editando = null; // texto original del motivo personalizado en edicion, o null
+
+    function salirModoEdicion(){
+      editando = null;
+      input.placeholder = "Escriba para buscar un motivo...";
+    }
+
+    function render(filtro){
+      lista.innerHTML = "";
+      var q = norm(filtro);
+      var candidatos = motivosCandidatos().filter(function(m){ return !q || norm(m).indexOf(q) !== -1; });
+      candidatos.forEach(function(m){
+        var esPersonalizado = motivosPersonalizadosCache.indexOf(m) !== -1;
+        var div = document.createElement("div");
+        div.className = "opcion" + (esPersonalizado ? " opcion-motivo" : "");
+        var span = document.createElement("span");
+        span.className = "opcion-motivo-texto";
+        span.textContent = m;
+        div.appendChild(span);
+        if (esPersonalizado){
+          var acciones = document.createElement("span");
+          acciones.className = "opcion-motivo-acciones";
+          var btnEditar = document.createElement("button");
+          btnEditar.type = "button";
+          btnEditar.className = "btn-icono-motivo";
+          btnEditar.title = "Editar este motivo";
+          btnEditar.textContent = "✏️";
+          btnEditar.addEventListener("mousedown", function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            editando = m;
+            input.value = m;
+            input.placeholder = 'Editando "' + m + '" — escriba el texto nuevo y presione Enter o "+"';
+            input.focus();
+            render(m);
+          });
+          var btnEliminar = document.createElement("button");
+          btnEliminar.type = "button";
+          btnEliminar.className = "btn-icono-motivo";
+          btnEliminar.title = "Eliminar este motivo de la lista";
+          btnEliminar.textContent = "🗑️";
+          btnEliminar.addEventListener("mousedown", function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            confirmarPersonalizado('¿Eliminar el motivo "' + m + '" de la lista? Esta acción no se puede deshacer.', function(){
+              eliminarMotivoPersonalizado(m);
+              if (input.value === m) input.value = "";
+              if (editando === m) salirModoEdicion();
+              render(input.value);
+            });
+          });
+          acciones.appendChild(btnEditar);
+          acciones.appendChild(btnEliminar);
+          div.appendChild(acciones);
+        }
+        div.addEventListener("mousedown", function(e){
+          if (e.target.closest(".btn-icono-motivo")) return;
+          e.preventDefault();
+          input.value = m;
+          lista.classList.remove("abierta");
+        });
+        lista.appendChild(div);
+      });
+      lista.classList.toggle("abierta", candidatos.length > 0);
+    }
+
     function confirmar(){
-      var texto = $(idInputNuevo).value.trim();
+      var texto = input.value.trim();
       if (!texto){
-        mostrarAvisoPersonalizado("Escriba el motivo nuevo antes de agregarlo.");
+        mostrarAvisoPersonalizado(editando ? "Escriba el texto nuevo del motivo." : "Escriba el motivo antes de guardarlo con +.");
         return;
       }
-      guardarMotivoPersonalizadoNuevo(texto);
-      $(idSelect).value = texto.trim().toUpperCase();
-      $(idCampoNuevo).classList.add("oculto");
+      if (editando){
+        editarMotivoPersonalizado(editando, texto);
+        salirModoEdicion();
+        mostrarToast("✔ Motivo actualizado", 2000);
+      } else {
+        var agregado = agregarMotivoALaLista(texto);
+        mostrarToast(agregado ? "✔ Motivo guardado para la próxima vez" : "Ese motivo ya estaba en la lista", 2000);
+      }
+      lista.classList.remove("abierta");
     }
-    $(idBtnConfirmar).addEventListener("click", confirmar);
-    $(idInputNuevo).addEventListener("keydown", function(e){
-      if (e.key === "Enter"){ e.preventDefault(); confirmar(); }
+
+    input.addEventListener("focus", function(){ render(input.value); });
+    input.addEventListener("input", function(){ render(input.value); });
+    input.addEventListener("blur", function(){
+      setTimeout(function(){ lista.classList.remove("abierta"); }, 150);
     });
+    input.addEventListener("keydown", function(e){
+      if (e.key === "Enter" && editando){ e.preventDefault(); confirmar(); }
+    });
+
+    return { confirmar: confirmar };
   }
 
   function initMotivosPersonalizados(){
-    try{
-      var lista = JSON.parse(localStorage.getItem(LS_MOTIVOS_PERSONALIZADOS) || "[]");
-      lista.forEach(agregarOpcionMotivoATodos);
-    }catch(err){ /* localStorage no disponible */ }
-    initAgregarMotivo("motivo", "btnAgregarMotivo", "campoMotivoNuevo", "motivoNuevoTexto", "btnConfirmarMotivoNuevo");
-    initAgregarMotivo("motivoRapido", "btnAgregarMotivoRapido", "campoMotivoRapidoNuevo", "motivoRapidoNuevoTexto", "btnConfirmarMotivoRapidoNuevo");
+    var acMotivo = configurarAutocompleteMotivo("motivo", "lista-motivo");
+    var acMotivoRapido = configurarAutocompleteMotivo("motivoRapido", "lista-motivoRapido");
+    $("btnAgregarMotivo").addEventListener("click", function(e){ e.stopPropagation(); acMotivo.confirmar(); });
+    $("btnAgregarMotivoRapido").addEventListener("click", function(e){ e.stopPropagation(); acMotivoRapido.confirmar(); });
+
+    // #motivoRapido vive dentro de un popover con overflow-y:auto (para su propio scroll) que
+    // recortaria la lista si no se libera mientras esta abierta -- mismo patron ya usado para
+    // PLAN/UBICACIÓN del encabezado con .lista-plan-abierta/.lista-ubicacion-abierta.
+    $("motivoRapido").addEventListener("focus", function(){
+      $("popoverNoVentaRapida").classList.add("lista-motivo-abierta");
+    });
+    $("motivoRapido").addEventListener("blur", function(){
+      setTimeout(function(){ $("popoverNoVentaRapida").classList.remove("lista-motivo-abierta"); }, 200);
+    });
   }
 
   // ============ AUTOCOMPLETE UBICACIÓN (distrito / provincia / departamento) ============
@@ -8891,7 +8979,7 @@ if (location.protocol === "file:") {
       cantidadObjeciones: bitacoraRebate.length,
       negativaResultado: negativaResultado,
       vendido: vendido,
-      motivo: vendido === "NO" ? $("motivo").options[$("motivo").selectedIndex].text : ""
+      motivo: vendido === "NO" ? $("motivo").value.trim() : ""
     };
   }
 
@@ -8966,8 +9054,8 @@ if (location.protocol === "file:") {
       return;
     }
     var vendido = vendidoEl.value;
-    if (vendido === "NO" && !$("motivo").value){
-      mostrarAvisoPersonalizado("Seleccione un motivo.");
+    if (vendido === "NO" && !$("motivo").value.trim()){
+      mostrarAvisoPersonalizado("Escriba o elija un motivo.");
       return;
     }
 
