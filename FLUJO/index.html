@@ -117,14 +117,22 @@
   /* Fila de un motivo personalizado (agregado con "+" en el buscador de MOTIVO): igual que
      .opcion normal pero con iconos editar/eliminar al costado, solo para los agregados por el
      agente -- los motivos fijos del negocio no traen estos iconos. */
-  .autocomplete .opcion.opcion-motivo{ display:flex; align-items:center; justify-content:space-between; gap:6px; }
-  .opcion-motivo-texto{ flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .autocomplete .opcion.opcion-motivo{ display:flex; align-items:flex-start; justify-content:space-between; gap:6px; }
+  .opcion-motivo-texto{ flex:1; min-width:0; }
   .opcion-motivo-acciones{ display:flex; gap:4px; flex-shrink:0; }
   .btn-icono-motivo{
     background:transparent; border:none; cursor:pointer; font-size:12px; padding:2px 4px;
     border-radius:4px; line-height:1;
   }
   .btn-icono-motivo:hover{ background:rgba(0,0,0,.08); }
+  /* Lista de MOTIVO mas sutil que el autocomplete generico (equipo/plan/ubicacion): filas mas
+     bajas, separador muy tenue entre ellas en vez del bulto que dejaba solo el padding grande,
+     y sombra mas liviana del contenedor. */
+  #ac-motivo .lista, #ac-motivoRapido .lista{ box-shadow:0 4px 10px rgba(0,0,0,.06); }
+  #ac-motivo .opcion, #ac-motivoRapido .opcion{
+    padding:6px 10px; font-size:12.5px; border-bottom:1px solid var(--gris-bg);
+  }
+  #ac-motivo .opcion:last-child, #ac-motivoRapido .opcion:last-child{ border-bottom:none; }
   /* El buscador de MOTIVO dentro del popover "No vendido rápido" necesita liberar el
      overflow-y:auto del popover mientras su lista esta abierta, o queda recortada -- mismo
      patron ya usado para PLAN/UBICACIÓN del encabezado. */
