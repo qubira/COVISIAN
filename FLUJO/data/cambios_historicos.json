@@ -1,44 +1,100 @@
 {
-"fechaAnterior": "2026-09-01T09:53:16",
-"fechaActual": "2026-09-01T10:15:04",
+"fechaAnterior": "2026-09-02T09:52:41",
+"fechaActual": "2026-09-02T11:38:19",
 "agregados": [
 {
+"zona": "AREQUIPA",
+"modelo": "CAMP-IPHONE 17 VERDE MG6N4BE/A 256GB"
+},
+{
+"zona": "LA LIBERTAD",
+"modelo": "SAMSUNG GXY A27 ROSA SM-A276B 256GB 5G"
+},
+{
+"zona": "LA LIBERTAD",
+"modelo": "XIAOMI REDMI NOTE 15 PRO+ CAFE 512GB"
+},
+{
+"zona": "LIMA",
+"modelo": "XIAOMI REDMI NOTE 15 PRO+ CAFE 512GB"
+},
+{
 "zona": "PIURA",
-"modelo": "HONOR X5D PLATA NAA-LX3 128GB"
+"modelo": "XIAOMI REDMI NOTE 15 PRO+ CAFE 512GB"
+},
+{
+"zona": "PROVINCIAS",
+"modelo": "HONOR 600 SMART PLATA 256GB 5G"
+},
+{
+"zona": "PROVINCIAS",
+"modelo": "HONOR X6E NEGRO LBU-LX3 256GB C/PACK"
+},
+{
+"zona": "PROVINCIAS",
+"modelo": "IPHONE 17 AZUL MG6L4BE/A 256GB"
+},
+{
+"zona": "PROVINCIAS",
+"modelo": "IPHONE 17 PRO MAX AZUL MFYP4BE/A 256GB"
+},
+{
+"zona": "PROVINCIAS",
+"modelo": "IPHONE 17 PRO PLATA MG8G4BE/A 256GB"
+},
+{
+"zona": "PROVINCIAS",
+"modelo": "MOTOROLA G77 NEGRO XT2621 256GB"
+},
+{
+"zona": "PROVINCIAS",
+"modelo": "OPPO A6K MORADO 256GB LTE"
+},
+{
+"zona": "PROVINCIAS",
+"modelo": "OPPO RENO 16 VINO 256GB 5G C/PROM"
+},
+{
+"zona": "PROVINCIAS",
+"modelo": "OPPO RENO 16F BLANCO 256GB 5G C/PROM"
+},
+{
+"zona": "PROVINCIAS",
+"modelo": "SAMSUNG GXY A27 NEGRO SM-A276B 256GB 5G"
+},
+{
+"zona": "PROVINCIAS",
+"modelo": "SAMSUNG GXY A27 ROSA SMA276B 256GB C/P"
+},
+{
+"zona": "PROVINCIAS",
+"modelo": "SAMSUNG GXY A57 AZUL SM-A576B 256G 5G"
+},
+{
+"zona": "PROVINCIAS",
+"modelo": "XIAOMI REDMI NOTE 15 PRO AZUL 512 5G"
+},
+{
+"zona": "PROVINCIAS",
+"modelo": "XIAOMI REDMI NOTE 15 PRO TITANIO 512 5G"
+},
+{
+"zona": "PROVINCIAS",
+"modelo": "XIAOMI REDMI NOTE 15 PRO+ CAFE 512GB"
 }
 ],
 "eliminados": [
 {
-"zona": "AREQUIPA",
-"modelo": "HONOR MAGIC 8 LITE NEGRO 512GB 5G"
-},
-{
-"zona": "LA LIBERTAD",
-"modelo": "HONOR MAGIC 8 LITE NEGRO 512GB 5G"
-},
-{
-"zona": "LAMBAYEQUE",
-"modelo": "HONOR MAGIC 8 LITE NEGRO 512GB 5G"
-},
-{
-"zona": "LAMBAYEQUE",
-"modelo": "HONOR X6E NEGRO LBU-LX3 256GB C/PACK"
+"zona": "LIMA",
+"modelo": "PACK - IPHONE 15 NEGRO MTP03BE/A 128GB"
 },
 {
 "zona": "LIMA",
-"modelo": "HONOR MAGIC 8 LITE NEGRO 512GB 5G"
+"modelo": "PACK-IPHONE 16 PRO MAX 256GB NEGRO"
 },
 {
 "zona": "PIURA",
-"modelo": "HONOR MAGIC 8 LITE NEGRO 512GB 5G"
-},
-{
-"zona": "PIURA",
-"modelo": "XIAOMI REDMI NOTE 15 PRO NEGRO 512 5G"
-},
-{
-"zona": "PROVINCIAS",
-"modelo": "HONOR MAGIC 8 LITE NEGRO 512GB 5G"
+"modelo": "HONOR X5D PLATA NAA-LX3 128GB"
 }
 ]
 }
