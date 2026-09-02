@@ -1489,6 +1489,8 @@ if (location.protocol === "file:") {
       <div class="radios" id="radiosConvenio"></div>
     </div>
 
+    <div class="aviso info oculto" id="avisoBancosInfo"></div>
+
     <div class="campo">
       <label for="creditoTipoGestion">TIPO DE GESTIÓN</label>
       <select id="creditoTipoGestion">
@@ -2935,6 +2937,46 @@ if (location.protocol === "file:") {
     return mejorScore >= 0.35 ? mejor : null;
   }
 
+  // Reglas del training "REBATE AL CONTADO / Financiamiento con Bancos sin intereses"
+  // (Tip 3), que no vienen en Visor.xlsb y por eso no se podian derivar de los datos:
+  // solo aplica con tarjeta de CREDITO (no debito) y solo en estos departamentos. El slide
+  // dice "Chiclayo" en vez de "Lambayeque" -- Chiclayo es la provincia capital de ese
+  // departamento, y DATA.cobertura no tiene un departamento literal "CHICLAYO", asi que se
+  // interpreta como LAMBAYEQUE. Los 2 departamentos de los 18 que existen en DATA.cobertura
+  // que quedan explicitamente FUERA de esta lista son LA LIBERTAD y PIURA.
+  var DEPARTAMENTOS_BANCOS = [
+    "AREQUIPA", "ANCASH", "AYACUCHO", "CAJAMARCA", "LAMBAYEQUE", "CUSCO", "HUANUCO", "ICA",
+    "JUNIN", "LIMA", "LORETO", "MOQUEGUA", "PUNO", "SAN MARTIN", "TACNA", "UCAYALI"
+  ];
+
+  // Aviso fijo con la info del Tip 3 (no depende de equipo/plan, solo de TIPO/SUBTIPO y de
+  // la UBICACION ya elegida) — se llama desde actualizarCostoInterno() (cada vez que cambia
+  // TIPO/SUBTIPO) y desde aplicarCobertura() (cada vez que cambia la ubicacion), para que el
+  // aviso de departamento no habilitado se actualice sin importar cual de los dos cambio.
+  function actualizarAvisoBancos(){
+    var el = $("avisoBancosInfo");
+    var esBancosActual = $("tipo").value === "OTROS" && $("subtipo").value === "BANCOS (Cuotas sin intereses)";
+    if (!esBancosActual){
+      el.classList.add("oculto");
+      return;
+    }
+    var departamento = seleccionCobertura ? norm(seleccionCobertura.departamento) : "";
+    var habilitado = departamento && DEPARTAMENTOS_BANCOS.indexOf(departamento) !== -1;
+    var avisoDepartamento = !departamento
+      ? ""
+      : habilitado
+        ? ('<br><span style="color:var(--verde);font-weight:700;">✓ ' + seleccionCobertura.departamento + ' está habilitado para BANCOS.</span>')
+        : ('<br><span style="color:var(--rojo);font-weight:700;">⚠ ' + seleccionCobertura.departamento + ' NO está en la lista de departamentos habilitados para BANCOS — no ofrecer esta modalidad aquí.</span>');
+    el.innerHTML =
+      "<b>Importante — Financiamiento con Bancos sin intereses:</b><br>" +
+      "Solo aplica con tarjeta de <b>CRÉDITO</b> (no débito): <b>INTERBANK</b> a 12, 18 o 24 meses, y con <b>BCP</b>/<b>BBVA</b> " +
+      "de 2 a 24 meses a elección del cliente en el banco. Aconseje un plazo mínimo — no calcule el valor de la cuota para " +
+      "otro número de meses, solo bríndele el precio.<br>" +
+      "Disponible solo en: Arequipa, Áncash, Ayacucho, Cajamarca, Chiclayo, Cusco, Huánuco, Ica, Junín, Lima, Loreto, " +
+      "Moquegua, Puno, San Martín, Tacna y Ucayali." + avisoDepartamento;
+    el.classList.remove("oculto");
+  }
+
   function pintarAvisoCosto(texto, tipoAviso){
     ultimoAvisoCosto = { texto: texto, tipo: tipoAviso || "info" };
   }
@@ -3300,6 +3342,7 @@ if (location.protocol === "file:") {
     $("costoGuion").classList.add("oculto");
     ocultarCompararCosto();
     actualizarCompararCaeqPhoenix();
+    actualizarAvisoBancos();
     var tipo = $("tipo").value, subtipo = $("subtipo").value;
     var planBase = $("plan").value.trim();
 
@@ -3839,7 +3882,14 @@ if (location.protocol === "file:") {
       $("rLabelRegular").classList.remove("rlabel-inactivo");
       $("rRegular").classList.remove("rvalor-inactivo");
     } else {
-      $("rUbicacion").value = "";
+      // OJO: no pisar lo que el agente esta escribiendo AHORA MISMO en el buscador de
+      // UBICACION. limpiarSeleccionUbicacionSiCambio() limpia seleccionCobertura (y llama
+      // a esta funcion) apenas el texto tipeado deja de coincidir con la ubicacion ya
+      // confirmada -- eso incluye el primer caracter de una busqueda nueva sobre este MISMO
+      // campo, y sin este chequeo esa busqueda se borraba sola antes de poder mostrar
+      // ninguna sugerencia (el campo quedaba "atascado" despues de la primera vez que se
+      // elegia una ubicacion, imposible de volver a buscar otra).
+      if (document.activeElement !== $("rUbicacion")) $("rUbicacion").value = "";
       $("rExpress").textContent = "-";
       $("rRegular").textContent = "-";
       $("rLabelExpress").classList.remove("rlabel-activo", "rlabel-inactivo");
@@ -5201,6 +5251,7 @@ if (location.protocol === "file:") {
 
     actualizarHabilitacionPostCobertura();
     actualizarResumen();
+    actualizarAvisoBancos();
 
     // si ya habia un equipo elegido, refresca colores/stock/pack para la nueva ubicacion
     if (equipoActual) mostrarFichaEquipo(equipoActual);
