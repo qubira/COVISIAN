@@ -290,7 +290,7 @@
   .btn-comparar{ width:auto; white-space:nowrap; padding:9px 14px; font-size:13px; margin-top:0; }
 
   .fila-input-btn{ display:flex; gap:6px; }
-  .fila-input-btn input{ flex:1; min-width:0; }
+  .fila-input-btn input, .fila-input-btn select{ flex:1; min-width:0; }
 
   .fila-guardar-tipificar{ display:flex; gap:8px; align-items:stretch; }
   .fila-guardar-tipificar .btn{ flex:1; }
@@ -1983,20 +1983,25 @@ if (location.protocol === "file:") {
     </div>
     <div class="campo oculto" id="campoMotivo">
       <label for="motivo">MOTIVO</label>
-      <select id="motivo">
-        <option value="">Seleccione un motivo...</option>
-        <option value="PRECIO">Precio muy alto</option>
-        <option value="NO_INTERESADO">Cliente no interesado</option>
-        <option value="SIN_STOCK">Sin stock del equipo elegido</option>
-        <option value="COBERTURA">No conforme con cobertura / tiempo de entrega</option>
-        <option value="NO_APROBADO">No aprobado (crédito)</option>
-        <option value="DOC_INCOMPLETA">Documentación incompleta</option>
-        <option value="EVALUAR">Cliente desea evaluar otras opciones</option>
-        <option value="OBJECION_NO_SUPERADA">Objeción no superada (rebate)</option>
-        <option value="OTRO">Otro</option>
-      </select>
-      <div class="campo oculto" id="campoMotivoOtro" style="margin-top:8px;">
-        <input type="text" id="motivoOtro" placeholder="Especifique el motivo...">
+      <div class="fila-input-btn">
+        <select id="motivo">
+          <option value="">Seleccione un motivo...</option>
+          <option value="PRECIO">Precio muy alto</option>
+          <option value="NO_INTERESADO">Cliente no interesado</option>
+          <option value="SIN_STOCK">Sin stock del equipo elegido</option>
+          <option value="COBERTURA">No conforme con cobertura / tiempo de entrega</option>
+          <option value="NO_APROBADO">No aprobado (crédito)</option>
+          <option value="DOC_INCOMPLETA">Documentación incompleta</option>
+          <option value="EVALUAR">Cliente desea evaluar otras opciones</option>
+          <option value="OBJECION_NO_SUPERADA">Objeción no superada (rebate)</option>
+        </select>
+        <button type="button" class="btn-mini" id="btnAgregarMotivo" title="Agregar un motivo nuevo a la lista">+</button>
+      </div>
+      <div class="campo oculto" id="campoMotivoNuevo" style="margin-top:8px;">
+        <div class="fila-input-btn">
+          <input type="text" id="motivoNuevoTexto" placeholder="Escriba el motivo nuevo...">
+          <button type="button" class="btn-mini" id="btnConfirmarMotivoNuevo">Agregar</button>
+        </div>
       </div>
     </div>
 
@@ -2035,20 +2040,25 @@ if (location.protocol === "file:") {
   </div>
   <div class="campo">
     <label for="motivoRapido">MOTIVO</label>
-    <select id="motivoRapido">
-      <option value="">Seleccione un motivo...</option>
-      <option value="PRECIO">Precio muy alto</option>
-      <option value="NO_INTERESADO">Cliente no interesado</option>
-      <option value="SIN_STOCK">Sin stock del equipo elegido</option>
-      <option value="COBERTURA">No conforme con cobertura / tiempo de entrega</option>
-      <option value="NO_APROBADO">No aprobado (crédito)</option>
-      <option value="DOC_INCOMPLETA">Documentación incompleta</option>
-      <option value="EVALUAR">Cliente desea evaluar otras opciones</option>
-      <option value="OBJECION_NO_SUPERADA">Objeción no superada (rebate)</option>
-      <option value="OTRO">Otro</option>
-    </select>
-    <div class="campo oculto" id="campoMotivoRapidoOtro" style="margin-top:8px;">
-      <input type="text" id="motivoRapidoOtro" placeholder="Especifique el motivo...">
+    <div class="fila-input-btn">
+      <select id="motivoRapido">
+        <option value="">Seleccione un motivo...</option>
+        <option value="PRECIO">Precio muy alto</option>
+        <option value="NO_INTERESADO">Cliente no interesado</option>
+        <option value="SIN_STOCK">Sin stock del equipo elegido</option>
+        <option value="COBERTURA">No conforme con cobertura / tiempo de entrega</option>
+        <option value="NO_APROBADO">No aprobado (crédito)</option>
+        <option value="DOC_INCOMPLETA">Documentación incompleta</option>
+        <option value="EVALUAR">Cliente desea evaluar otras opciones</option>
+        <option value="OBJECION_NO_SUPERADA">Objeción no superada (rebate)</option>
+      </select>
+      <button type="button" class="btn-mini" id="btnAgregarMotivoRapido" title="Agregar un motivo nuevo a la lista">+</button>
+    </div>
+    <div class="campo oculto" id="campoMotivoRapidoNuevo" style="margin-top:8px;">
+      <div class="fila-input-btn">
+        <input type="text" id="motivoRapidoNuevoTexto" placeholder="Escriba el motivo nuevo...">
+        <button type="button" class="btn-mini" id="btnConfirmarMotivoRapidoNuevo">Agregar</button>
+      </div>
     </div>
   </div>
   <button type="button" class="btn" id="btnGuardarNoVentaRapida" style="width:100%; margin-top:10px;">Guardar como NO vendido</button>
@@ -2724,7 +2734,7 @@ if (location.protocol === "file:") {
     // demas — sin esto, un solo error silencioso podia dejar sin usar, por ejemplo, el
     // buscador de EQUIPO (initAutocomplete) si algo antes de el en la lista fallaba.
     [initCodFinanciamiento, initPlanes, initAutocomplete, initComparar, initStockNacional,
-      initCosto, initSimuladorEquipos, initVerDetalleEquipo, initZoomEquipo, initExpandirMapas, initFiltroAvanzadoDireccion, initAgendarLlamada, initCasosAgendados, initWhatsapp, initAutoguardado, initEncabezadoColapsable, initBotonesEncabezadoMinimizable, initCambiosHistoricos, initInvalidarValidacionesContrato, initContabilizarTiempo, initResaltarCamposLlenos, initMayusculasAutomaticas, initTipoSubtipoEncabezado, initPlanEncabezado, initCodFinanciamientoEncabezado, initConvenioEncabezado, initColorEquipoAutocomplete, initSuprimirAutocompletePago, precargarCicloContrato, actualizarContrato, actualizarSimuladorFinanciamiento, actualizarEncabezado].forEach(function(fn){
+      initCosto, initSimuladorEquipos, initVerDetalleEquipo, initZoomEquipo, initExpandirMapas, initFiltroAvanzadoDireccion, initAgendarLlamada, initCasosAgendados, initWhatsapp, initMotivosPersonalizados, initAutoguardado, initEncabezadoColapsable, initBotonesEncabezadoMinimizable, initCambiosHistoricos, initInvalidarValidacionesContrato, initContabilizarTiempo, initResaltarCamposLlenos, initMayusculasAutomaticas, initTipoSubtipoEncabezado, initPlanEncabezado, initCodFinanciamientoEncabezado, initConvenioEncabezado, initColorEquipoAutocomplete, initSuprimirAutocompletePago, precargarCicloContrato, actualizarContrato, actualizarSimuladorFinanciamiento, actualizarEncabezado].forEach(function(fn){
       try{ fn(); }catch(err){ console.error("Fallo al inicializar " + fn.name + ":", err); }
     });
   }).catch(function(err){
@@ -3769,7 +3779,6 @@ if (location.protocol === "file:") {
       negativaResultado: negativaResultado,
       vendido: (document.querySelector('input[name=vendido]:checked') || {}).value || "",
       motivo: $("motivo").value,
-      motivoOtro: $("motivoOtro").value,
       actualizado: formatearFechaHoraLocal(new Date())
     };
   }
@@ -4072,9 +4081,15 @@ if (location.protocol === "file:") {
       if (rVendido) rVendido.checked = true;
       if (estado.vendido === "NO") $("campoMotivo").classList.remove("oculto");
     }
-    $("motivo").value = estado.motivo || "";
-    if (estado.motivo === "OTRO") $("campoMotivoOtro").classList.remove("oculto");
-    $("motivoOtro").value = estado.motivoOtro || "";
+    // compatibilidad con borradores viejos (de antes de reemplazar "Otro" + texto libre por
+    // "+ agregar motivo nuevo"): si el borrador todavia trae motivo="OTRO" con su texto en
+    // motivoOtro, se da de alta ese texto como motivo personalizado en vez de perderlo.
+    if (estado.motivo === "OTRO" && estado.motivoOtro){
+      agregarOpcionMotivoATodos(estado.motivoOtro);
+      $("motivo").value = estado.motivoOtro.trim().toUpperCase();
+    } else {
+      $("motivo").value = estado.motivo || "";
+    }
 
     $("contratoFechaNacimiento").value = estado.contratoFechaNacimiento || "";
     $("contratoNombrePadreMadre").value = estado.contratoNombrePadreMadre || "";
@@ -4220,7 +4235,7 @@ if (location.protocol === "file:") {
     $("packAviso").classList.add("oculto");
     $("packAviso").innerHTML = "";
     $("campoMotivo").classList.add("oculto");
-    $("campoMotivoOtro").classList.add("oculto");
+    $("campoMotivoNuevo").classList.add("oculto");
     poblarSubtipo("POSTPAGO", "CAEQ");
     $("mensajeEnvio").innerHTML = "";
     $("bannerRestaurado").classList.add("oculto");
@@ -4762,7 +4777,7 @@ if (location.protocol === "file:") {
       if (rNo) rNo.checked = true;
       $("campoMotivo").classList.remove("oculto");
       $("motivo").value = "OBJECION_NO_SUPERADA";
-      $("campoMotivoOtro").classList.add("oculto");
+      $("campoMotivoNuevo").classList.add("oculto");
       actualizarBitacoraBoton();
       guardarProgreso();
       $("fs-venta").scrollIntoView({ behavior: "smooth", block: "start" });
@@ -5060,37 +5075,28 @@ if (location.protocol === "file:") {
   // boton siempre activo en el encabezado (no vive dentro de fs-venta, asi que no depende de
   // que ese fieldset este habilitado) -- el pedido puntual era no tener que bajar hasta abajo
   // ni esperar a que se llenen otros campos primero. Al confirmar, se refleja el motivo
-  // tambien en los campos reales de RESULTADO (#motivo/#motivoOtro/el radio NO) para que el
-  // formulario quede consistente si el agente llega a bajar a mirarlo antes de que se limpie,
-  // y se reusa guardarRegistroVenta() -- el mismo camino que ya usa el submit de GUARDAR, sin
-  // duplicar esa logica de guardado/envio/cierre de llamada.
+  // tambien en el campo real de RESULTADO (#motivo/el radio NO) para que el formulario quede
+  // consistente si el agente llega a bajar a mirarlo antes de que se limpie, y se reusa
+  // guardarRegistroVenta() -- el mismo camino que ya usa el submit de GUARDAR, sin duplicar
+  // esa logica de guardado/envio/cierre de llamada.
   $("btnNoVentaRapida").addEventListener("click", function(e){
     e.stopPropagation();
     $("motivoRapido").value = "";
-    $("campoMotivoRapidoOtro").classList.add("oculto");
-    $("motivoRapidoOtro").value = "";
+    $("campoMotivoRapidoNuevo").classList.add("oculto");
     abrirPopoverAnclado("btnNoVentaRapida", "popoverNoVentaRapida");
   });
   $("btnCerrarNoVentaRapida").addEventListener("click", function(){
     $("popoverNoVentaRapida").classList.add("oculto");
-  });
-  $("motivoRapido").addEventListener("change", function(){
-    $("campoMotivoRapidoOtro").classList.toggle("oculto", $("motivoRapido").value !== "OTRO");
   });
   $("btnGuardarNoVentaRapida").addEventListener("click", function(){
     if (!$("motivoRapido").value){
       mostrarAvisoPersonalizado("Seleccione un motivo.");
       return;
     }
-    if ($("motivoRapido").value === "OTRO" && !$("motivoRapidoOtro").value.trim()){
-      mostrarAvisoPersonalizado("Especifique el motivo en el campo de texto.");
-      return;
-    }
     var radioNo = document.querySelector('input[name=vendido][value=NO]');
     radioNo.checked = true;
     radioNo.dispatchEvent(new Event("change", { bubbles: true }));
     $("motivo").value = $("motivoRapido").value;
-    $("motivoOtro").value = $("motivoRapidoOtro").value;
     $("popoverNoVentaRapida").classList.add("oculto");
     guardarRegistroVenta("NO");
   });
@@ -5135,18 +5141,78 @@ if (location.protocol === "file:") {
         campoMotivo.classList.remove("oculto");
       } else {
         campoMotivo.classList.add("oculto");
-        $("campoMotivoOtro").classList.add("oculto");
+        $("campoMotivoNuevo").classList.add("oculto");
       }
     });
   });
 
-  $("motivo").addEventListener("change", function(){
-    if ($("motivo").value === "OTRO"){
-      $("campoMotivoOtro").classList.remove("oculto");
-    } else {
-      $("campoMotivoOtro").classList.add("oculto");
+  // ============ MOTIVO (NO vendido): "+ agregar motivo nuevo" en vez de "Otro" + texto libre
+  // ============ para no repetir el mismo motivo no listado escrito distinto (con errores de
+  // ============ tipeo) cada vez -- una vez agregado queda disponible como opcion normal, en
+  // ============ los DOS selects (#motivo de RESULTADO y #motivoRapido del boton rapido del
+  // ============ encabezado) y para las proximas llamadas (persistido en localStorage).
+  var LS_MOTIVOS_PERSONALIZADOS = "motivos_personalizados_no_venta";
+
+  function agregarOpcionMotivoATodos(texto){
+    var limpio = (texto || "").trim().toUpperCase();
+    if (!limpio) return;
+    ["motivo", "motivoRapido"].forEach(function(idSelect){
+      var sel = $(idSelect);
+      var yaExiste = Array.prototype.some.call(sel.options, function(o){ return o.value === limpio; });
+      if (yaExiste) return;
+      var opt = document.createElement("option");
+      opt.value = limpio;
+      opt.textContent = limpio;
+      sel.appendChild(opt);
+    });
+  }
+
+  function guardarMotivoPersonalizadoNuevo(texto){
+    var limpio = (texto || "").trim().toUpperCase();
+    if (!limpio) return;
+    agregarOpcionMotivoATodos(limpio);
+    try{
+      var lista = JSON.parse(localStorage.getItem(LS_MOTIVOS_PERSONALIZADOS) || "[]");
+      if (lista.indexOf(limpio) === -1){
+        lista.push(limpio);
+        localStorage.setItem(LS_MOTIVOS_PERSONALIZADOS, JSON.stringify(lista));
+      }
+    }catch(err){ /* localStorage no disponible */ }
+  }
+
+  // Wire generico del boton "+" -> revela un input+"Agregar" (Enter tambien confirma), en vez
+  // de un modal aparte -- mismo patron ya usado por el "Otro" que reemplaza.
+  function initAgregarMotivo(idSelect, idBtnMas, idCampoNuevo, idInputNuevo, idBtnConfirmar){
+    $(idBtnMas).addEventListener("click", function(e){
+      e.stopPropagation();
+      $(idCampoNuevo).classList.remove("oculto");
+      $(idInputNuevo).value = "";
+      $(idInputNuevo).focus();
+    });
+    function confirmar(){
+      var texto = $(idInputNuevo).value.trim();
+      if (!texto){
+        mostrarAvisoPersonalizado("Escriba el motivo nuevo antes de agregarlo.");
+        return;
+      }
+      guardarMotivoPersonalizadoNuevo(texto);
+      $(idSelect).value = texto.trim().toUpperCase();
+      $(idCampoNuevo).classList.add("oculto");
     }
-  });
+    $(idBtnConfirmar).addEventListener("click", confirmar);
+    $(idInputNuevo).addEventListener("keydown", function(e){
+      if (e.key === "Enter"){ e.preventDefault(); confirmar(); }
+    });
+  }
+
+  function initMotivosPersonalizados(){
+    try{
+      var lista = JSON.parse(localStorage.getItem(LS_MOTIVOS_PERSONALIZADOS) || "[]");
+      lista.forEach(agregarOpcionMotivoATodos);
+    }catch(err){ /* localStorage no disponible */ }
+    initAgregarMotivo("motivo", "btnAgregarMotivo", "campoMotivoNuevo", "motivoNuevoTexto", "btnConfirmarMotivoNuevo");
+    initAgregarMotivo("motivoRapido", "btnAgregarMotivoRapido", "campoMotivoRapidoNuevo", "motivoRapidoNuevoTexto", "btnConfirmarMotivoRapidoNuevo");
+  }
 
   // ============ AUTOCOMPLETE UBICACIÓN (distrito / provincia / departamento) ============
   var seleccionCobertura = null;
@@ -8825,7 +8891,7 @@ if (location.protocol === "file:") {
       cantidadObjeciones: bitacoraRebate.length,
       negativaResultado: negativaResultado,
       vendido: vendido,
-      motivo: vendido === "NO" ? ($("motivo").value === "OTRO" ? $("motivoOtro").value : $("motivo").options[$("motivo").selectedIndex].text) : ""
+      motivo: vendido === "NO" ? $("motivo").options[$("motivo").selectedIndex].text : ""
     };
   }
 
@@ -8833,8 +8899,8 @@ if (location.protocol === "file:") {
   // llamada. Se saco a una funcion aparte (recibe "vendido" ya validado/confirmado) para que
   // el boton "No vendido (rápido)" del encabezado pueda reusar exactamente este mismo camino
   // sin duplicar la logica de guardado/envio/cierre — los campos reales (radio vendido,
-  // #motivo/#motivoOtro) ya quedan puestos por quien llame a esta funcion, construirRegistro()
-  // los lee de ahi igual que si el agente los hubiera llenado a mano en RESULTADO.
+  // #motivo) ya quedan puestos por quien llame a esta funcion, construirRegistro() los lee
+  // de ahi igual que si el agente los hubiera llenado a mano en RESULTADO.
   function guardarRegistroVenta(vendido){
     var registro = construirRegistro();
 
@@ -8902,10 +8968,6 @@ if (location.protocol === "file:") {
     var vendido = vendidoEl.value;
     if (vendido === "NO" && !$("motivo").value){
       mostrarAvisoPersonalizado("Seleccione un motivo.");
-      return;
-    }
-    if (vendido === "NO" && $("motivo").value === "OTRO" && !$("motivoOtro").value.trim()){
-      mostrarAvisoPersonalizado("Especifique el motivo en el campo de texto.");
       return;
     }
 
