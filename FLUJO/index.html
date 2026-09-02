@@ -6144,6 +6144,14 @@ if (location.protocol === "file:") {
     if (tipo === "ESPECIALES" && subtipo === "PHOENIX (Contado)"){
       return esEquipoPhoenix(nombreEquipo);
     }
+    // OTROS|BANCOS (Cuotas sin intereses): no tenia entrada en REGLA_TIPO_SUBTIPO, asi que
+    // "sin regla conocida" dejaba pasar CUALQUIER equipo del catalogo sin filtrar -- la
+    // lista mostraba equipos que despues fallaban en COSTO con "No se encontró el equipo...
+    // en la tabla de BANCOS". Mismo caso que PHOENIX arriba: se filtra por la tabla de
+    // precios real (esEquipoBancos) en vez de no filtrar nada.
+    if (tipo === "OTROS" && subtipo === "BANCOS (Cuotas sin intereses)"){
+      return esEquipoBancos(nombreEquipo);
+    }
     var regla = REGLA_TIPO_SUBTIPO[tipo + "|" + subtipo];
     if (!regla) return true; // sin regla conocida (ALTA/PREPAGO/OTROS): no se filtra
     var meta = DATA.equiposTipoventa[nombreEquipo];
