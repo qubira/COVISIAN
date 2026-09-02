@@ -1100,6 +1100,7 @@ if (location.protocol === "file:") {
       <button type="button" class="btn-agendar" id="btnContabilizarTiempo" title="Contabilizar tiempo de gestión">⏱ <span>Tiempo</span></button>
       <a href="tienda-movistar.html" target="_blank" rel="noopener" class="btn-agendar" style="text-decoration:none;" title="Precios reales de Movistar y Claro, para comparar (solo referencia)">🏪 <span>Tiendas</span></a>
       <button type="button" class="btn-agendar" id="btnTipificacionHeader" title="Tipificar la llamada y empezar un caso nuevo">🏷️ <span>Tipificar</span></button>
+      <button type="button" class="btn-agendar" id="btnNoVentaRapida" title="Marcar NO vendido, elegir motivo y guardar, sin bajar hasta RESULTADO">🚫 <span>No vendido</span></button>
       <button type="button" class="btn-agendar" id="btnWhatsapp" title="Escribir al cliente por WhatsApp">💬 <span>WhatsApp</span></button>
       <button type="button" class="btn-agendar oculto" id="btnBitacoraRebate" title="Bitácora de objeciones de este cliente">📋 <span>Bitácora</span></button>
     </div>
@@ -2021,6 +2022,36 @@ if (location.protocol === "file:") {
     <button type="button" class="btn-tipificacion" data-tipificacion="No contacto efectivo">No contacto efectivo</button>
     <button type="button" class="btn-tipificacion" data-tipificacion="No contacto">No contacto</button>
   </div>
+</div>
+
+<div class="popover-region oculto" id="popoverNoVentaRapida">
+  <div class="popover-region-header">
+    <div class="popover-region-titulo">NO VENDIDO (RÁPIDO)</div>
+    <button type="button" class="btn-cerrar" id="btnCerrarNoVentaRapida">✕</button>
+  </div>
+  <div class="popover-region-seccion" style="color:var(--gris); margin-bottom:10px;">
+    Guarda el formulario completo como NO vendido (con este motivo) en "No venta" y
+    "No contacto efectivo", sin bajar hasta RESULTADO.
+  </div>
+  <div class="campo">
+    <label for="motivoRapido">MOTIVO</label>
+    <select id="motivoRapido">
+      <option value="">Seleccione un motivo...</option>
+      <option value="PRECIO">Precio muy alto</option>
+      <option value="NO_INTERESADO">Cliente no interesado</option>
+      <option value="SIN_STOCK">Sin stock del equipo elegido</option>
+      <option value="COBERTURA">No conforme con cobertura / tiempo de entrega</option>
+      <option value="NO_APROBADO">No aprobado (crédito)</option>
+      <option value="DOC_INCOMPLETA">Documentación incompleta</option>
+      <option value="EVALUAR">Cliente desea evaluar otras opciones</option>
+      <option value="OBJECION_NO_SUPERADA">Objeción no superada (rebate)</option>
+      <option value="OTRO">Otro</option>
+    </select>
+    <div class="campo oculto" id="campoMotivoRapidoOtro" style="margin-top:8px;">
+      <input type="text" id="motivoRapidoOtro" placeholder="Especifique el motivo...">
+    </div>
+  </div>
+  <button type="button" class="btn" id="btnGuardarNoVentaRapida" style="width:100%; margin-top:10px;">Guardar como NO vendido</button>
 </div>
 
 <div class="toast-tipificacion oculto" id="toastTipificacion"></div>
@@ -4952,7 +4983,8 @@ if (location.protocol === "file:") {
     { btn: "btnInfoRegion", popover: "popoverRegion" },
     { btn: "btnInfoCodFinanciamiento", popover: "popoverCodFinanciamiento" },
     { btn: "btnTipificacionHeader", popover: "popoverTipificacion" },
-    { btn: "btnTipificacionVenta", popover: "popoverTipificacion" }
+    { btn: "btnTipificacionVenta", popover: "popoverTipificacion" },
+    { btn: "btnNoVentaRapida", popover: "popoverNoVentaRapida" }
   ];
 
   function abrirPopoverAnclado(btnId, popoverId){
@@ -5024,7 +5056,51 @@ if (location.protocol === "file:") {
     });
   });
 
+  // NO VENDIDO RAPIDO: mismo resultado que RESULTADO -> NO + motivo + GUARDAR, pero desde un
+  // boton siempre activo en el encabezado (no vive dentro de fs-venta, asi que no depende de
+  // que ese fieldset este habilitado) -- el pedido puntual era no tener que bajar hasta abajo
+  // ni esperar a que se llenen otros campos primero. Al confirmar, se refleja el motivo
+  // tambien en los campos reales de RESULTADO (#motivo/#motivoOtro/el radio NO) para que el
+  // formulario quede consistente si el agente llega a bajar a mirarlo antes de que se limpie,
+  // y se reusa guardarRegistroVenta() -- el mismo camino que ya usa el submit de GUARDAR, sin
+  // duplicar esa logica de guardado/envio/cierre de llamada.
+  $("btnNoVentaRapida").addEventListener("click", function(e){
+    e.stopPropagation();
+    $("motivoRapido").value = "";
+    $("campoMotivoRapidoOtro").classList.add("oculto");
+    $("motivoRapidoOtro").value = "";
+    abrirPopoverAnclado("btnNoVentaRapida", "popoverNoVentaRapida");
+  });
+  $("btnCerrarNoVentaRapida").addEventListener("click", function(){
+    $("popoverNoVentaRapida").classList.add("oculto");
+  });
+  $("motivoRapido").addEventListener("change", function(){
+    $("campoMotivoRapidoOtro").classList.toggle("oculto", $("motivoRapido").value !== "OTRO");
+  });
+  $("btnGuardarNoVentaRapida").addEventListener("click", function(){
+    if (!$("motivoRapido").value){
+      mostrarAvisoPersonalizado("Seleccione un motivo.");
+      return;
+    }
+    if ($("motivoRapido").value === "OTRO" && !$("motivoRapidoOtro").value.trim()){
+      mostrarAvisoPersonalizado("Especifique el motivo en el campo de texto.");
+      return;
+    }
+    var radioNo = document.querySelector('input[name=vendido][value=NO]');
+    radioNo.checked = true;
+    radioNo.dispatchEvent(new Event("change", { bubbles: true }));
+    $("motivo").value = $("motivoRapido").value;
+    $("motivoOtro").value = $("motivoRapidoOtro").value;
+    $("popoverNoVentaRapida").classList.add("oculto");
+    guardarRegistroVenta("NO");
+  });
+
   document.addEventListener("click", function(e){
+    // Un click dentro del modal de confirmar/aviso (ej. "Seleccione un motivo" al validar
+    // "No vendido rápido" con el popover todavia abierto) NO cuenta como "click afuera" --
+    // sin este chequeo, cerrar ese aviso tambien cerraba el popover de origen, perdiendo lo
+    // que el agente ya habia elegido ahi y obligandolo a volver a abrirlo desde cero.
+    if (e.target.closest("#modalConfirmar")) return;
     POPOVERS_ANCLADOS.forEach(function(p){
       var popover = $(p.popover);
       if (popover.classList.contains("oculto")) return;
@@ -8753,24 +8829,13 @@ if (location.protocol === "file:") {
     };
   }
 
-  document.getElementById("ficha").addEventListener("submit", function(e){
-    e.preventDefault();
-
-    var vendidoEl = document.querySelector('input[name=vendido]:checked');
-    if (!vendidoEl){
-      mostrarAvisoPersonalizado("Indique si se vendió o no.");
-      return;
-    }
-    var vendido = vendidoEl.value;
-    if (vendido === "NO" && !$("motivo").value){
-      mostrarAvisoPersonalizado("Seleccione un motivo.");
-      return;
-    }
-    if (vendido === "NO" && $("motivo").value === "OTRO" && !$("motivoOtro").value.trim()){
-      mostrarAvisoPersonalizado("Especifique el motivo en el campo de texto.");
-      return;
-    }
-
+  // Guardado real de GUARDAR: arma el registro, respaldo local, envia al Sheet y cierra la
+  // llamada. Se saco a una funcion aparte (recibe "vendido" ya validado/confirmado) para que
+  // el boton "No vendido (rápido)" del encabezado pueda reusar exactamente este mismo camino
+  // sin duplicar la logica de guardado/envio/cierre — los campos reales (radio vendido,
+  // #motivo/#motivoOtro) ya quedan puestos por quien llame a esta funcion, construirRegistro()
+  // los lee de ahi igual que si el agente los hubiera llenado a mano en RESULTADO.
+  function guardarRegistroVenta(vendido){
     var registro = construirRegistro();
 
     var mensaje = $("mensajeEnvio");
@@ -8824,6 +8889,27 @@ if (location.protocol === "file:") {
       btn.disabled = false;
       cerrarLlamada('<div class="aviso err">No se pudo enviar a la hoja de cálculo (quedó guardada localmente). Detalle: ' + err + '</div>');
     });
+  }
+
+  document.getElementById("ficha").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    var vendidoEl = document.querySelector('input[name=vendido]:checked');
+    if (!vendidoEl){
+      mostrarAvisoPersonalizado("Indique si se vendió o no.");
+      return;
+    }
+    var vendido = vendidoEl.value;
+    if (vendido === "NO" && !$("motivo").value){
+      mostrarAvisoPersonalizado("Seleccione un motivo.");
+      return;
+    }
+    if (vendido === "NO" && $("motivo").value === "OTRO" && !$("motivoOtro").value.trim()){
+      mostrarAvisoPersonalizado("Especifique el motivo en el campo de texto.");
+      return;
+    }
+
+    guardarRegistroVenta(vendido);
   });
 
   // TIPIFICAR: ruta alterna a GUARDAR, para casos que no llegan a definirse como venta/no
