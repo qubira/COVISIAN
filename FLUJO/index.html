@@ -7361,6 +7361,38 @@ if (location.protocol === "file:") {
     try{ localStorage.setItem(LS_TIEMPO_PERMANENTE_INICIO, String(tiempoPermanenteInicioTs)); }catch(err){}
   }
 
+  // Sonido de aviso (sintetizado con Web Audio API, sin archivo externo -- mismo criterio
+  // que el QR self-hosted: las PCs de la campaña pueden tener acceso a internet restringido)
+  // para el contabilizador permanente cada vez que se cumplen 5 minutos mas. Tres tonos
+  // ascendentes cortos, como una notificacion, no una sirena. Si el navegador bloquea el
+  // audio (autoplay) o no soporta AudioContext, falla en silencio -- nunca debe romper el
+  // conteo visual, que ya funciona sin esto.
+  var audioCtxAlerta = null;
+  function reproducirSonidoAlertaTiempo(){
+    try{
+      var Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return;
+      if (!audioCtxAlerta) audioCtxAlerta = new Ctx();
+      var ctx = audioCtxAlerta;
+      if (ctx.state === "suspended") ctx.resume();
+      var ahora = ctx.currentTime;
+      [[ahora, 880], [ahora + 0.18, 880], [ahora + 0.36, 1174.7]].forEach(function(par){
+        var inicio = par[0], frecuencia = par[1];
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.value = frecuencia;
+        gain.gain.setValueAtTime(0.0001, inicio);
+        gain.gain.exponentialRampToValueAtTime(0.25, inicio + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, inicio + 0.16);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(inicio);
+        osc.stop(inicio + 0.18);
+      });
+    }catch(err){ /* audio no disponible/bloqueado: el conteo visual sigue funcionando igual */ }
+  }
+
   function actualizarPanelTiempoPermanente(){
     if (!tiempoPermanenteInicioTs){
       $("panelTiempoPermanenteValor").textContent = "00:00";
@@ -7374,6 +7406,7 @@ if (location.protocol === "file:") {
       tiempoPermanenteUltimoUmbral = umbralActual;
       var valorEl = $("panelTiempoPermanenteValor");
       valorEl.classList.add("alerta-tipificar");
+      reproducirSonidoAlertaTiempo();
       clearTimeout(actualizarPanelTiempoPermanente._t);
       actualizarPanelTiempoPermanente._t = setTimeout(function(){
         valorEl.classList.remove("alerta-tipificar");
