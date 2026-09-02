@@ -3739,7 +3739,7 @@ if (location.protocol === "file:") {
       vendido: (document.querySelector('input[name=vendido]:checked') || {}).value || "",
       motivo: $("motivo").value,
       motivoOtro: $("motivoOtro").value,
-      actualizado: new Date().toISOString()
+      actualizado: formatearFechaHoraLocal(new Date())
     };
   }
 
@@ -7971,7 +7971,7 @@ if (location.protocol === "file:") {
       var cita = {
         id: generarDraftId(),
         estado: "PENDIENTE",
-        agendadoEn: new Date().toISOString(),
+        agendadoEn: formatearFechaHoraLocal(new Date()),
         fecha: fecha,
         hora: hora,
         cel: $("guionAni").value.trim(),
@@ -8343,6 +8343,15 @@ if (location.protocol === "file:") {
   function fechaLocalHoy(){
     return formatearFechaLocalYMD(new Date());
   }
+  // "YYYY-MM-DD HH:mm:ss" en hora LOCAL, para las marcas de tiempo que se guardan en el
+  // Sheet (registro de GUARDAR/TIPIFICAR, autoguardado de borrador, "agendadoEn" de Casos
+  // agendados) — mismo motivo que formatearFechaLocalYMD: new Date().toISOString() siempre
+  // da hora UTC (termina en "Z"), 5 horas adelantada a Peru, y en el Sheet se veia como si
+  // se hubiera guardado a una hora distinta a la real.
+  function formatearFechaHoraLocal(d){
+    return formatearFechaLocalYMD(d) + " " +
+      String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0") + ":" + String(d.getSeconds()).padStart(2, "0");
+  }
 
   // Semana calendario actual (lunes a domingo) y mes calendario actual, para el filtro
   // Hoy/Semana/Mes de "Casos agendados". Comparacion de rango es por string YYYY-MM-DD
@@ -8652,7 +8661,7 @@ if (location.protocol === "file:") {
     var vendidoEl = document.querySelector('input[name=vendido]:checked');
     var vendido = vendidoEl ? vendidoEl.value : "";
     return {
-      fecha: new Date().toISOString(),
+      fecha: formatearFechaHoraLocal(new Date()),
       guionAni: $("guionAni").value.trim(),
       guionAniReferencia: $("guionAniReferencia").value.trim(),
       guionDni: $("guionDni").value.trim(),
