@@ -8758,16 +8758,15 @@ if (location.protocol === "file:") {
       setTimeout(limpiarFormularioCompleto, 1800);
     }
 
-    if (vendido !== "SI"){
-      cerrarLlamada('<div class="aviso info">Registro guardado localmente (no vendido). No se envía a la hoja de cálculo.</div>');
-      return;
-    }
-
     if (!tieneScriptConfigurado()){
       cerrarLlamada('<div class="aviso err">Falta configurar GOOGLE_SCRIPT_URL en index.html. El registro quedó guardado localmente.</div>');
       return;
     }
 
+    // Se envia siempre, se haya vendido o no -- la hoja "Ventas" ya tiene columnas "vendido"/
+    // "motivo" (ver COLUMNAS_VENTA en apps_script.gs) que registran exactamente esto; antes
+    // un "NO" se guardaba SOLO localmente y nunca llegaba a Drive, a diferencia de TIPIFICAR
+    // y el autoguardado de borrador, que ya enviaban siempre sin esta excepcion.
     btn.disabled = true;
     fetch(GOOGLE_SCRIPT_URL, {
       method: "POST",
@@ -8776,7 +8775,9 @@ if (location.protocol === "file:") {
       body: JSON.stringify(registro)
     }).then(function(){
       btn.disabled = false;
-      cerrarLlamada('<div class="aviso ok">Venta guardada y enviada correctamente.</div>');
+      cerrarLlamada(vendido === "SI"
+        ? '<div class="aviso ok">Venta guardada y enviada correctamente.</div>'
+        : '<div class="aviso ok">Registro guardado y enviado a la hoja de cálculo.</div>');
     }).catch(function(err){
       btn.disabled = false;
       cerrarLlamada('<div class="aviso err">No se pudo enviar a la hoja de cálculo (quedó guardada localmente). Detalle: ' + err + '</div>');
