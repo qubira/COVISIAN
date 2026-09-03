@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laboratorio de Equipos - Movistar</title>
+<style>
+  :root{
+    --azul:#0f3d91; --azul-claro:#1a56d6; --azul-bg:#eef3fc;
+    --verde:#1a8f4c; --rojo:#c0392b; --gris:#6b7280; --gris-bg:#f4f5f7;
+    --borde:#d7dce3; --texto:#1f2530;
+  }
+  *{box-sizing:border-box;}
+  body{
+    font-family:'Segoe UI', Arial, sans-serif; background:var(--gris-bg); color:var(--texto);
+    margin:0; padding:14px 12px 60px;
+  }
+  .contenedor{ max-width:760px; margin:0 auto; }
+  h1{ color:var(--azul); font-size:18px; margin:0 0 4px; }
+  .subtitulo{ color:var(--gris); font-size:12.5px; margin:0 0 16px; line-height:1.4; }
+  .panel{
+    border:1px solid var(--borde); border-radius:10px; background:#fff;
+    padding:14px 16px 16px; margin-bottom:14px;
+  }
+  .panel-titulo{
+    font-weight:700; color:#fff; background:var(--azul); padding:4px 12px;
+    border-radius:6px; font-size:12.5px; letter-spacing:.3px; display:inline-block; margin:-14px 0 12px -4px;
+  }
+  .fila{ display:flex; gap:12px; flex-wrap:wrap; }
+  .fila > .campo{ flex:1; min-width:150px; }
+  .campo{ margin:8px 0; }
+  .campo label{ display:block; font-size:11.5px; font-weight:700; color:var(--gris); margin-bottom:3px; letter-spacing:.2px; }
+  input[type=text], input[type=number], select, textarea{
+    width:100%; padding:8px 9px; border:1px solid var(--borde); border-radius:6px;
+    font-size:13.5px; font-family:inherit; background:#fff; color:var(--texto);
+  }
+  input:focus, select:focus{ outline:2px solid var(--azul-claro); outline-offset:-1px; }
+  .oculto{ display:none !important; }
+
+  .autocomplete{ position:relative; }
+  .autocomplete .lista{
+    position:absolute; z-index:50; top:100%; left:0; right:0; background:#fff;
+    border:1px solid var(--borde); border-top:none; border-radius:0 0 6px 6px;
+    max-height:220px; overflow-y:auto; display:none; box-shadow:0 6px 14px rgba(0,0,0,.08);
+  }
+  .autocomplete .lista.abierta{ display:block; }
+  .autocomplete .opcion{ padding:7px 10px; font-size:13px; cursor:pointer; border-bottom:1px solid var(--gris-bg); }
+  .autocomplete .opcion:last-child{ border-bottom:none; }
+  .autocomplete .opcion:hover{ background:var(--azul-bg); }
+  .autocomplete .opcion small{ display:block; color:var(--gris); font-size:11px; }
+  .autocomplete .opcion.opcion-phoenix{ background:#fff8de; }
+  .autocomplete .opcion.opcion-phoenix:hover{ background:#fff0ae; }
+
+  .badge-phoenix{
+    display:inline-block; font-size:9.5px; font-weight:800; letter-spacing:.3px; color:#8a6a00;
+    background:#ffe58a; border-radius:8px; padding:1px 6px; margin-left:4px; vertical-align:middle;
+  }
+  .badge-bancos{
+    display:inline-block; font-size:9.5px; font-weight:800; letter-spacing:.3px; color:#fff;
+    background:var(--azul); border-radius:8px; padding:1px 6px; margin-left:4px; vertical-align:middle;
+  }
+
+  .radios{ display:flex; gap:14px; flex-wrap:wrap; margin-top:2px; }
+  .radios label{ font-weight:400; font-size:13px; display:flex; align-items:center; gap:5px; color:var(--texto); }
+
+  .filtros-grid{ display:grid; grid-template-columns:1fr 1fr; gap:8px 12px; margin-top:4px; }
+  @media (max-width:520px){ .filtros-grid{ grid-template-columns:1fr; } }
+
+  .fila-botones{ display:flex; gap:8px; margin:10px 0; flex-wrap:wrap; }
+  button{
+    border:1.5px solid var(--azul); background:var(--azul-bg); color:var(--azul); border-radius:6px;
+    padding:8px 14px; font-size:13px; font-weight:700; cursor:pointer;
+  }
+  button:hover{ background:#dce8fb; }
+  button.btn-limpiar{ border-color:var(--gris); background:var(--gris-bg); color:var(--gris); }
+
+  .lista-equipos{
+    border:1px solid var(--borde); border-radius:8px; max-height:280px; overflow-y:auto;
+  }
+  .lista-equipos-item{ padding:8px 12px; font-size:12.5px; cursor:pointer; border-bottom:1px solid var(--gris-bg); }
+  .lista-equipos-item:last-child{ border-bottom:none; }
+  .lista-equipos-item:hover{ background:var(--azul-bg); }
+  .lista-equipos-item.activo{ background:var(--azul); color:#fff; font-weight:700; }
+  .lista-equipos-item.opcion-phoenix{ background:#fff8de; }
+  .lista-equipos-item.opcion-phoenix:hover{ background:#fff0ae; }
+  .lista-equipos-item.opcion-phoenix.activo{ background:var(--azul); }
+  .lista-equipos-vacio{ padding:14px; color:var(--gris); font-size:12.5px; text-align:center; }
+
+  .ficha-cabecera{ display:flex; gap:14px; align-items:flex-start; margin-bottom:10px; }
+  .ficha-foto{ width:90px; height:90px; flex-shrink:0; border:1px solid var(--borde); border-radius:8px; display:flex; align-items:center; justify-content:center; overflow:hidden; background:var(--gris-bg); cursor:zoom-in; }
+  .ficha-foto img{ max-width:100%; max-height:100%; object-fit:contain; }
+  .ficha-foto .icono-generico{ font-size:34px; color:var(--borde); }
+  .ficha-titulo{ font-weight:700; font-size:15px; color:var(--azul); }
+  .ficha-sub{ font-size:12px; color:var(--gris); margin-top:2px; }
+
+  .specs-tabla{ display:grid; grid-template-columns:auto 1fr auto 1fr; border:1px solid var(--borde); border-radius:8px; overflow:hidden; font-size:12px; }
+  .specs-tabla > div{ padding:5px 8px; border-bottom:1px solid var(--borde); }
+  .specs-tabla > div:nth-child(4n-1), .specs-tabla > div:nth-child(4n){ border-right:none; }
+  .specs-tabla > div:nth-child(4n-3), .specs-tabla > div:nth-child(4n-2){ border-right:1px solid var(--borde); }
+  .specs-tabla > div:nth-last-child(-n+2){ border-bottom:none; }
+  .specs-label{ background:var(--gris-bg); color:var(--gris); font-weight:700; }
+  .specs-valor{ font-weight:700; }
+  @media (max-width:480px){
+    .specs-tabla{ grid-template-columns:auto 1fr; }
+    .specs-tabla > div:nth-child(4n-3), .specs-tabla > div:nth-child(4n-2){ border-right:none; }
+  }
+
+  .color-chip{
+    display:inline-block; padding:1px 8px; border-radius:10px; font-size:11px;
+    font-weight:700; margin:1px 3px 1px 0; background:#e5e9f0; color:#333;
+  }
+  .color-chip.ultimas{ background:#fff2cc; color:#8a6a00; }
+  .color-chip.sin-cobertura-express{ background:#fdecea; color:#8a1c12; }
+  .sin-stock-zona{ color:var(--gris); font-style:italic; font-size:12.5px; }
+  .pack-aviso{ margin-top:10px; padding:8px 12px; border-radius:8px; background:#fff7e0; border:1px solid #f0d789; font-size:12.5px; }
+
+  .precio-equipo-grid{ display:grid; grid-template-columns:1fr 1fr; gap:6px 24px; }
+  .linea{ display:flex; justify-content:space-between; padding:3px 0; font-size:13px; }
+  .linea-titulo-rojo{ color:var(--rojo); font-weight:700; }
+  .aviso-linea{ margin-top:8px; font-size:12.5px; }
+  .aviso-linea.err{ color:var(--rojo); }
+  .aviso-linea.info{ color:var(--gris); }
+
+  .tabla-comparar-wrap{ overflow-x:auto; }
+  table.tabla-comparar{ width:100%; border-collapse:collapse; font-size:12px; margin-top:6px; }
+  table.tabla-comparar th, table.tabla-comparar td{ border:1px solid var(--borde); padding:6px 8px; text-align:center; }
+  table.tabla-comparar th{ background:var(--azul); color:#fff; }
+  table.tabla-comparar tr.fila-plan-actual td{ background:#fff8de; font-weight:700; }
+
+  .zoom-overlay{
+    display:none; position:fixed; inset:0; background:rgba(15,20,30,.75); z-index:500;
+    align-items:center; justify-content:center; padding:20px;
+  }
+  .zoom-overlay.visible{ display:flex; }
+  .zoom-caja{ background:#fff; border-radius:10px; padding:16px; max-width:90vw; max-height:90vh; overflow:auto; text-align:center; }
+  .zoom-caja img{ max-width:80vw; max-height:70vh; }
+  .zoom-cerrar{ float:right; border:none; background:transparent; font-size:20px; cursor:pointer; color:var(--gris); }
+
+  .banner-sin-datos{
+    display:none; background:#fdecea; color:var(--rojo); border:1px solid #f3c1bb; border-radius:8px;
+    padding:10px 14px; font-size:13px; margin-bottom:14px;
+  }
+  .banner-sin-datos.oculto-forzado{ display:none !important; }
+</style>
+</head>
+<body>
+<div class="contenedor">
+  <h1>🧪 Laboratorio de Equipos</h1>
+  <div class="subtitulo">
+    Consulta equipos disponibles por zona, precios AL CONTADO/FINANCIADO y comparaciones — solo de
+    referencia, no guarda nada ni afecta ninguna ficha de llamada. Los datos se leen de los mismos
+    archivos que la Ficha de Llamada, así que se actualizan solos cada vez que se procesa un Excel nuevo.
+  </div>
+
+  <div class="banner-sin-datos" id="bannerSinDatos">
+    ⛔ No se pudieron cargar los datos. Abre esta página desde el mismo servidor local que la Ficha de
+    Llamada (no con doble clic / file://).
+  </div>
+
+  <div class="panel">
+    <div class="panel-titulo">1. UBICACIÓN (para ver stock real de la zona)</div>
+    <div class="campo autocomplete" id="ac-ubicacion">
+      <label for="ubicacion">Buscar distrito</label>
+      <input type="text" id="ubicacion" placeholder="Ej: San Isidro..." autocomplete="off">
+      <div class="lista" id="lista-ubicacion"></div>
+    </div>
+    <div class="linea" id="ubicacionResumen" style="display:none;"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-titulo">2. TIPO / SUBTIPO / CONVENIO / PLAN</div>
+    <div class="fila">
+      <div class="campo">
+        <label for="tipo">TIPO</label>
+        <select id="tipo">
+          <option value="">Seleccione...</option>
+          <option value="PREPAGO">PREPAGO</option>
+          <option value="POSTPAGO">POSTPAGO</option>
+          <option value="ESPECIALES">ESPECIALES</option>
+          <option value="OTROS">OTROS</option>
+        </select>
+      </div>
+      <div class="campo">
+        <label for="subtipo">SUBTIPO</label>
+        <select id="subtipo"><option value="">Seleccione un TIPO primero...</option></select>
+      </div>
+    </div>
+    <div class="campo oculto" id="campoConvenio">
+      <label>CONVENIO</label>
+      <div class="radios" id="radiosConvenio"></div>
+    </div>
+    <div class="fila">
+      <div class="campo autocomplete" id="ac-plan">
+        <label for="plan">PLAN</label>
+        <input type="text" id="plan" placeholder="Ej: 39.9" autocomplete="off">
+        <div class="lista" id="lista-plan"></div>
+      </div>
+      <div class="campo">
+        <label for="codFinanciamiento">CÓD FINANCIAMIENTO</label>
+        <select id="codFinanciamiento"></select>
+      </div>
+    </div>
+    <div class="fila">
+      <div class="campo">
+        <label for="cargoFijo">Cargo Fijo Máximo</label>
+        <input type="number" step="0.01" id="cargoFijo" placeholder="S/">
+      </div>
+      <div class="campo">
+        <label for="capFinanciamiento">Cap. Financiamiento</label>
+        <input type="number" step="0.01" id="capFinanciamiento" placeholder="Cuota mensual máxima S/">
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-titulo">3. Buscar equipo</div>
+    <div class="campo autocomplete" id="ac-equipo">
+      <label for="equipoBuscar">Nombre del equipo</label>
+      <input type="text" id="equipoBuscar" placeholder="Escriba para buscar..." autocomplete="off">
+    </div>
+    <div class="filtros-grid">
+      <div class="campo"><label for="filtroRam">RAM</label><select id="filtroRam"><option value="">Todas</option></select></div>
+      <div class="campo"><label for="filtroRom">ROM</label><select id="filtroRom"><option value="">Todas</option></select></div>
+      <div class="campo"><label for="filtroGama">GAMA</label><select id="filtroGama"><option value="">Todas</option></select></div>
+      <div class="campo"><label for="filtroCamara">CÁMARA PRINCIPAL</label><select id="filtroCamara"><option value="">Todas</option></select></div>
+      <div class="campo"><label for="filtroBateria">BATERÍA</label><select id="filtroBateria"><option value="">Todas</option></select></div>
+      <div class="campo"><label for="filtroPantalla">PANTALLA</label><select id="filtroPantalla"><option value="">Todas</option></select></div>
+      <div class="campo"><label for="filtroMarca">MARCA</label><select id="filtroMarca"><option value="">Todas</option></select></div>
+      <div class="campo"><label for="filtroProcesador">PROCESADOR</label><select id="filtroProcesador"><option value="">Todas</option></select></div>
+    </div>
+    <div class="fila-botones">
+      <button type="button" id="btnFiltrarTodo">🔍 Filtrar todo</button>
+      <button type="button" class="btn-limpiar" id="btnLimpiarFiltro">🧹 Limpiar filtro</button>
+    </div>
+    <div class="lista-equipos" id="listaEquipos">
+      <div class="lista-equipos-vacio">Escriba, filtre, o presione "Filtrar todo" para ver el catálogo disponible.</div>
+    </div>
+  </div>
+
+  <div class="panel oculto" id="fichaPanel">
+    <div class="panel-titulo">4. Ficha del equipo</div>
+    <div class="ficha-cabecera">
+      <div class="ficha-foto" id="fichaFoto"><span class="icono-generico">📱</span></div>
+      <div>
+        <div class="ficha-titulo" id="fichaTitulo">-</div>
+        <div class="ficha-sub" id="fichaSub"></div>
+      </div>
+    </div>
+    <div class="specs-tabla" id="fichaSpecs"></div>
+    <div class="campo" style="margin-top:10px;">
+      <label>Colores en stock (zona elegida)</label>
+      <div id="fichaColores"><span class="sin-stock-zona">Seleccione ubicación para ver stock/colores</span></div>
+    </div>
+    <div class="pack-aviso oculto" id="fichaPack"></div>
+  </div>
+
+  <div class="panel oculto" id="precioPanel">
+    <div class="panel-titulo">5. Precio del equipo</div>
+    <div id="precioContenido"></div>
+  </div>
+
+  <div class="panel oculto" id="comparaPanel">
+    <div class="panel-titulo">6. Comparar AL CONTADO vs FINANCIADO (todos los planes)</div>
+    <div class="tabla-comparar-wrap">
+      <table class="tabla-comparar">
+        <thead><tr><th>MODELO</th><th>PLAN</th><th>AL CONTADO</th><th>FINANCIADO</th></tr></thead>
+        <tbody id="comparaTbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="zoom-overlay" id="zoomOverlay">
+  <div class="zoom-caja">
+    <button type="button" class="zoom-cerrar" id="btnCerrarZoom">✕</button>
+    <div><img id="zoomImg" src="" alt=""></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  function $(id){ return document.getElementById(id); }
+
+  var DATA = { cobertura: [], specs: [], equiposPlanes: [], codFinanciamiento: [], stock: [], packs: [],
+    planes: [], equiposTipoventa: {}, precios: {}, gamaFinanciamiento: {}, equiposImagenes: [],
+    equiposPhoenix: [], equiposBancos: [] };
+
+  Promise.all([
+    fetch("data/cobertura.json").then(function(r){ return r.json(); }),
+    fetch("data/equipos_specs.json").then(function(r){ return r.json(); }),
+    fetch("data/equipos_planes.json").then(function(r){ return r.json(); }),
+    fetch("data/cod_financiamiento.json").then(function(r){ return r.json(); }),
+    fetch("data/stock.json").then(function(r){ return r.json(); }),
+    fetch("data/packs.json").then(function(r){ return r.json(); }),
+    fetch("data/planes.json").then(function(r){ return r.json(); }),
+    fetch("data/equipos_tipoventa.json").then(function(r){ return r.json(); }),
+    fetch("data/precios.json").then(function(r){ return r.json(); }),
+    fetch("data/gama_financiamiento.json").then(function(r){ return r.json(); }),
+    fetch("data/equipos_imagenes.json").then(function(r){ return r.json(); }),
+    fetch("data/equipos_phoenix.json").then(function(r){ return r.json(); }),
+    fetch("data/equipos_bancos.json").then(function(r){ return r.json(); })
+  ]).then(function(res){
+    DATA.cobertura = res[0]; DATA.specs = res[1]; DATA.equiposPlanes = res[2];
+    DATA.codFinanciamiento = res[3]; DATA.stock = res[4]; DATA.packs = res[5];
+    DATA.planes = res[6]; DATA.equiposTipoventa = res[7]; DATA.precios = res[8];
+    DATA.gamaFinanciamiento = res[9]; DATA.equiposImagenes = res[10];
+    DATA.equiposPhoenix = res[11]; DATA.equiposBancos = res[12];
+    init();
+  }).catch(function(err){
+    $("bannerSinDatos").style.display = "block";
+    console.error("No se pudieron cargar los datos:", err);
+  });
+
+  // ============ Utilidades de texto (identicas a FLUJO/index.html) ============
+  function norm(s){
+    return (s || "").toString().toUpperCase()
+      .normalize("NFD").replace(/[̀-ͯ]/g, "")
+      .replace(/\s+/g, " ").trim();
+  }
+  var ALIAS_BUSQUEDA = { "GALAXY": "GXY" };
+  function normBusqueda(texto){
+    return norm(texto).split(" ").map(function(tok){ return ALIAS_BUSQUEDA[tok] || tok; }).join(" ");
+  }
+  var STOPWORDS = ["GXY", "PACK", "CAMP", "C/P", "C/PACK", "C/C", "C/CAMP", "C/PROM", "C/SW",
+    "DLV", "BAND", "AUDIFONO", "KLIPXTREME", "FIFA", "TWS"];
+  function tokensEquipo(nombre){
+    var s = norm(nombre)
+      .replace(/\bCAMP-/g, "CAMP ").replace(/\bPACK-/g, "PACK ")
+      .replace(/SM-[A-Z0-9]+/g, " ").replace(/\d+GB/g, " ").replace(/\bLTE\b/g, " 4G ")
+      .replace(/_[A-Z0-9]+$/, " ").replace(/-/g, " ");
+    return s.split(" ").filter(function(t){ return t && STOPWORDS.indexOf(t) === -1; });
+  }
+  function tokensModelo(tokens){
+    return tokens.filter(function(t){ return /\d/.test(t) && ["4G", "5G", "3G"].indexOf(t) === -1; });
+  }
+  function normSinSufijoCanal(nombre){ return norm(nombre).replace(/_[A-Z0-9]+$/, ""); }
+
+  var EQUIPOS_PHOENIX_NORM = null;
+  function esEquipoPhoenix(nombreEquipo){
+    if (!EQUIPOS_PHOENIX_NORM){
+      EQUIPOS_PHOENIX_NORM = {};
+      (DATA.equiposPhoenix || []).forEach(function(n){ EQUIPOS_PHOENIX_NORM[norm(n)] = true; });
+    }
+    return !!EQUIPOS_PHOENIX_NORM[normSinSufijoCanal(nombreEquipo)];
+  }
+  var EQUIPOS_BANCOS_NORM = null;
+  function esEquipoBancos(nombreEquipo){
+    if (!EQUIPOS_BANCOS_NORM){
+      EQUIPOS_BANCOS_NORM = {};
+      (DATA.equiposBancos || []).forEach(function(n){ EQUIPOS_BANCOS_NORM[norm(n)] = true; });
+    }
+    return !!EQUIPOS_BANCOS_NORM[normSinSufijoCanal(nombreEquipo)];
+  }
+
+  // ============ Stock por zona / colores (identico a FLUJO/index.html) ============
+  var ZONAS_PROPIAS = ["AREQUIPA", "LA LIBERTAD", "LAMBAYEQUE", "PIURA"];
+  var COLORES_CONOCIDOS = ["NEGRO", "AZUL", "DORADO", "GRIS", "VERDE", "PLATA", "BLANCO",
+    "MORADO", "ROSA", "TITANIO", "NARANJA", "ORO", "CELESTE", "CAFE", "ESMERALDA",
+    "NGRO", "NEGR", "CELEST", "ROSADO", "ARANDANO", "VINO"];
+
+  function zonaStock(departamento){
+    var d = norm(departamento);
+    if (!d) return null;
+    if (d === "LIMA") return "LIMA";
+    if (ZONAS_PROPIAS.indexOf(d) !== -1) return d;
+    return "PROVINCIAS";
+  }
+  function esCodigoRuido(tok){
+    if (["4G", "5G", "3G"].indexOf(tok) !== -1) return false;
+    if (/^\d+G$/.test(tok)) return false;
+    return tok.length >= 5 && /\d/.test(tok) && /[A-Z]/.test(tok);
+  }
+  function tokensStock(nombre){
+    var s = norm(nombre)
+      .replace(/\bCAMP-/g, "CAMP ").replace(/\bPACK-/g, "PACK ").replace(/\bLTE\b/g, " 4G ")
+      .replace(/\b(\d{2,})GB?\b/g, "$1").replace(/_[A-Z0-9]+$/, " ").replace(/\s-\s/g, " ");
+    return s.split(" ").filter(function(t){
+      return t && ["4G", "5G", "3G"].indexOf(t) === -1 && STOPWORDS.indexOf(t) === -1 &&
+        COLORES_CONOCIDOS.indexOf(t) === -1 && !esCodigoRuido(t);
+    });
+  }
+  function filasStockEnZona(nombreEquipo, zona){
+    var qTokens = tokensStock(nombreEquipo);
+    var qSet = {}; qTokens.forEach(function(t){ qSet[t] = true; });
+    return DATA.stock.filter(function(row){
+      if (row.zona !== zona) return false;
+      var cTokens = tokensStock(row.modelo);
+      if (!cTokens.length || cTokens.length !== qTokens.length) return false;
+      return cTokens.every(function(t){ return qSet[t]; });
+    });
+  }
+  function stockDelEquipo(nombreEquipo, departamento){
+    var zona = zonaStock(departamento);
+    if (!zona) return { zona: null, filas: [] };
+    return { zona: zona, filas: filasStockEnZona(nombreEquipo, zona) };
+  }
+  function extraerColor(modelo){
+    var toks = norm(modelo).split(" ");
+    for (var i = 0; i < toks.length; i++){ if (COLORES_CONOCIDOS.indexOf(toks[i]) !== -1) return toks[i]; }
+    return null;
+  }
+  function equipoTieneStockEnZona(nombreEquipo){
+    if (!seleccionCobertura) return true;
+    return stockDelEquipo(nombreEquipo, seleccionCobertura.departamento).filas.length > 0;
+  }
+  function actualizarColoresYStock(nombreEquipo){
+    var departamento = seleccionCobertura ? seleccionCobertura.departamento : null;
+    var el = $("fichaColores");
+    if (!departamento){
+      el.innerHTML = '<span class="sin-stock-zona">Seleccione ubicación para ver stock/colores</span>';
+      return;
+    }
+    var res = stockDelEquipo(nombreEquipo, departamento);
+    if (!res.filas.length){
+      el.innerHTML = '<span class="sin-stock-zona">Sin stock registrado en ' + res.zona + '</span>';
+      return;
+    }
+    var distritoConExpress = seleccionCobertura && norm(seleccionCobertura.express) === "SI";
+    var vistos = {}; var chips = [];
+    res.filas.forEach(function(row){
+      var color = extraerColor(row.modelo) || "N/D";
+      var key = color + "|" + row.estado;
+      if (vistos[key]) return;
+      vistos[key] = true;
+      var esUltimas = norm(row.estado) === "ULTIMAS UNIDADES";
+      var modoEntrega = esUltimas ? "Solo Express" : "Express y Regular";
+      var sinCobertura = esUltimas && !distritoConExpress;
+      var clase = "color-chip" + (esUltimas ? " ultimas" : "") + (sinCobertura ? " sin-cobertura-express" : "");
+      var texto = color + " · " + (row.estado || "") + " (" + modoEntrega + ")";
+      if (sinCobertura) texto += " ⚠ sin cobertura Express aquí";
+      chips.push('<span class="' + clase + '">' + texto + "</span>");
+    });
+    el.innerHTML = chips.join(" ");
+  }
+
+  // ============ Specs / imagenes / packs (identico) ============
+  function mejorMatchSpecs(nombreSeleccionado){
+    var nSel = norm(nombreSeleccionado);
+    var exacto = DATA.specs.find(function(row){ return norm(row.descAgrup) === nSel; });
+    if (exacto) return exacto;
+    var qTokens = tokensEquipo(nombreSeleccionado);
+    if (!qTokens.length) return null;
+    var qModelo = tokensModelo(qTokens);
+    if (!qModelo.length) return null;
+    var qSet = {}; qTokens.forEach(function(t){ qSet[t] = true; });
+    var mejor = null, mejorScore = 0;
+    DATA.specs.forEach(function(row){
+      var candTokens = tokensEquipo(row.descAgrup || row.equipo);
+      if (!candTokens.length) return;
+      var candSet = {}; candTokens.forEach(function(t){ candSet[t] = true; });
+      if (!qModelo.every(function(t){ return candSet[t]; })) return;
+      var interseccion = candTokens.filter(function(t){ return qSet[t]; }).length;
+      var union = {}; qTokens.concat(candTokens).forEach(function(t){ union[t] = true; });
+      var score = interseccion / Object.keys(union).length;
+      if (score > mejorScore){ mejorScore = score; mejor = row; }
+    });
+    return mejorScore >= 0.35 ? mejor : null;
+  }
+  function mejorMatchImagen(nombreSeleccionado){
+    var qTokens = tokensEquipo(nombreSeleccionado);
+    if (!qTokens.length) return null;
+    var qModelo = tokensModelo(qTokens);
+    if (!qModelo.length) return null;
+    var qSet = {}; qTokens.forEach(function(t){ qSet[t] = true; });
+    var mejor = null, mejorScore = 0;
+    (DATA.equiposImagenes || []).forEach(function(row){
+      var candTokens = tokensEquipo(row.nombre);
+      if (!candTokens.length) return;
+      var candSet = {}; candTokens.forEach(function(t){ candSet[t] = true; });
+      if (!qModelo.every(function(t){ return candSet[t]; })) return;
+      var interseccion = candTokens.filter(function(t){ return qSet[t]; }).length;
+      var union = {}; qTokens.concat(candTokens).forEach(function(t){ union[t] = true; });
+      var score = interseccion / Object.keys(union).length;
+      if (score > mejorScore){ mejorScore = score; mejor = row; }
+    });
+    return mejorScore >= 0.4 ? mejor : null;
+  }
+  function esAccesorioCargador(texto){
+    var t = norm(texto || "");
+    return t.indexOf("CARGADOR") !== -1 || t.indexOf("MAGSAFE") !== -1;
+  }
+  function matchPacks(nombreEquipo){
+    var qTokens = tokensEquipo(nombreEquipo);
+    var qModelo = tokensModelo(qTokens);
+    if (!qModelo.length) return [];
+    var qSet = {}; qTokens.forEach(function(t){ qSet[t] = true; });
+    return DATA.packs.filter(function(p){
+      var candTokens = tokensEquipo(p.nombreStock || p.equipo);
+      if (!candTokens.length) return false;
+      var candSet = {}; candTokens.forEach(function(t){ candSet[t] = true; });
+      if (!qModelo.every(function(t){ return candSet[t]; })) return false;
+      var interseccion = candTokens.filter(function(t){ return qSet[t]; }).length;
+      var union = {}; qTokens.concat(candTokens).forEach(function(t){ union[t] = true; });
+      return (interseccion / Object.keys(union).length) >= 0.5;
+    });
+  }
+  function actualizarPackAviso(nombreEquipo){
+    var aviso = $("fichaPack");
+    var packs = matchPacks(nombreEquipo);
+    var vistos = {}; var lineas = [];
+    packs.forEach(function(p){
+      var marcaP = norm(p.marca || "");
+      if ((marcaP === "IPHONE" || marcaP === "SAMSUNG") && esAccesorioCargador(p.accesorio)) return;
+      var key = p.accesorio;
+      if (vistos[key]) return;
+      vistos[key] = true;
+      lineas.push("🎁 Incluye accesorio: <b>" + p.accesorio + "</b>" +
+        (p.precio ? " (S/ " + p.precio + ")" : "") + " — " + p.origen);
+    });
+    if (!lineas.length){ aviso.classList.add("oculto"); aviso.innerHTML = ""; return; }
+    aviso.innerHTML = lineas.join("<br>");
+    aviso.classList.remove("oculto");
+  }
+
+  // ============ UBICACIÓN ============
+  var seleccionCobertura = null;
+  function setupUbicacion(){
+    var input = $("ubicacion"); var lista = $("lista-ubicacion");
+    input.addEventListener("input", function(){
+      if (seleccionCobertura && norm(input.value) !== norm(seleccionCobertura.distrito)) {
+        seleccionCobertura = null;
+        $("ubicacionResumen").style.display = "none";
+      }
+      var q = norm(input.value);
+      lista.innerHTML = "";
+      if (!q){ lista.classList.remove("abierta"); return; }
+      var vistos = {};
+      var coincidencias = DATA.cobertura.filter(function(row){
+        var v = row.distrito + " " + row.provincia + " " + row.departamento;
+        return v && norm(v).indexOf(q) !== -1;
+      });
+      var unicos = [];
+      coincidencias.forEach(function(row){
+        var key = row.departamento + "|" + row.provincia + "|" + row.distrito;
+        if (!vistos[key]){ vistos[key] = true; unicos.push(row); }
+      });
+      unicos.slice(0, 30).forEach(function(row){
+        var div = document.createElement("div");
+        div.className = "opcion";
+        div.innerHTML = "<b>" + row.distrito + "</b><small>" + row.provincia + " - " + row.departamento + "</small>";
+        div.addEventListener("mousedown", function(e){
+          e.preventDefault();
+          seleccionCobertura = row;
+          input.value = row.distrito;
+          lista.classList.remove("abierta");
+          var resumen = $("ubicacionResumen");
+          resumen.style.display = "flex";
+          resumen.innerHTML = "<span>Zona de stock: <b>" + (zonaStock(row.departamento) || "-") +
+            "</b> · Express: <b>" + (row.express || "NO") + "</b></span>";
+          if (equipoActual){ actualizarColoresYStock(equipoActual); recalcularTodo(); }
+        });
+        lista.appendChild(div);
+      });
+      lista.classList.toggle("abierta", unicos.length > 0);
+    });
+    input.addEventListener("blur", function(){ setTimeout(function(){ lista.classList.remove("abierta"); }, 150); });
+  }
+
+  // ============ TIPO / SUBTIPO / CONVENIO / PLAN ============
+  var SUBTIPOS = {
+    PREPAGO: ["PREPAGO"],
+    POSTPAGO: ["CAEQ", "PORTABILIDAD", "ALTA"],
+    ESPECIALES: ["PHOENIX (Contado)", "ONLINE (Contado)", "RETENCION/BLINDAJE (Contado)", "PHOENIX/ONLINE (Financiado)", "RETENCION/BLINDAJE (Financiado)"],
+    OTROS: ["BANCOS (Cuotas sin intereses)", "CLIENTES BLACK (Dscto Equipos)"]
+  };
+  function poblarSubtipo(tipo, subtipoSeleccionado){
+    var sel = $("subtipo");
+    sel.innerHTML = "";
+    var def = document.createElement("option");
+    def.value = ""; def.textContent = tipo ? "Seleccione..." : "Seleccione un TIPO primero...";
+    sel.appendChild(def);
+    (SUBTIPOS[tipo] || []).forEach(function(s){
+      var opt = document.createElement("option");
+      opt.value = s; opt.textContent = s;
+      sel.appendChild(opt);
+    });
+    sel.value = subtipoSeleccionado || "";
+  }
+  var ETIQUETAS_CONVENIO = { CONTADO: "CONTADO", FINANCIADO: "FINANCIADO",
+    FINANCIADO_PROPIO: "FINANCIADO PROPIO (tienda)", BANCOS: "BANCOS (Financiado)" };
+  function poblarRadiosConvenio(convenios, seleccionado){
+    var cont = $("radiosConvenio");
+    if (convenios.length <= 1){
+      cont.innerHTML = "";
+      $("campoConvenio").classList.add("oculto");
+      return convenios[0] || "";
+    }
+    $("campoConvenio").classList.remove("oculto");
+    var actual = convenios.indexOf(seleccionado) !== -1 ? seleccionado : convenios[0];
+    cont.innerHTML = "";
+    convenios.forEach(function(c){
+      var label = document.createElement("label");
+      var input = document.createElement("input");
+      input.type = "radio"; input.name = "convenioCosto"; input.value = c;
+      input.checked = (c === actual);
+      input.addEventListener("change", recalcularTodo);
+      label.appendChild(input);
+      label.appendChild(document.createTextNode(ETIQUETAS_CONVENIO[c] || c));
+      cont.appendChild(label);
+    });
+    return actual;
+  }
+
+  var CODIGOS_FINANCIAMIENTO = [
+    { codigo: "1", descripcion: "Se paga inicial según la gama del equipo." },
+    { codigo: "2", porcentaje: 0.25, descripcion: "Inicial del 25%." },
+    { codigo: "3", soloContado: true, descripcion: "Pago al contado." },
+    { codigo: "4", porcentaje: 0.35, descripcion: "Inicial del 35%." },
+    { codigo: "5", descripcion: "Inicial de S/ 0.00 (Eq gama entrada / media)." }
+  ];
+  var TABLA_INICIAL_POR_TRAMO = { 1: 78, 2: 118, 3: 368, 4: 848, 5: 1228, 6: 1598, 7: 2648 };
+  var CUOTAS_FINANCIAMIENTO = 12;
+  function obtenerCodigoFinanciamiento(codigo){
+    return CODIGOS_FINANCIAMIENTO.find(function(c){ return c.codigo === codigo; }) || null;
+  }
+  function inicialBaseSegunCodigo(codigo, costo, tramo, tipoVenta){
+    if (codigo === "2") return Math.round(costo * 0.25);
+    if (codigo === "4") return Math.round(costo * 0.35);
+    if (codigo === "1") return tramo ? TABLA_INICIAL_POR_TRAMO[tramo] : null;
+    if (codigo === "5"){
+      if (!tramo) return null;
+      if (tramo <= 2) return 0;
+      if (tramo === 3) return tipoVenta === "PORTA" ? TABLA_INICIAL_POR_TRAMO[3] : 0;
+      if (tramo === 6) return tipoVenta === "PORTA" ? 1558 : TABLA_INICIAL_POR_TRAMO[6];
+      return TABLA_INICIAL_POR_TRAMO[tramo];
+    }
+    return null;
+  }
+  function construirResultadoFinanciamiento(costo, inicialBase, capFinanciamiento, textoInicialForzado){
+    var inicial = inicialBase;
+    var cap = parseFloat(capFinanciamiento);
+    var pagoBase = (costo - inicial) / CUOTAS_FINANCIAMIENTO;
+    if (!isNaN(cap) && cap > 0 && pagoBase > cap){
+      inicial = Math.round((costo - CUOTAS_FINANCIAMIENTO * cap) / 10) * 10 - 1;
+    }
+    var pagoMensual = Math.ceil((costo - inicial) / CUOTAS_FINANCIAMIENTO);
+    return { inicial: inicial, pagoMensual: pagoMensual, advertencia: null,
+      textoInicial: textoInicialForzado || ("S/ " + inicial.toFixed(2)) };
+  }
+  function calcularFinanciamiento(costo, codigoSel, equipo, tipoVenta, capFinanciamiento){
+    var info = obtenerCodigoFinanciamiento(codigoSel);
+    var tramo = equipo ? DATA.gamaFinanciamiento[equipo.toUpperCase().trim()] : null;
+    if (!info) return construirResultadoFinanciamiento(costo, 0, capFinanciamiento, "S/ 0.00");
+    if (info.soloContado){
+      return { inicial: null, pagoMensual: Math.ceil(costo / CUOTAS_FINANCIAMIENTO), textoInicial: null,
+        advertencia: "El CÓD " + info.codigo + " corresponde a pago AL CONTADO, no a financiamiento." };
+    }
+    var inicialBase = inicialBaseSegunCodigo(info.codigo, costo, tramo, tipoVenta);
+    if (inicialBase === null){
+      return { inicial: null, pagoMensual: Math.ceil(costo / CUOTAS_FINANCIAMIENTO), advertencia: null,
+        textoInicial: "según la gama del equipo (sin tramo cargado para este modelo)" };
+    }
+    return construirResultadoFinanciamiento(costo, inicialBase, capFinanciamiento, null);
+  }
+  function initCodFinanciamiento(){
+    var sel = $("codFinanciamiento");
+    CODIGOS_FINANCIAMIENTO.forEach(function(c){
+      var opt = document.createElement("option");
+      opt.value = c.codigo; opt.textContent = "CÓD " + c.codigo + " — " + c.descripcion;
+      sel.appendChild(opt);
+    });
+    sel.value = "1";
+  }
+  function etiquetaPlan(p){ return p === "MT" ? "Planes MT" : ("S/ " + p); }
+  function etiquetaPlanCosto(p){
+    if (p === null || p === undefined || p === "") return "-";
+    return p === "MT" ? "Planes MT" : ("S/ " + p);
+  }
+  function claveDePlan(valor){
+    if (valor === null || valor === undefined) return null;
+    var v = valor.toString().trim().toUpperCase();
+    if (!v) return null;
+    if (v === "MT" || v === "PLANES MT") return "MT";
+    var n = parseFloat(v.replace(",", "."));
+    return isNaN(n) ? null : n.toFixed(1);
+  }
+  function setupPlan(){
+    var input = $("plan"); var lista = $("lista-plan");
+    function render(filtro){
+      lista.innerHTML = "";
+      var q = norm(filtro);
+      var coincidencias = DATA.planes.filter(function(p){
+        return norm(etiquetaPlan(p)).indexOf(q) !== -1 || norm(String(p)).indexOf(q) !== -1;
+      });
+      coincidencias.forEach(function(p){
+        var div = document.createElement("div");
+        div.className = "opcion"; div.textContent = etiquetaPlan(p);
+        div.addEventListener("mousedown", function(e){
+          e.preventDefault(); input.value = p; lista.classList.remove("abierta"); recalcularTodo();
+        });
+        lista.appendChild(div);
+      });
+      lista.classList.toggle("abierta", coincidencias.length > 0);
+    }
+    input.addEventListener("focus", function(){ render(input.value); });
+    input.addEventListener("input", function(){ render(input.value); recalcularTodo(); });
+    input.addEventListener("blur", function(){ setTimeout(function(){ lista.classList.remove("abierta"); }, 150); });
+  }
+
+  // ============ REGLA TIPO/SUBTIPO -> filtro de catalogo (identico) ============
+  var REGLA_TIPO_SUBTIPO = {
+    "POSTPAGO|CAEQ": { campo: "tipoVenta", valor: ["CAEQ/MIGRA"] },
+    "POSTPAGO|PORTABILIDAD": { campo: "tipoVenta", valor: ["PORTA"] },
+    "ESPECIALES|PHOENIX (Contado)": { campo: "canal", valor: ["ESP_POST_PHOENIX"] },
+    "ESPECIALES|ONLINE (Contado)": { campo: "canal", valor: ["ESP_POST_ONLINE"] },
+    "ESPECIALES|RETENCION/BLINDAJE (Contado)": { campo: "canal", valor: ["ESP_POST_RETENCION", "ESP_POST_BLINDAJE"] },
+    "ESPECIALES|PHOENIX/ONLINE (Financiado)": { campo: "canal", valor: ["ESP_POST_PHOENIX", "ESP_POST_ONLINE"] },
+    "ESPECIALES|RETENCION/BLINDAJE (Financiado)": { campo: "canal", valor: ["ESP_POST_RETENCION", "ESP_POST_BLINDAJE"] }
+  };
+  function equipoCoincideTipoSubtipo(nombreEquipo){
+    var tipo = $("tipo").value, subtipo = $("subtipo").value;
+    if (!tipo || !subtipo) return true;
+    if (tipo === "ESPECIALES" && subtipo === "PHOENIX (Contado)") return esEquipoPhoenix(nombreEquipo);
+    if (tipo === "OTROS" && subtipo === "BANCOS (Cuotas sin intereses)") return esEquipoBancos(nombreEquipo);
+    var regla = REGLA_TIPO_SUBTIPO[tipo + "|" + subtipo];
+    if (!regla) return true;
+    var meta = DATA.equiposTipoventa[nombreEquipo];
+    if (!meta) return false;
+    var lista = meta[regla.campo] || [];
+    return regla.valor.some(function(v){ return lista.indexOf(v) !== -1; });
+  }
+
+  function buscarModeloEnTablaPrecios(nombreEquipo, tabla){
+    if (!nombreEquipo || !tabla) return null;
+    var nSel = norm(nombreEquipo);
+    var claves = Object.keys(tabla);
+    for (var i = 0; i < claves.length; i++){ if (norm(claves[i]) === nSel) return claves[i]; }
+    var qTokens = tokensEquipo(nombreEquipo);
+    if (!qTokens.length) return null;
+    var qModelo = tokensModelo(qTokens);
+    if (!qModelo.length) return null;
+    var qSet = {}; qTokens.forEach(function(t){ qSet[t] = true; });
+    var mejor = null, mejorScore = 0;
+    claves.forEach(function(clave){
+      var candTokens = tokensEquipo(clave);
+      var candSet = {}; candTokens.forEach(function(t){ candSet[t] = true; });
+      if (!qModelo.every(function(t){ return candSet[t]; })) return;
+      var interseccion = candTokens.filter(function(t){ return qSet[t]; }).length;
+      var union = {}; qTokens.concat(candTokens).forEach(function(t){ union[t] = true; });
+      var score = interseccion / Object.keys(union).length;
+      if (score > mejorScore){ mejorScore = score; mejor = clave; }
+    });
+    return mejorScore >= 0.35 ? mejor : null;
+  }
+
+  // ============ SIMULADOR: filtros de equipo (identico, sin sondeo/pedido) ============
+  var ORDEN_GAMA = ["ENTRADA", "MEDIA", "ALTA", "PREMIUM"];
+  function comparadorNumerico(a, b){ return parseFloat(a) - parseFloat(b); }
+  function comparadorTexto(a, b){ return String(a).localeCompare(String(b)); }
+  function poblarSelectOrdenado(id, valores, sufijo, comparador){
+    var sel = $(id);
+    var arr = Array.prototype.slice.call(valores);
+    arr.sort(comparador);
+    arr.forEach(function(v){
+      var opt = document.createElement("option");
+      opt.value = v; opt.textContent = v + (sufijo || "");
+      sel.appendChild(opt);
+    });
+  }
+  var CAMPOS_FILTRO = [
+    { id: "filtroRam", specsKey: "ram", sufijo: " GB", comparador: comparadorNumerico },
+    { id: "filtroRom", specsKey: "memoria", sufijo: " GB", comparador: comparadorNumerico },
+    { id: "filtroGama", specsKey: "gama", sufijo: "", comparador: function(a, b){ return ORDEN_GAMA.indexOf(a) - ORDEN_GAMA.indexOf(b); } },
+    { id: "filtroCamara", specsKey: "camaraPrincipal", sufijo: " MP", comparador: comparadorNumerico },
+    { id: "filtroBateria", specsKey: "bateria", sufijo: " mAh", comparador: comparadorNumerico },
+    { id: "filtroPantalla", specsKey: "pantalla", sufijo: "", comparador: comparadorTexto },
+    { id: "filtroMarca", specsKey: "marca", sufijo: "", comparador: comparadorTexto },
+    { id: "filtroProcesador", specsKey: "procesador", sufijo: "", comparador: comparadorTexto }
+  ];
+  function equiposBaseParaFiltro(idFiltroExcluido){
+    var q = normBusqueda($("equipoBuscar").value);
+    var valores = {};
+    CAMPOS_FILTRO.forEach(function(f){ valores[f.id] = f.id === idFiltroExcluido ? "" : $(f.id).value; });
+    return DATA.equiposPlanes.filter(function(nombre){
+      if (q){
+        var n = norm(nombre);
+        if (!q.split(" ").every(function(tok){ return tok && n.indexOf(tok) !== -1; })) return false;
+      }
+      if (!equipoTieneStockEnZona(nombre)) return false;
+      if (!equipoCoincideTipoSubtipo(nombre)) return false;
+      var hayFiltroActivo = CAMPOS_FILTRO.some(function(f){ return valores[f.id]; });
+      if (hayFiltroActivo){
+        var specs = mejorMatchSpecs(nombre);
+        if (!specs) return false;
+        for (var i = 0; i < CAMPOS_FILTRO.length; i++){
+          var f = CAMPOS_FILTRO[i];
+          if (valores[f.id] && String(specs[f.specsKey]) !== valores[f.id]) return false;
+        }
+      }
+      return true;
+    });
+  }
+  function actualizarOpcionesFiltros(){
+    CAMPOS_FILTRO.forEach(function(f){
+      var base = equiposBaseParaFiltro(f.id);
+      var disponibles = {};
+      base.forEach(function(nombre){
+        var specs = mejorMatchSpecs(nombre);
+        if (!specs) return;
+        var v = specs[f.specsKey];
+        if (v != null && v !== "") disponibles[String(v)] = true;
+      });
+      var sel = $(f.id);
+      var actual = sel.value;
+      sel.innerHTML = '<option value="">Todas</option>';
+      poblarSelectOrdenado(f.id, Object.keys(disponibles), f.sufijo, f.comparador);
+      sel.value = disponibles[actual] ? actual : "";
+    });
+  }
+  function buscarEquipos(forzarTodo){
+    actualizarOpcionesFiltros();
+    var q = normBusqueda($("equipoBuscar").value);
+    var valoresFiltro = {};
+    CAMPOS_FILTRO.forEach(function(f){ valoresFiltro[f.id] = $(f.id).value; });
+    var hayFiltroCampo = CAMPOS_FILTRO.some(function(f){ return valoresFiltro[f.id]; });
+    var hayFiltro = q || hayFiltroCampo;
+    if (!hayFiltro && !forzarTodo){
+      $("listaEquipos").innerHTML = '<div class="lista-equipos-vacio">Escriba, filtre, o presione "Filtrar todo" para ver el catálogo disponible.</div>';
+      return;
+    }
+    var resultados = DATA.equiposPlanes.filter(function(nombre){
+      if (q){
+        var n = norm(nombre);
+        if (!q.split(" ").every(function(tok){ return tok && n.indexOf(tok) !== -1; })) return false;
+      }
+      if (!equipoTieneStockEnZona(nombre)) return false;
+      if (!equipoCoincideTipoSubtipo(nombre)) return false;
+      if (hayFiltroCampo){
+        var specs = mejorMatchSpecs(nombre);
+        if (!specs) return false;
+        for (var i = 0; i < CAMPOS_FILTRO.length; i++){
+          var f = CAMPOS_FILTRO[i];
+          if (valoresFiltro[f.id] && String(specs[f.specsKey]) !== valoresFiltro[f.id]) return false;
+        }
+      }
+      return true;
+    });
+    renderListaEquipos(resultados);
+  }
+  function renderListaEquipos(nombres){
+    var cont = $("listaEquipos");
+    if (!nombres.length){
+      cont.innerHTML = '<div class="lista-equipos-vacio">Sin resultados para los filtros elegidos.</div>';
+      return;
+    }
+    cont.innerHTML = "";
+    nombres.slice(0, 200).forEach(function(nombre){
+      var div = document.createElement("div");
+      div.className = "lista-equipos-item";
+      var esPh = esEquipoPhoenix(nombre), esBc = esEquipoBancos(nombre);
+      if (esPh || esBc){
+        if (esPh) div.className += " opcion-phoenix";
+        div.innerHTML = (esPh ? "⭐ " : "") + nombre +
+          (esPh ? ' <span class="badge-phoenix">PHOENIX</span>' : "") +
+          (esBc ? ' <span class="badge-bancos">BANCOS</span>' : "");
+      } else {
+        div.textContent = nombre;
+      }
+      div.addEventListener("mousedown", function(e){
+        e.preventDefault();
+        $("equipoBuscar").value = nombre;
+        mostrarFicha(nombre);
+        cont.querySelectorAll(".lista-equipos-item").forEach(function(el){ el.classList.remove("activo"); });
+        div.classList.add("activo");
+      });
+      cont.appendChild(div);
+    });
+  }
+  function limpiarFiltros(){
+    $("equipoBuscar").value = "";
+    CAMPOS_FILTRO.forEach(function(f){ $(f.id).value = ""; });
+    actualizarOpcionesFiltros();
+    $("listaEquipos").innerHTML = '<div class="lista-equipos-vacio">Escriba, filtre, o presione "Filtrar todo" para ver el catálogo disponible.</div>';
+  }
+
+  // ============ FICHA + FOTO/ZOOM ============
+  var equipoActual = null;
+  function mostrarFicha(nombreSeleccionado){
+    equipoActual = nombreSeleccionado;
+    var specs = mejorMatchSpecs(nombreSeleccionado);
+    $("fichaPanel").classList.remove("oculto");
+    $("fichaTitulo").textContent = nombreSeleccionado;
+    var tablaSpecs = $("fichaSpecs");
+    if (specs){
+      $("fichaSub").textContent = (specs.marca || "-") + " · " + (specs.gama || "-");
+      tablaSpecs.innerHTML =
+        fila("PANTALLA", specs.pantalla || "-") + fila("ROM", specs.memoria ? (specs.memoria + " GB") : "-") +
+        fila("RAM", specs.ram || "-") + fila("CÁMARA", specs.camaraPrincipal ? (specs.camaraPrincipal + " MP") : "-") +
+        fila("SELFIE", specs.camaraSelfie ? (specs.camaraSelfie + " MP") : "-") + fila("BATERÍA", specs.bateria || "-") +
+        fila("PROCESADOR", specs.procesador || "-") + fila("SO", specs.so || "-");
+    } else {
+      $("fichaSub").textContent = "Sin ficha técnica exacta — mostrando solo lo disponible.";
+      tablaSpecs.innerHTML = "";
+    }
+    function fila(label, valor){
+      return '<div class="specs-label">' + label + '</div><div class="specs-valor">' + valor + '</div>';
+    }
+    var foto = $("fichaFoto");
+    var match = mejorMatchImagen(nombreSeleccionado);
+    if (match){
+      foto.innerHTML = '<img src="' + match.archivo + '" alt="' + nombreSeleccionado + '">';
+      foto.onclick = function(){
+        $("zoomImg").src = match.archivo;
+        $("zoomOverlay").classList.add("visible");
+      };
+    } else {
+      foto.innerHTML = '<span class="icono-generico">📱</span>';
+      foto.onclick = null;
+    }
+    actualizarColoresYStock(nombreSeleccionado);
+    actualizarPackAviso(nombreSeleccionado);
+    recalcularTodo();
+  }
+  $("btnCerrarZoom").addEventListener("click", function(){ $("zoomOverlay").classList.remove("visible"); });
+  $("zoomOverlay").addEventListener("click", function(e){ if (e.target === this) this.classList.remove("visible"); });
+
+  // ============ PRECIO (CONTADO/FINANCIADO) + COMPARAR ============
+  function pintarAviso(texto, tipo){
+    $("precioContenido").innerHTML = '<div class="aviso-linea ' + (tipo || "info") + '">' + texto + '</div>';
+    $("comparaPanel").classList.add("oculto");
+  }
+  function recalcularTodo(){
+    $("comparaPanel").classList.add("oculto");
+    if (!equipoActual){ $("precioPanel").classList.add("oculto"); return; }
+    $("precioPanel").classList.remove("oculto");
+
+    var tipo = $("tipo").value, subtipo = $("subtipo").value;
+    if (!tipo || !subtipo){ pintarAviso("Seleccione TIPO y SUBTIPO para calcular el precio.", "info"); return; }
+    if (tipo === "PREPAGO"){ pintarAviso("No disponible para PREPAGO: la tabla de precios no permite cruzar este SUBTIPO de forma confiable.", "err"); return; }
+
+    var clave = tipo + "|" + subtipo;
+    var tabla = DATA.precios[clave];
+    if (!tabla){ pintarAviso("No hay tabla de precios cargada para " + tipo + " / " + subtipo + ".", "err"); return; }
+
+    var esBancos = (clave === "OTROS|BANCOS (Cuotas sin intereses)");
+    var conveniosRadio = esBancos ? ["CONTADO", "FINANCIADO"] : tabla.convenios;
+    var convenioSel = poblarRadiosConvenio(conveniosRadio, (document.querySelector('input[name=convenioCosto]:checked') || {}).value);
+    var seccionScoring = document.getElementById("codFinanciamiento").closest ? null : null; // (no-op, sin fieldset a bloquear aca)
+
+    var claveP = claveDePlan($("plan").value.trim());
+    if (!claveP){ pintarAviso('Ingrese un PLAN válido (ej. 39.9) para calcular el precio.', "info"); return; }
+
+    if (esBancos){
+      if (!convenioSel){ pintarAviso("No hay convenio disponible para esta combinación.", "err"); return; }
+      var modeloB = buscarModeloEnTablaPrecios(equipoActual, tabla.precios.PRECIO_TOTAL);
+      if (!modeloB){ pintarAviso('No se encontró el equipo "' + equipoActual + '" en la tabla de BANCOS (Cuotas sin intereses).', "err"); return; }
+      var totalB = tabla.precios.PRECIO_TOTAL[modeloB][claveP];
+      var cuotaB = tabla.precios.CUOTA_MENSUAL[modeloB][claveP];
+      if (convenioSel === "FINANCIADO"){
+        if (cuotaB === undefined){ pintarAviso("El plan " + etiquetaPlanCosto(claveP) + " no tiene cuota mensual para este equipo en BANCOS.", "err"); return; }
+        pintarGridPrecio(totalB, cuotaB, 0, "S/ 0.00", "BANCOS: cuota sin intereses cobrada en tu tarjeta a través del banco, no en tu recibo Movistar.");
+      } else {
+        if (totalB === undefined){ pintarAviso("El plan " + etiquetaPlanCosto(claveP) + " no tiene precio de contado para este equipo en BANCOS.", "err"); return; }
+        pintarGridSoloContado(totalB, "BANCOS (Contado)");
+      }
+      return;
+    }
+
+    if (!convenioSel){ pintarAviso("No hay convenio disponible para esta combinación.", "err"); return; }
+    var tablaConvenio = tabla.precios[convenioSel] || {};
+    var modelo = buscarModeloEnTablaPrecios(equipoActual, tablaConvenio);
+    if (!modelo){ pintarAviso('No se encontró el equipo "' + equipoActual + '" en la tabla de precios de ' + (ETIQUETAS_CONVENIO[convenioSel] || convenioSel) + ".", "err"); return; }
+    var costo = tablaConvenio[modelo][claveP];
+    if (costo === undefined){ pintarAviso("El plan " + etiquetaPlanCosto(claveP) + " no tiene precio para este equipo en " + (ETIQUETAS_CONVENIO[convenioSel] || convenioSel) + ".", "err"); return; }
+
+    if (convenioSel === "FINANCIADO"){
+      var tipoVentaFin = subtipo === "PORTABILIDAD" ? "PORTA" : "CAEQ/MIGRA";
+      var info = calcularFinanciamiento(costo, $("codFinanciamiento").value, modelo, tipoVentaFin, $("capFinanciamiento").value);
+      pintarGridPrecio(costo, info.pagoMensual, info.inicial, info.textoInicial, info.advertencia);
+    } else {
+      pintarGridSoloContado(costo, ETIQUETAS_CONVENIO[convenioSel] || convenioSel);
+    }
+
+    if (tabla.convenios.indexOf("CONTADO") !== -1 && tabla.convenios.indexOf("FINANCIADO") !== -1){
+      renderComparar(tabla, modelo, claveP);
+    } else {
+      $("comparaPanel").classList.add("oculto");
+    }
+  }
+  function pintarGridSoloContado(total, modalidad){
+    $("precioContenido").innerHTML =
+      '<div class="linea"><span>Total a Pagar</span><b>S/ ' + total.toFixed(2) + '</b></div>' +
+      '<div class="linea"><span>Modalidad</span><b>' + modalidad + '</b></div>' +
+      '<div class="aviso-linea info">Sin cuotas: aplica solo a la modalidad FINANCIADO.</div>';
+  }
+  function pintarGridPrecio(total, cuota, inicial, inicialTexto, advertencia){
+    var planNum = parseFloat($("plan").value);
+    var pagoMesTxt = (cuota != null && !isNaN(planNum)) ? ("S/ " + (planNum + cuota).toFixed(2)) : "-";
+    $("precioContenido").innerHTML =
+      '<div class="precio-equipo-grid">' +
+        '<div class="linea"><span class="linea-titulo-rojo">Total a Pagar</span><b>S/ ' + total.toFixed(2) + '</b></div>' +
+        '<div class="linea"><span class="linea-titulo-rojo">Cuota Mensual</span><b>' + (cuota != null ? ("S/ " + cuota.toFixed(2)) : "-") + '</b></div>' +
+        '<div class="linea"><span class="linea-titulo-rojo">Cuota Inicial a Pagar</span><b>' + (inicialTexto || "-") + '</b></div>' +
+        '<div class="linea"><span class="linea-titulo-rojo">Pago Mensual (CF+Cuota)</span><b>' + pagoMesTxt + '</b></div>' +
+      '</div>' +
+      (advertencia ? ('<div class="aviso-linea err">⚠ ' + advertencia + '</div>') : "");
+  }
+  function renderComparar(tabla, modelo, claveP){
+    var preciosContado = tabla.precios.CONTADO[modelo] || {};
+    var preciosFinanciado = tabla.precios.FINANCIADO[modelo] || {};
+    var planes = (tabla.planes.CONTADO || []).slice();
+    (tabla.planes.FINANCIADO || []).forEach(function(p){ if (planes.indexOf(p) === -1) planes.push(p); });
+    var tbody = $("comparaTbody");
+    tbody.innerHTML = "";
+    planes.forEach(function(p, i){
+      var cp = String(p);
+      var tr = document.createElement("tr");
+      if (cp === claveP) tr.className = "fila-plan-actual";
+      if (i === 0){
+        var tdModelo = document.createElement("td");
+        tdModelo.rowSpan = planes.length; tdModelo.textContent = modelo;
+        tr.appendChild(tdModelo);
+      }
+      var tdPlan = document.createElement("td"); tdPlan.textContent = etiquetaPlanCosto(p); tr.appendChild(tdPlan);
+      var tdC = document.createElement("td"); tdC.textContent = preciosContado[cp] !== undefined ? ("S/ " + preciosContado[cp].toFixed(2)) : "-"; tr.appendChild(tdC);
+      var tdF = document.createElement("td"); tdF.textContent = preciosFinanciado[cp] !== undefined ? ("S/ " + preciosFinanciado[cp].toFixed(2)) : "-"; tr.appendChild(tdF);
+      tbody.appendChild(tr);
+    });
+    $("comparaPanel").classList.remove("oculto");
+  }
+
+  // ============ INIT ============
+  function init(){
+    initCodFinanciamiento();
+    setupUbicacion();
+    setupPlan();
+    poblarSubtipo("", "");
+
+    $("tipo").addEventListener("change", function(){ poblarSubtipo($("tipo").value, ""); recalcularTodo(); });
+    $("subtipo").addEventListener("change", recalcularTodo);
+    $("codFinanciamiento").addEventListener("change", recalcularTodo);
+    $("cargoFijo").addEventListener("input", recalcularTodo);
+    $("capFinanciamiento").addEventListener("input", recalcularTodo);
+
+    actualizarOpcionesFiltros();
+    $("equipoBuscar").addEventListener("input", function(){ buscarEquipos(); });
+    $("btnFiltrarTodo").addEventListener("click", function(){ buscarEquipos(true); });
+    $("btnLimpiarFiltro").addEventListener("click", limpiarFiltros);
+    CAMPOS_FILTRO.forEach(function(f){ $(f.id).addEventListener("change", function(){ buscarEquipos(); }); });
+  }
+})();
+</script>
+</body>
+</html>
