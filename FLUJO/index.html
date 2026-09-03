@@ -481,6 +481,16 @@
     background:#e6f7ec; border:1px solid #b6e6c6; color:var(--verde); font-size:13px;
     display:flex; justify-content:space-between; align-items:center; gap:10px;
   }
+
+  /* Aviso flotante y no bloqueante de que los datos (equipos/precios/stock) se refrescaron
+     solos en segundo plano -- no interrumpe el formulario, se oculta solo a los pocos segundos. */
+  .toast-datos-actualizados{
+    position:fixed; top:14px; right:14px; z-index:400; background:var(--verde); color:#fff;
+    padding:9px 16px; border-radius:8px; font-size:12.5px; font-weight:700;
+    box-shadow:0 4px 14px rgba(0,0,0,.18); display:none; align-items:center; gap:8px;
+    max-width:calc(100vw - 28px);
+  }
+  .toast-datos-actualizados.visible{ display:flex; }
   .banner-restaurado button{
     border:none; background:none; color:var(--verde); text-decoration:underline;
     cursor:pointer; font-size:12.5px; font-weight:700; white-space:nowrap;
@@ -1210,6 +1220,8 @@ if (location.protocol === "file:") {
 
 <p class="subtitulo">Complete cada sección en orden. Las siguientes se habilitan automáticamente.</p>
 <p class="datos-generados" id="datosGenerados"></p>
+
+<div class="toast-datos-actualizados" id="toastDatosActualizados">🔄 Equipos/precios/stock actualizados automáticamente</div>
 
 <div class="banner-sin-drive oculto" id="bannerSinDrive">
   ⚠ El autoguardado hacia el Google Sheet <b>NO está configurado</b> — todo se guarda
@@ -2694,41 +2706,60 @@ if (location.protocol === "file:") {
   }
 
   // ---------- Carga de datos ----------
-  Promise.all([
-    fetch("data/cobertura.json").then(function(r){ return r.json(); }),
-    fetch("data/equipos_specs.json").then(function(r){ return r.json(); }),
-    fetch("data/equipos_planes.json").then(function(r){ return r.json(); }),
-    fetch("data/cod_financiamiento.json").then(function(r){ return r.json(); }),
-    fetch("data/stock.json").then(function(r){ return r.json(); }),
-    fetch("data/packs.json").then(function(r){ return r.json(); }),
-    fetch("data/planes.json").then(function(r){ return r.json(); }),
-    fetch("data/equipos_tipoventa.json").then(function(r){ return r.json(); }),
-    fetch("data/precios.json").then(function(r){ return r.json(); }),
-    fetch("data/objeciones.json").then(function(r){ return r.json(); }),
-    fetch("data/regiones.json").then(function(r){ return r.json(); }),
-    fetch("data/gama_financiamiento.json").then(function(r){ return r.json(); }),
-    fetch("data/equipos_imagenes.json").then(function(r){ return r.json(); }),
-    fetch("data/cambios_historicos.json").then(function(r){ return r.json(); }),
-    fetch("data/equipos_phoenix.json").then(function(r){ return r.json(); }),
-    fetch("data/equipos_bancos.json").then(function(r){ return r.json(); })
-  ]).then(function(res){
-    DATA.cobertura = res[0];
-    DATA.specs = res[1];
-    DATA.equiposPlanes = res[2];
-    DATA.codFinanciamiento = res[3];
-    DATA.stock = res[4];
-    DATA.packs = res[5];
-    DATA.planes = res[6];
-    DATA.equiposTipoventa = res[7];
-    DATA.precios = res[8];
-    DATA.objeciones = res[9];
-    DATA.regiones = res[10];
-    DATA.gamaFinanciamiento = res[11];
-    DATA.equiposImagenes = res[12];
-    DATA.cambiosHistoricos = res[13];
-    DATA.equiposPhoenix = res[14];
-    DATA.equiposBancos = res[15];
+  // cargarDatos() solo hace fetch + asigna DATA.* — separado de la carga inicial (que ademas
+  // corre todos los init()) para poder reusarlo desde revisarActualizacionDatos() y refrescar
+  // el catalogo/precios/stock en segundo plano sin volver a ejecutar ningun init() (eso
+  // duplicaria listeners y reiniciaria estado del formulario en plena llamada).
+  function cargarDatos(){
+    // Cache-busting: el navegador (y, en Vercel, la red de CDN) puede servir estos .json
+    // desde cache aunque el archivo ya haya cambiado en el servidor — sin esto,
+    // revisarActualizacionDatos() detectaria "generadoEn" nuevo en _meta.json pero
+    // cargarDatos() podia terminar trayendo los MISMOS json viejos igual. El sufijo unico
+    // por llamada fuerza una URL distinta cada vez, asi que siempre pega a la red.
+    var v = "?_=" + Date.now();
+    return Promise.all([
+      fetch("data/cobertura.json" + v).then(function(r){ return r.json(); }),
+      fetch("data/equipos_specs.json" + v).then(function(r){ return r.json(); }),
+      fetch("data/equipos_planes.json" + v).then(function(r){ return r.json(); }),
+      fetch("data/cod_financiamiento.json" + v).then(function(r){ return r.json(); }),
+      fetch("data/stock.json" + v).then(function(r){ return r.json(); }),
+      fetch("data/packs.json" + v).then(function(r){ return r.json(); }),
+      fetch("data/planes.json" + v).then(function(r){ return r.json(); }),
+      fetch("data/equipos_tipoventa.json" + v).then(function(r){ return r.json(); }),
+      fetch("data/precios.json" + v).then(function(r){ return r.json(); }),
+      fetch("data/objeciones.json" + v).then(function(r){ return r.json(); }),
+      fetch("data/regiones.json" + v).then(function(r){ return r.json(); }),
+      fetch("data/gama_financiamiento.json" + v).then(function(r){ return r.json(); }),
+      fetch("data/equipos_imagenes.json" + v).then(function(r){ return r.json(); }),
+      fetch("data/cambios_historicos.json" + v).then(function(r){ return r.json(); }),
+      fetch("data/equipos_phoenix.json" + v).then(function(r){ return r.json(); }),
+      fetch("data/equipos_bancos.json" + v).then(function(r){ return r.json(); })
+    ]).then(function(res){
+      DATA.cobertura = res[0];
+      DATA.specs = res[1];
+      DATA.equiposPlanes = res[2];
+      DATA.codFinanciamiento = res[3];
+      DATA.stock = res[4];
+      DATA.packs = res[5];
+      DATA.planes = res[6];
+      DATA.equiposTipoventa = res[7];
+      DATA.precios = res[8];
+      DATA.objeciones = res[9];
+      DATA.regiones = res[10];
+      DATA.gamaFinanciamiento = res[11];
+      DATA.equiposImagenes = res[12];
+      DATA.cambiosHistoricos = res[13];
+      DATA.equiposPhoenix = res[14];
+      DATA.equiposBancos = res[15];
+      // esEquipoPhoenix/esEquipoBancos memoizan estas tablas normalizadas en la primera
+      // llamada (EQUIPOS_PHOENIX_NORM/EQUIPOS_BANCOS_NORM) — hay que invalidarlas cada vez
+      // que DATA.equiposPhoenix/equiposBancos cambia, o seguirian usando la lista vieja.
+      EQUIPOS_PHOENIX_NORM = null;
+      EQUIPOS_BANCOS_NORM = null;
+    });
+  }
 
+  cargarDatos().then(function(){
     // Cada init() es independiente: si uno falla (dato raro, etc.) no debe tumbar a los
     // demas — sin esto, un solo error silencioso podia dejar sin usar, por ejemplo, el
     // buscador de EQUIPO (initAutocomplete) si algo antes de el en la lista fallaba.
@@ -2747,26 +2778,51 @@ if (location.protocol === "file:") {
   // asesor no toque ningun campo durante varios minutos.
   setInterval(function(){ try{ actualizarContrato(); }catch(err){} }, 30000);
 
-  // Aviso de frescura de datos: extract_data.py escribe data/_meta.json con la fecha en
-  // que se generaron los JSON. No es un chequeo en vivo contra los Excel (el navegador no
-  // puede leerlos), pero avisa si hace mucho que no se regeneran para que el agente sepa
-  // que debe correr INICIAR.bat (que ahora regenera solo si algun Excel cambio) o
-  // extract_data.py a mano si sospecha que la fuente cambio.
-  fetch("data/_meta.json").then(function(r){ return r.json(); }).then(function(meta){
+  // Aviso de frescura + auto-actualizacion en segundo plano: extract_data.py escribe
+  // data/_meta.json con la fecha/hora exacta en que se regeneraron los JSON. La pestana ya
+  // abierta de un asesor no se entera sola de un `git push` con datos nuevos (el fetch inicial
+  // ya paso), asi que esto revisa _meta.json cada 5 minutos y, si "generadoEn" cambio desde la
+  // ultima vez, vuelve a llamar a cargarDatos() para refrescar equipos/precios/stock EN VIVO —
+  // sin recargar la pagina ni perder el formulario en progreso (el autoguardado ni se entera).
+  var ultimoMetaGeneradoEn = null;
+  function actualizarBannerFrescura(meta){
     var el = $("datosGenerados");
     var fecha = new Date(meta.generadoEn);
     var texto = fecha.toLocaleDateString("es-PE", { day: "2-digit", month: "2-digit", year: "numeric" }) +
       " " + fecha.toLocaleTimeString("es-PE", { hour: "2-digit", minute: "2-digit" });
     var horasDesde = (Date.now() - fecha.getTime()) / 36e5;
     el.textContent = "📊 Datos (equipos/precios/cobertura) generados el " + texto;
+    el.classList.toggle("viejo", horasDesde > 24);
     if (horasDesde > 24){
-      el.textContent += " — si algún Excel de origen cambió después, cierra esto y vuelve a abrir con INICIAR.bat";
-      el.classList.add("viejo");
+      el.textContent += " — si algún Excel de origen cambió después, esta pestaña lo detecta sola en unos minutos.";
     }
-  }).catch(function(){
-    // data/_meta.json no existe todavia (version vieja de extract_data.py sin regenerar) —
-    // no es un error real, simplemente no se muestra el aviso de frescura.
-  });
+  }
+  function mostrarAvisoDatosActualizados(){
+    var el = $("toastDatosActualizados");
+    if (!el) return;
+    el.classList.add("visible");
+    clearTimeout(mostrarAvisoDatosActualizados._temporizador);
+    mostrarAvisoDatosActualizados._temporizador = setTimeout(function(){ el.classList.remove("visible"); }, 8000);
+  }
+  function revisarActualizacionDatos(){
+    fetch("data/_meta.json?_=" + Date.now()).then(function(r){ return r.json(); }).then(function(meta){
+      var esPrimeraRevision = (ultimoMetaGeneradoEn === null);
+      var cambioDesdeUltimaRevision = !esPrimeraRevision && meta.generadoEn !== ultimoMetaGeneradoEn;
+      ultimoMetaGeneradoEn = meta.generadoEn;
+      actualizarBannerFrescura(meta);
+      if (cambioDesdeUltimaRevision){
+        cargarDatos().then(mostrarAvisoDatosActualizados).catch(function(err){
+          console.error("No se pudo refrescar data/*.json en segundo plano:", err);
+        });
+      }
+    }).catch(function(){
+      // data/_meta.json no existe todavia (version vieja de extract_data.py sin regenerar) —
+      // no es un error real, simplemente no se muestra el aviso de frescura ni se reintenta
+      // hasta la proxima revision programada.
+    });
+  }
+  revisarActualizacionDatos();
+  setInterval(revisarActualizacionDatos, 5 * 60 * 1000);
 
   // Los 5 codigos vigentes: cada uno define como se calcula la cuota inicial del
   // financiamiento, y esto alimenta directamente el guion de COSTO y el de CONTRATO.
