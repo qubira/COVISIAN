@@ -1,60 +1,56 @@
 {
-"fechaAnterior": "2026-09-02T11:38:20",
-"fechaActual": "2026-09-02T15:13:06",
+"fechaAnterior": "2026-09-03T10:03:38",
+"fechaActual": "2026-09-03T11:00:11",
 "agregados": [
 {
-"zona": "LA LIBERTAD",
-"modelo": "SAMSUNG GXY A27 NEGRO SMA276B 256GB C/P"
-},
-{
-"zona": "LA LIBERTAD",
-"modelo": "SAMSUNG GXY A27 ROSA SMA276B 256GB C/P"
-},
-{
-"zona": "LA LIBERTAD",
-"modelo": "XIAOMI REDMI A7 PRO AZUL 128GB"
-},
-{
-"zona": "LA LIBERTAD",
-"modelo": "XIAOMI REDMI A7 PRO NEGRO 128GB"
-},
-{
-"zona": "LA LIBERTAD",
-"modelo": "XIAOMI REDMI A7 PRO VERDE 128GB"
-},
-{
-"zona": "LA LIBERTAD",
-"modelo": "ZTE NUBIA V80 PRO BLANCO 256GB"
-},
-{
-"zona": "PIURA",
-"modelo": "XIAOMI REDMI A7 PRO AZUL 128GB"
-},
-{
-"zona": "PIURA",
-"modelo": "XIAOMI REDMI A7 PRO NEGRO 128GB"
-},
-{
-"zona": "PIURA",
-"modelo": "XIAOMI REDMI A7 PRO VERDE 128GB"
-},
-{
-"zona": "PIURA",
-"modelo": "XIAOMI REDMI NOTE 15 PRO NEGRO 512 5G"
+"zona": "LAMBAYEQUE",
+"modelo": "MOTOROLA G06 AZUL XT25352 128GB"
 }
 ],
 "eliminados": [
 {
 "zona": "AREQUIPA",
-"modelo": "HONOR X5D PLATA NAA-LX3 128GB"
+"modelo": "CAMP-IPHONE 17 VERDE MG6N4BE/A 256GB"
+},
+{
+"zona": "AREQUIPA",
+"modelo": "XIAOMI REDMI NOTE 15 NEGRO 256GB LTE"
+},
+{
+"zona": "LA LIBERTAD",
+"modelo": "XIAOMI REDMI NOTE 15 NEGRO 256GB LTE"
+},
+{
+"zona": "LA LIBERTAD",
+"modelo": "XIAOMI REDMI NOTE 15 PRO+ CAFE 512GB"
 },
 {
 "zona": "LAMBAYEQUE",
-"modelo": "HONOR X5D PLATA NAA-LX3 128GB"
+"modelo": "XIAOMI REDMI NOTE 15 NEGRO 256GB LTE"
 },
 {
-"zona": "LAMBAYEQUE",
-"modelo": "MOTOROLA G06 AZUL XT25352 128GB"
+"zona": "LIMA",
+"modelo": "XIAOMI REDMI NOTE 15 NEGRO 256GB LTE"
+},
+{
+"zona": "LIMA",
+"modelo": "XIAOMI REDMI NOTE 15 PRO+ CAFE 512GB"
+},
+{
+"zona": "PIURA",
+"modelo": "XIAOMI REDMI NOTE 15 NEGRO 256GB LTE"
+},
+{
+"zona": "PIURA",
+"modelo": "XIAOMI REDMI NOTE 15 PRO+ CAFE 512GB"
+},
+{
+"zona": "PROVINCIAS",
+"modelo": "XIAOMI REDMI NOTE 15 NEGRO 256GB LTE"
+},
+{
+"zona": "PROVINCIAS",
+"modelo": "XIAOMI REDMI NOTE 15 PRO+ CAFE 512GB"
 }
 ]
 }
