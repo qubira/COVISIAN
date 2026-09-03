@@ -2815,7 +2815,10 @@ if (location.protocol === "file:") {
   // Regla del simulador real: si el asesor ingresa Cap. Financiamiento = S/ 0.00 (no vacio,
   // literalmente cero), el cliente no tiene ninguna capacidad de cuota mensual y por lo tanto
   // SOLO califica AL CONTADO, sin importar el CÓD FINANCIAMIENTO elegido — se avisa igual que
-  // el caso "CÓD 3 = solo contado" para que se vea en el guion y en PRECIO DEL EQUIPO.
+  // el caso "CÓD 3 = solo contado" para que se vea en el guion y en PRECIO DEL EQUIPO. Esta
+  // regla NO aplica a OTROS|BANCOS (Cuotas sin intereses): esa modalidad tiene su propio flujo
+  // de precios (bloque PRECIO_TOTAL/CUOTA_MENSUAL en actualizarCostoInterno) que nunca llama a
+  // esta funcion ni lee Cap. Financiamiento — ahi CONTADO y cuotas siguen calificando siempre.
   function capIndicaSoloContado(capFinanciamiento){
     if (capFinanciamiento === null || capFinanciamiento === undefined) return false;
     var texto = capFinanciamiento.toString().trim();

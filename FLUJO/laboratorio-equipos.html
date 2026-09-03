@@ -637,6 +637,10 @@
     return { inicial: inicial, pagoMensual: pagoMensual, advertencia: null,
       textoInicial: textoInicialForzado || ("S/ " + inicial.toFixed(2)) };
   }
+  // Esta regla NO aplica a OTROS|BANCOS (Cuotas sin intereses): esa modalidad se calcula
+  // aparte (bloque PRECIO_TOTAL/CUOTA_MENSUAL en recalcularTodo, mas abajo) y nunca llama a
+  // calcularFinanciamiento ni lee Cap. Financiamiento — ahi CONTADO y cuotas siguen calificando
+  // siempre, sin importar lo que tenga escrito el campo Cap. Financiamiento.
   function capIndicaSoloContado(capFinanciamiento){
     if (capFinanciamiento === null || capFinanciamiento === undefined) return false;
     var texto = capFinanciamiento.toString().trim();
