@@ -548,6 +548,10 @@
           resumen.innerHTML = "<span>Zona de stock: <b>" + (zonaStock(row.departamento) || "-") +
             "</b> · Express: <b>" + (row.express || "NO") + "</b></span>";
           if (equipoActual){ actualizarColoresYStock(equipoActual); recalcularTodo(); }
+          // la lista de resultados (seccion 3) tambien depende de la zona de stock elegida
+          // aca (equipoTieneStockEnZona) — sin esto quedaba desactualizada hasta que el
+          // agente volviera a escribir o tocar un filtro.
+          refrescarListaEquiposSiHaceFalta();
         });
         lista.appendChild(div);
       });
@@ -587,6 +591,19 @@
     }
     $("campoConvenio").classList.remove("oculto");
     var actual = convenios.indexOf(seleccionado) !== -1 ? seleccionado : convenios[0];
+
+    // Evita reconstruir el DOM si ya esta correcto: esta funcion se llama en casi cada input
+    // del formulario (recalcularTodo corre en el input de PLAN/Cap.Financiamiento/etc), y si
+    // un click sobre uno de estos radios coincide con el recalculo disparado por OTRO campo,
+    // destruir y recrear los <input> justo ahi deja el click a mitad de camino sobre un nodo
+    // que ya no existe — el radio nunca queda marcado aunque el agente si lo haya clickeado
+    // (mismo bug ya resuelto en index.html).
+    var yaCorrecto = cont.children.length === convenios.length && convenios.every(function(c, i){
+      var input = cont.children[i] && cont.children[i].querySelector("input");
+      return input && input.value === c && input.checked === (c === actual);
+    });
+    if (yaCorrecto) return actual;
+
     cont.innerHTML = "";
     convenios.forEach(function(c){
       var label = document.createElement("label");
@@ -824,6 +841,16 @@
       sel.value = disponibles[actual] ? actual : "";
     });
   }
+  // Recuerda si la lista actual viene de "Filtrar todo" (sin texto/filtros propios) para
+  // poder refrescarla igual cuando cambia la UBICACION (el filtro por zona de stock depende
+  // de seleccionCobertura) sin perder ese modo ni, al reves, forzar una lista antes de que el
+  // agente haya buscado nada.
+  var ultimaBusquedaForzada = false;
+  function refrescarListaEquiposSiHaceFalta(){
+    var q = normBusqueda($("equipoBuscar").value);
+    var hayFiltroCampo = CAMPOS_FILTRO.some(function(f){ return $(f.id).value; });
+    if (q || hayFiltroCampo || ultimaBusquedaForzada) buscarEquipos(ultimaBusquedaForzada);
+  }
   function buscarEquipos(forzarTodo){
     actualizarOpcionesFiltros();
     var q = normBusqueda($("equipoBuscar").value);
@@ -952,7 +979,6 @@
     var esBancos = (clave === "OTROS|BANCOS (Cuotas sin intereses)");
     var conveniosRadio = esBancos ? ["CONTADO", "FINANCIADO"] : tabla.convenios;
     var convenioSel = poblarRadiosConvenio(conveniosRadio, (document.querySelector('input[name=convenioCosto]:checked') || {}).value);
-    var seccionScoring = document.getElementById("codFinanciamiento").closest ? null : null; // (no-op, sin fieldset a bloquear aca)
 
     var claveP = claveDePlan($("plan").value.trim());
     if (!claveP){ pintarAviso('Ingrese un PLAN válido (ej. 39.9) para calcular el precio.', "info"); return; }
@@ -1050,9 +1076,9 @@
     $("capFinanciamiento").addEventListener("input", recalcularTodo);
 
     actualizarOpcionesFiltros();
-    $("equipoBuscar").addEventListener("input", function(){ buscarEquipos(); });
-    $("btnFiltrarTodo").addEventListener("click", function(){ buscarEquipos(true); });
-    $("btnLimpiarFiltro").addEventListener("click", limpiarFiltros);
+    $("equipoBuscar").addEventListener("input", function(){ ultimaBusquedaForzada = false; buscarEquipos(); });
+    $("btnFiltrarTodo").addEventListener("click", function(){ ultimaBusquedaForzada = true; buscarEquipos(true); });
+    $("btnLimpiarFiltro").addEventListener("click", function(){ ultimaBusquedaForzada = false; limpiarFiltros(); });
     CAMPOS_FILTRO.forEach(function(f){ $(f.id).addEventListener("change", function(){ buscarEquipos(); }); });
   }
 })();
