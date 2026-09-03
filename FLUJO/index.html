@@ -2812,7 +2812,24 @@ if (location.protocol === "file:") {
   // mensual del equipo supera la "Cap. Financiamiento" que ingreso el asesor, la inicial
   // sube (redondeada a la decena menos 1, ej. 79/89/149) para que la cuota mensual quepa
   // dentro de esa capacidad. La cuota mensual siempre se redondea hacia arriba (entero).
+  // Regla del simulador real: si el asesor ingresa Cap. Financiamiento = S/ 0.00 (no vacio,
+  // literalmente cero), el cliente no tiene ninguna capacidad de cuota mensual y por lo tanto
+  // SOLO califica AL CONTADO, sin importar el CÓD FINANCIAMIENTO elegido — se avisa igual que
+  // el caso "CÓD 3 = solo contado" para que se vea en el guion y en PRECIO DEL EQUIPO.
+  function capIndicaSoloContado(capFinanciamiento){
+    if (capFinanciamiento === null || capFinanciamiento === undefined) return false;
+    var texto = capFinanciamiento.toString().trim();
+    if (texto === "") return false;
+    return parseFloat(texto) === 0;
+  }
+
   function calcularFinanciamiento(costo, codigoSel, equipo, tipoVenta, capFinanciamiento){
+    if (capIndicaSoloContado(capFinanciamiento)){
+      return {
+        inicial: null, pagoMensual: Math.ceil(costo / CUOTAS_FINANCIAMIENTO), pagoMensualTotal: null, textoInicial: null,
+        advertencia: "Cap. Financiamiento en S/ 0.00: el cliente NO califica para FINANCIADO, solo puede pagar AL CONTADO."
+      };
+    }
     var info = obtenerCodigoFinanciamiento(codigoSel);
     // DATA.gamaFinanciamiento esta indexado tal cual sale del Excel (mayusculas, sin
     // acentos ni recorte de espacios internos), igual que buscarModeloEnTablaPrecios.

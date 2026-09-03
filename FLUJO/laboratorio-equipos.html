@@ -637,7 +637,20 @@
     return { inicial: inicial, pagoMensual: pagoMensual, advertencia: null,
       textoInicial: textoInicialForzado || ("S/ " + inicial.toFixed(2)) };
   }
+  function capIndicaSoloContado(capFinanciamiento){
+    if (capFinanciamiento === null || capFinanciamiento === undefined) return false;
+    var texto = capFinanciamiento.toString().trim();
+    if (texto === "") return false;
+    return parseFloat(texto) === 0;
+  }
+
   function calcularFinanciamiento(costo, codigoSel, equipo, tipoVenta, capFinanciamiento){
+    if (capIndicaSoloContado(capFinanciamiento)){
+      return {
+        inicial: null, pagoMensual: Math.ceil(costo / CUOTAS_FINANCIAMIENTO), textoInicial: null,
+        advertencia: "Cap. Financiamiento en S/ 0.00: el cliente NO califica para FINANCIADO, solo puede pagar AL CONTADO."
+      };
+    }
     var info = obtenerCodigoFinanciamiento(codigoSel);
     var tramo = equipo ? DATA.gamaFinanciamiento[equipo.toUpperCase().trim()] : null;
     if (!info) return construirResultadoFinanciamiento(costo, 0, capFinanciamiento, "S/ 0.00");
