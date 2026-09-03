@@ -22,10 +22,17 @@
  *                            "Ventas") en la hoja con el nombre exacto de datos.tipificacion
  *                            ("Contacto efectivo" / "No contacto efectivo" / "No contacto"),
  *                            creandola si todavia no existe.
+ *  - "agregarMotivo"       : boton "+" del buscador de MOTIVO -> agrega una fila en
+ *                            "Motivos personalizados" (si el texto no existe ya, sin acentos/
+ *                            mayusculas).
+ *  - "editarMotivo"        : icono ✏️ de un motivo personalizado -> actualiza el texto de la
+ *                            fila con ese id.
+ *  - "eliminarMotivo"      : icono 🗑️ de un motivo personalizado -> borra esa fila.
  *
- * Tambien responde GET (?accion=listarCitas): devuelve todas las filas de "Llamadas
- * Agendadas" en JSONP, para que "Casos agendados" funcione como base de datos compartida
- * entre navegadores (ver doGet mas abajo).
+ * Tambien responde GET (?accion=listarCitas o ?accion=listarMotivos): devuelve todas las
+ * filas de "Llamadas Agendadas"/"Motivos personalizados" en JSONP, para que "Casos
+ * agendados" y la lista de MOTIVO funcionen como base de datos compartida entre navegadores
+ * (ver doGet mas abajo).
  *
  * Ver pasos de instalacion en GUIA_APPS_SCRIPT.md
  */
@@ -97,6 +104,9 @@ var COLUMNAS_AGENDA = [
   "equipoInteres", "observacion", "estado", "tipoCliente"
 ];
 
+var HOJA_MOTIVOS = "Motivos personalizados";
+var COLUMNAS_MOTIVOS = ["id", "texto", "agregadoEn"];
+
 // GET: usado para que "Casos agendados" pueda leer el Sheet como base de datos compartida
 // (cualquier navegador ve las mismas citas, no solo las que agendo ese mismo navegador).
 // Se responde en formato JSONP (no JSON plano) porque los Web Apps de Apps Script no dejan
@@ -108,6 +118,8 @@ function doGet(e) {
   var payload;
   if (accion === "listarCitas") {
     payload = { ok: true, citas: listarCitas() };
+  } else if (accion === "listarMotivos") {
+    payload = { ok: true, motivos: listarMotivos() };
   } else {
     payload = { ok: false, error: "accion GET desconocida" };
   }
@@ -155,6 +167,20 @@ function listarCitas() {
   });
 }
 
+// Lista simple (sin conversion de fecha especial, "agregadoEn" solo se usa para referencia
+// humana, no se parsea de vuelta como Date en ningun lado).
+function listarMotivos() {
+  var hoja = obtenerOCrearHoja(HOJA_MOTIVOS, COLUMNAS_MOTIVOS);
+  var ultimaFila = hoja.getLastRow();
+  if (ultimaFila < 2) return [];
+  var valores = hoja.getRange(2, 1, ultimaFila - 1, COLUMNAS_MOTIVOS.length).getValues();
+  return valores.map(function (fila) {
+    var obj = {};
+    COLUMNAS_MOTIVOS.forEach(function (campo, i) { obj[campo] = fila[i]; });
+    return obj;
+  });
+}
+
 function doPost(e) {
   // Varios agentes pueden guardar al mismo tiempo. Sin lock, dos "borrador" casi
   // simultáneos para el mismo draftId podrían leer la hoja antes de que el otro
@@ -184,6 +210,12 @@ function doPost(e) {
       eliminarAgenda(datos.id);
     } else if (accion === "tipificacion") {
       guardarTipificacion(datos);
+    } else if (accion === "agregarMotivo") {
+      agregarMotivo(datos);
+    } else if (accion === "editarMotivo") {
+      editarMotivo(datos);
+    } else if (accion === "eliminarMotivo") {
+      eliminarMotivo(datos.id);
     } else {
       guardarVenta(datos);
     }
@@ -289,6 +321,44 @@ function editarAgenda(datos) {
 // cerrarBorrador con HOJA_BORRADORES).
 function eliminarAgenda(id) {
   var hoja = obtenerOCrearHoja(HOJA_AGENDA, COLUMNAS_AGENDA);
+  var filaExistente = buscarFilaPorDraftId(hoja, id);
+  if (filaExistente > 0) {
+    hoja.deleteRow(filaExistente);
+  }
+}
+
+// Boton "+" del buscador de MOTIVO: agrega el texto escrito como fila nueva en "Motivos
+// personalizados", para que quede disponible para CUALQUIER navegador (antes solo se
+// guardaba en localStorage del navegador donde se agrego). No duplica si el mismo texto
+// (sin distinguir mayusculas/acentos) ya existe -- el dedup fino ya lo hace el frontend con
+// norm(), aca solo se evita la duplicacion obvia por si dos agentes agregan lo mismo casi
+// al mismo tiempo.
+function agregarMotivo(datos) {
+  var hoja = obtenerOCrearHoja(HOJA_MOTIVOS, COLUMNAS_MOTIVOS);
+  var ultimaFila = hoja.getLastRow();
+  if (ultimaFila >= 2) {
+    var textos = hoja.getRange(2, 2, ultimaFila - 1, 1).getValues();
+    var yaExiste = textos.some(function (fila) {
+      return (fila[0] || "").toString().trim().toLowerCase() === (datos.texto || "").trim().toLowerCase();
+    });
+    if (yaExiste) return;
+  }
+  hoja.appendRow([datos.id, datos.texto, datos.agregadoEn || ""]);
+}
+
+// Icono ✏️ de un motivo personalizado: actualiza el texto de la fila con ese id (mismo
+// patron que editarAgenda, busca por columna 1 con buscarFilaPorDraftId).
+function editarMotivo(datos) {
+  var hoja = obtenerOCrearHoja(HOJA_MOTIVOS, COLUMNAS_MOTIVOS);
+  var filaExistente = buscarFilaPorDraftId(hoja, datos.id);
+  if (filaExistente > 0) {
+    hoja.getRange(filaExistente, COLUMNAS_MOTIVOS.indexOf("texto") + 1).setValue(datos.texto);
+  }
+}
+
+// Icono 🗑️ de un motivo personalizado: borra la fila definitivamente.
+function eliminarMotivo(id) {
+  var hoja = obtenerOCrearHoja(HOJA_MOTIVOS, COLUMNAS_MOTIVOS);
   var filaExistente = buscarFilaPorDraftId(hoja, id);
   if (filaExistente > 0) {
     hoja.deleteRow(filaExistente);

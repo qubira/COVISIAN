@@ -5150,38 +5150,66 @@ if (location.protocol === "file:") {
     "Cliente desea evaluar otras opciones",
     "Objeción no superada (rebate)"
   ];
+  // motivosPersonalizadosCache: [{id, texto}, ...]. Vive en localStorage como cache/respaldo
+  // offline, pero la hoja "Motivos personalizados" del Sheet es la fuente compartida real --
+  // sin esto, un motivo agregado en una PC no aparecia en las demas (cada navegador tenia su
+  // propio localStorage aislado). agregarMotivo/editarMotivo/eliminarMotivo (apps_script.gs)
+  // espejan cada cambio al Sheet ademas de aplicarlo local al toque, para que la UI no tenga
+  // que esperar al POST.
   var LS_MOTIVOS_PERSONALIZADOS = "motivos_personalizados_no_venta";
   var motivosPersonalizadosCache = null;
 
   function cargarMotivosPersonalizadosCache(){
     if (motivosPersonalizadosCache) return;
-    try{ motivosPersonalizadosCache = JSON.parse(localStorage.getItem(LS_MOTIVOS_PERSONALIZADOS) || "[]"); }
-    catch(err){ motivosPersonalizadosCache = []; }
+    try{
+      var guardado = JSON.parse(localStorage.getItem(LS_MOTIVOS_PERSONALIZADOS) || "[]");
+      // migracion: version anterior guardaba solo texto (string[]), no {id, texto}[] -- se
+      // persiste de una vez (no solo en memoria) para no tener que re-migrar en cada carga,
+      // incluso si sincronizarMotivosRemotos() todavia no corrio o fallo.
+      var huboMigracion = false;
+      motivosPersonalizadosCache = guardado.map(function(m){
+        if (typeof m === "string"){ huboMigracion = true; return { id: generarDraftId(), texto: m }; }
+        return m;
+      });
+      if (huboMigracion) guardarMotivosPersonalizadosCache();
+    }catch(err){ motivosPersonalizadosCache = []; }
   }
   function guardarMotivosPersonalizadosCache(){
     try{ localStorage.setItem(LS_MOTIVOS_PERSONALIZADOS, JSON.stringify(motivosPersonalizadosCache)); }catch(err){}
   }
   function motivosCandidatos(){
     cargarMotivosPersonalizadosCache();
-    return MOTIVOS_BASE.concat(motivosPersonalizadosCache);
+    return MOTIVOS_BASE.concat(motivosPersonalizadosCache.map(function(m){ return m.texto; }));
+  }
+  function enviarAccionMotivo(accion, datos){
+    if (!tieneScriptConfigurado()) return;
+    fetch(GOOGLE_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(Object.assign({ accion: accion }, datos))
+    }).catch(function(){ /* queda igual guardado localmente, se reintenta solo en la proxima sincronizacion */ });
   }
   function agregarMotivoALaLista(texto){
     var limpio = (texto || "").trim();
     if (!limpio) return false;
     var yaExiste = motivosCandidatos().some(function(m){ return norm(m) === norm(limpio); });
     if (yaExiste) return false;
-    motivosPersonalizadosCache.push(limpio);
+    var entrada = { id: generarDraftId(), texto: limpio, agregadoEn: formatearFechaHoraLocal(new Date()) };
+    motivosPersonalizadosCache.push(entrada);
     guardarMotivosPersonalizadosCache();
+    enviarAccionMotivo("agregarMotivo", entrada);
     return true;
   }
   function editarMotivoPersonalizado(anterior, nuevo){
     var limpio = (nuevo || "").trim();
     if (!limpio) return;
     cargarMotivosPersonalizadosCache();
-    var idx = motivosPersonalizadosCache.indexOf(anterior);
-    if (idx === -1) return;
-    motivosPersonalizadosCache[idx] = limpio;
+    var entrada = motivosPersonalizadosCache.find(function(m){ return m.texto === anterior; });
+    if (!entrada) return;
+    entrada.texto = limpio;
     guardarMotivosPersonalizadosCache();
+    enviarAccionMotivo("editarMotivo", { id: entrada.id, texto: limpio });
     // si algun campo tenia seleccionado justo el texto viejo, se actualiza al nuevo
     [$("motivo"), $("motivoRapido")].forEach(function(input){
       if (input && input.value === anterior) input.value = limpio;
@@ -5189,8 +5217,32 @@ if (location.protocol === "file:") {
   }
   function eliminarMotivoPersonalizado(texto){
     cargarMotivosPersonalizadosCache();
-    motivosPersonalizadosCache = motivosPersonalizadosCache.filter(function(m){ return m !== texto; });
+    var entrada = motivosPersonalizadosCache.find(function(m){ return m.texto === texto; });
+    if (!entrada) return;
+    motivosPersonalizadosCache = motivosPersonalizadosCache.filter(function(m){ return m !== entrada; });
     guardarMotivosPersonalizadosCache();
+    enviarAccionMotivo("eliminarMotivo", { id: entrada.id });
+  }
+
+  // Trae los motivos del Sheet y los combina con los locales (mismo patron que
+  // sincronizarCitasRemotas): un motivo que ya existe local se conserva tal cual (puede tener
+  // ediciones/eliminaciones aun no confirmadas por el servidor), uno que solo esta remoto se
+  // agrega. Se llama al iniciar para que los agentes vean los motivos que otros ya agregaron.
+  function sincronizarMotivosRemotos(callback){
+    function terminar(){ if (callback) callback(); }
+    if (!tieneScriptConfigurado()){ terminar(); return; }
+    jsonp(GOOGLE_SCRIPT_URL + "?accion=listarMotivos").then(function(res){
+      if (!res || !res.ok || !Array.isArray(res.motivos)) return;
+      cargarMotivosPersonalizadosCache();
+      var porId = {};
+      motivosPersonalizadosCache.forEach(function(m){ porId[m.id] = m; });
+      res.motivos.forEach(function(remoto){
+        if (!remoto.id || porId[remoto.id]) return;
+        porId[remoto.id] = { id: remoto.id, texto: remoto.texto, agregadoEn: remoto.agregadoEn };
+      });
+      motivosPersonalizadosCache = Object.keys(porId).map(function(k){ return porId[k]; });
+      guardarMotivosPersonalizadosCache();
+    }).then(terminar, terminar);
   }
 
   // Devuelve { confirmar } para que el boton "+" externo pueda reusar la MISMA logica de
@@ -5210,7 +5262,7 @@ if (location.protocol === "file:") {
       var q = norm(filtro);
       var candidatos = motivosCandidatos().filter(function(m){ return !q || norm(m).indexOf(q) !== -1; });
       candidatos.forEach(function(m){
-        var esPersonalizado = motivosPersonalizadosCache.indexOf(m) !== -1;
+        var esPersonalizado = motivosPersonalizadosCache.some(function(x){ return x.texto === m; });
         var div = document.createElement("div");
         div.className = "opcion" + (esPersonalizado ? " opcion-motivo" : "");
         var span = document.createElement("span");
@@ -5294,6 +5346,7 @@ if (location.protocol === "file:") {
   }
 
   function initMotivosPersonalizados(){
+    sincronizarMotivosRemotos();
     var acMotivo = configurarAutocompleteMotivo("motivo", "lista-motivo");
     var acMotivoRapido = configurarAutocompleteMotivo("motivoRapido", "lista-motivoRapido");
     $("btnAgregarMotivo").addEventListener("click", function(e){ e.stopPropagation(); acMotivo.confirmar(); });
