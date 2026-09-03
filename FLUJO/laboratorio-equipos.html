@@ -7,20 +7,55 @@
 <style>
   :root{
     --azul:#0f3d91; --azul-claro:#1a56d6; --azul-bg:#eef3fc;
-    --verde:#1a8f4c; --rojo:#c0392b; --gris:#6b7280; --gris-bg:#f4f5f7;
-    --borde:#d7dce3; --texto:#1f2530;
+    --verde:#1a8f4c; --verde-bg:#e8f8ee; --rojo:#c0392b; --gris:#6b7280; --gris-bg:#f4f5f7;
+    --borde:#d7dce3; --texto:#1f2530; --superficie:#fff;
   }
   *{box-sizing:border-box;}
   body{
     font-family:'Segoe UI', Arial, sans-serif; background:var(--gris-bg); color:var(--texto);
-    margin:0; padding:14px 12px 60px;
+    margin:0; padding:14px 12px 90px; transition:background .15s,color .15s;
   }
-  .contenedor{ max-width:760px; margin:0 auto; }
-  h1{ color:var(--azul); font-size:18px; margin:0 0 4px; }
-  .subtitulo{ color:var(--gris); font-size:12.5px; margin:0 0 16px; line-height:1.4; }
+  .contenedor{ max-width:1180px; margin:0 auto; }
+  .encabezado-fila{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+  .encabezado-titulo{ display:flex; align-items:center; gap:8px; }
+  h1{ color:var(--azul); font-size:19px; margin:0; }
+  .encabezado-acciones{ display:flex; align-items:center; gap:8px; flex-shrink:0; }
+  .link-volver{
+    font-size:12px; font-weight:700; color:var(--azul); text-decoration:none; white-space:nowrap;
+    border:1px solid var(--borde); border-radius:20px; padding:5px 12px; background:var(--superficie);
+  }
+  .link-volver:hover{ background:var(--azul-bg); border-color:var(--azul); }
+  .btn-tema{
+    display:flex; align-items:center; justify-content:center; border:1px solid var(--borde);
+    background:var(--superficie); color:var(--azul); border-radius:50%; width:30px; height:30px;
+    font-size:14px; cursor:pointer; flex-shrink:0; padding:0;
+  }
+  .btn-tema:hover{ background:var(--azul-bg); border-color:var(--azul); }
+  .subtitulo{ color:var(--gris); font-size:12.5px; margin:6px 0 16px; line-height:1.4; max-width:760px; }
+
+  /* ---- Indicador de progreso (1 Ubicacion / 2 Plan / 3 Equipo / 4 Resultado) ---- */
+  .stepper{ display:flex; gap:6px; margin-bottom:16px; flex-wrap:wrap; }
+  .step{
+    display:flex; align-items:center; gap:6px; font-size:11.5px; font-weight:700; color:var(--gris);
+    background:var(--superficie); border:1px solid var(--borde); border-radius:20px; padding:5px 12px 5px 8px;
+    transition:background .15s,border-color .15s,color .15s;
+  }
+  .step .bolita{
+    width:18px; height:18px; border-radius:50%; background:var(--gris-bg); color:var(--gris);
+    display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; border:1px solid var(--borde);
+  }
+  .step.activo{ border-color:var(--azul); color:var(--azul); }
+  .step.activo .bolita{ background:var(--azul); color:#fff; border-color:var(--azul); }
+  .step.completo{ border-color:var(--verde); color:var(--verde); background:var(--verde-bg); }
+  .step.completo .bolita{ background:var(--verde); color:#fff; border-color:var(--verde); }
+
+  .layout{ display:grid; grid-template-columns:minmax(0,380px) minmax(0,1fr); gap:16px; align-items:start; }
+  @media (max-width:920px){ .layout{ grid-template-columns:1fr; } }
+  .columna{ display:flex; flex-direction:column; gap:14px; min-width:0; }
+
   .panel{
-    border:1px solid var(--borde); border-radius:10px; background:#fff;
-    padding:14px 16px 16px; margin-bottom:14px;
+    border:1px solid var(--borde); border-radius:10px; background:var(--superficie);
+    padding:14px 16px 16px; transition:background .15s,border-color .15s;
   }
   .panel-titulo{
     font-weight:700; color:#fff; background:var(--azul); padding:4px 12px;
@@ -32,14 +67,14 @@
   .campo label{ display:block; font-size:11.5px; font-weight:700; color:var(--gris); margin-bottom:3px; letter-spacing:.2px; }
   input[type=text], input[type=number], select, textarea{
     width:100%; padding:8px 9px; border:1px solid var(--borde); border-radius:6px;
-    font-size:13.5px; font-family:inherit; background:#fff; color:var(--texto);
+    font-size:13.5px; font-family:inherit; background:var(--superficie); color:var(--texto);
   }
   input:focus, select:focus{ outline:2px solid var(--azul-claro); outline-offset:-1px; }
   .oculto{ display:none !important; }
 
   .autocomplete{ position:relative; }
   .autocomplete .lista{
-    position:absolute; z-index:50; top:100%; left:0; right:0; background:#fff;
+    position:absolute; z-index:50; top:100%; left:0; right:0; background:var(--superficie);
     border:1px solid var(--borde); border-top:none; border-radius:0 0 6px 6px;
     max-height:220px; overflow-y:auto; display:none; box-shadow:0 6px 14px rgba(0,0,0,.08);
   }
@@ -75,31 +110,41 @@
   button.btn-limpiar{ border-color:var(--gris); background:var(--gris-bg); color:var(--gris); }
 
   .lista-equipos{
-    border:1px solid var(--borde); border-radius:8px; max-height:280px; overflow-y:auto;
+    display:flex; flex-direction:column; gap:6px; max-height:420px; overflow-y:auto; padding-right:2px;
   }
-  .lista-equipos-item{ padding:8px 12px; font-size:12.5px; cursor:pointer; border-bottom:1px solid var(--gris-bg); }
-  .lista-equipos-item:last-child{ border-bottom:none; }
-  .lista-equipos-item:hover{ background:var(--azul-bg); }
-  .lista-equipos-item.activo{ background:var(--azul); color:#fff; font-weight:700; }
-  .lista-equipos-item.opcion-phoenix{ background:#fff8de; }
-  .lista-equipos-item.opcion-phoenix:hover{ background:#fff0ae; }
-  .lista-equipos-item.opcion-phoenix.activo{ background:var(--azul); }
-  .lista-equipos-vacio{ padding:14px; color:var(--gris); font-size:12.5px; text-align:center; }
+  .lista-equipos-item{
+    padding:8px 10px 8px 12px; font-size:12.5px; cursor:pointer; border-radius:8px;
+    border:1px solid var(--borde); background:var(--superficie); position:relative;
+    display:flex; align-items:center; gap:6px; flex-wrap:wrap; transition:background .1s,border-color .1s,transform .1s;
+  }
+  .lista-equipos-item:hover{ background:var(--azul-bg); border-color:var(--azul-claro); transform:translateX(1px); }
+  .lista-equipos-item.activo{ background:var(--azul); color:#fff; font-weight:700; border-color:var(--azul); }
+  .lista-equipos-item.opcion-phoenix{ border-left:3px solid #e0ac00; background:#fffaea; }
+  .lista-equipos-item.opcion-phoenix:hover{ background:#fff2c4; }
+  .lista-equipos-item.opcion-phoenix.activo{ background:var(--azul); border-left-color:#ffd25c; }
+  .lista-equipos-vacio{ padding:22px 14px; color:var(--gris); font-size:12.5px; text-align:center; }
+  .lista-equipos-contador{ font-size:11px; color:var(--gris); font-weight:700; margin:-6px 0 8px; }
 
   .ficha-cabecera{ display:flex; gap:14px; align-items:flex-start; margin-bottom:10px; }
-  .ficha-foto{ width:90px; height:90px; flex-shrink:0; border:1px solid var(--borde); border-radius:8px; display:flex; align-items:center; justify-content:center; overflow:hidden; background:var(--gris-bg); cursor:zoom-in; }
+  .ficha-foto{ width:96px; height:96px; flex-shrink:0; border:1px solid var(--borde); border-radius:8px; display:flex; align-items:center; justify-content:center; overflow:hidden; background:var(--gris-bg); cursor:zoom-in; position:relative; }
+  .ficha-foto:hover::after{
+    content:"🔍"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    background:rgba(15,20,30,.35); color:#fff; font-size:20px;
+  }
   .ficha-foto img{ max-width:100%; max-height:100%; object-fit:contain; }
-  .ficha-foto .icono-generico{ font-size:34px; color:var(--borde); }
-  .ficha-titulo{ font-weight:700; font-size:15px; color:var(--azul); }
+  .ficha-foto .icono-generico{ font-size:38px; color:var(--borde); }
+  .ficha-titulo{ font-weight:700; font-size:15.5px; color:var(--azul); }
   .ficha-sub{ font-size:12px; color:var(--gris); margin-top:2px; }
+  .ficha-badges{ margin-top:5px; display:flex; gap:4px; flex-wrap:wrap; }
 
   .specs-tabla{ display:grid; grid-template-columns:auto 1fr auto 1fr; border:1px solid var(--borde); border-radius:8px; overflow:hidden; font-size:12px; }
-  .specs-tabla > div{ padding:5px 8px; border-bottom:1px solid var(--borde); }
+  .specs-tabla > div{ padding:6px 8px; border-bottom:1px solid var(--borde); }
   .specs-tabla > div:nth-child(4n-1), .specs-tabla > div:nth-child(4n){ border-right:none; }
   .specs-tabla > div:nth-child(4n-3), .specs-tabla > div:nth-child(4n-2){ border-right:1px solid var(--borde); }
   .specs-tabla > div:nth-last-child(-n+2){ border-bottom:none; }
   .specs-label{ background:var(--gris-bg); color:var(--gris); font-weight:700; }
   .specs-valor{ font-weight:700; }
+  .seccion-subtitulo{ font-size:11.5px; font-weight:700; color:var(--gris); letter-spacing:.2px; margin:12px 0 5px; }
   @media (max-width:480px){
     .specs-tabla{ grid-template-columns:auto 1fr; }
     .specs-tabla > div:nth-child(4n-3), .specs-tabla > div:nth-child(4n-2){ border-right:none; }
@@ -114,25 +159,36 @@
   .sin-stock-zona{ color:var(--gris); font-style:italic; font-size:12.5px; }
   .pack-aviso{ margin-top:10px; padding:8px 12px; border-radius:8px; background:#fff7e0; border:1px solid #f0d789; font-size:12.5px; }
 
-  .precio-equipo-grid{ display:grid; grid-template-columns:1fr 1fr; gap:6px 24px; }
+  .precio-stats{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .precio-stat{
+    border:1px solid var(--borde); border-radius:8px; padding:10px 12px; background:var(--gris-bg);
+  }
+  .precio-stat.destacado{ background:var(--azul); border-color:var(--azul); }
+  .precio-stat .stat-label{ font-size:10.5px; font-weight:700; letter-spacing:.3px; color:var(--gris); text-transform:uppercase; }
+  .precio-stat.destacado .stat-label{ color:#dce8ff; }
+  .precio-stat .stat-valor{ font-size:19px; font-weight:800; color:var(--texto); margin-top:2px; }
+  .precio-stat.destacado .stat-valor{ color:#fff; font-size:22px; }
   .linea{ display:flex; justify-content:space-between; padding:3px 0; font-size:13px; }
   .linea-titulo-rojo{ color:var(--rojo); font-weight:700; }
-  .aviso-linea{ margin-top:8px; font-size:12.5px; }
-  .aviso-linea.err{ color:var(--rojo); }
-  .aviso-linea.info{ color:var(--gris); }
+  .aviso-linea{ margin-top:10px; font-size:12.5px; padding:8px 10px; border-radius:8px; }
+  .aviso-linea.err{ color:var(--rojo); background:#fdecea; border:1px solid #f3c1bb; }
+  .aviso-linea.info{ color:var(--gris); background:var(--gris-bg); }
 
-  .tabla-comparar-wrap{ overflow-x:auto; }
-  table.tabla-comparar{ width:100%; border-collapse:collapse; font-size:12px; margin-top:6px; }
-  table.tabla-comparar th, table.tabla-comparar td{ border:1px solid var(--borde); padding:6px 8px; text-align:center; }
-  table.tabla-comparar th{ background:var(--azul); color:#fff; }
+  .tabla-comparar-wrap{ overflow-x:auto; border-radius:8px; border:1px solid var(--borde); }
+  table.tabla-comparar{ width:100%; border-collapse:collapse; font-size:12px; }
+  table.tabla-comparar th, table.tabla-comparar td{ border-bottom:1px solid var(--borde); border-right:1px solid var(--borde); padding:7px 8px; text-align:center; }
+  table.tabla-comparar th{ background:var(--azul); color:#fff; position:sticky; top:0; }
+  table.tabla-comparar td:last-child, table.tabla-comparar th:last-child{ border-right:none; }
+  table.tabla-comparar tbody tr:hover td{ background:var(--azul-bg); }
   table.tabla-comparar tr.fila-plan-actual td{ background:#fff8de; font-weight:700; }
+  table.tabla-comparar tr.fila-plan-actual:hover td{ background:#fff0ae; }
 
   .zoom-overlay{
     display:none; position:fixed; inset:0; background:rgba(15,20,30,.75); z-index:500;
     align-items:center; justify-content:center; padding:20px;
   }
   .zoom-overlay.visible{ display:flex; }
-  .zoom-caja{ background:#fff; border-radius:10px; padding:16px; max-width:90vw; max-height:90vh; overflow:auto; text-align:center; }
+  .zoom-caja{ background:var(--superficie); border-radius:10px; padding:16px; max-width:90vw; max-height:90vh; overflow:auto; text-align:center; }
   .zoom-caja img{ max-width:80vw; max-height:70vh; }
   .zoom-cerrar{ float:right; border:none; background:transparent; font-size:20px; cursor:pointer; color:var(--gris); }
 
@@ -141,11 +197,49 @@
     padding:10px 14px; font-size:13px; margin-bottom:14px;
   }
   .banner-sin-datos.oculto-forzado{ display:none !important; }
+
+  /* ---- Barra de resumen fija: el equipo + cuota elegidos, visible aunque el agente haya
+     bajado a leer specs/comparativa mas abajo mientras habla con el cliente ---- */
+  .resumen-flotante{
+    position:fixed; left:0; right:0; bottom:0; z-index:80; background:var(--azul); color:#fff;
+    padding:9px 16px; display:none; align-items:center; justify-content:center; gap:18px;
+    flex-wrap:wrap; font-size:12.5px; box-shadow:0 -4px 14px rgba(0,0,0,.15);
+  }
+  .resumen-flotante.visible{ display:flex; }
+  .resumen-flotante b{ font-size:13.5px; }
+  .resumen-flotante .rf-sep{ opacity:.5; }
+
+  /* ============ MODO OSCURO ============
+     Casi todo ya usa var(--azul)/var(--borde)/var(--texto)/etc., asi que sobreescribir esas
+     variables en body.tema-oscuro recolorea la mayor parte solo. Lo de abajo son los pocos
+     colores puestos a mano (washes de badges/avisos) que no pasan por una variable. */
+  body.tema-oscuro{
+    --azul:#5b9bff; --azul-claro:#7db2ff; --azul-bg:#16233d;
+    --verde:#3ddc84; --verde-bg:#122a1c; --rojo:#ff6b5e; --gris:#9aa3b2; --gris-bg:#1a1e27;
+    --borde:#333846; --texto:#e4e7ee; --superficie:#20242f;
+  }
+  body.tema-oscuro .lista-equipos-item.opcion-phoenix{ background:#2a2410; border-left-color:#c99a1f; }
+  body.tema-oscuro .lista-equipos-item.opcion-phoenix:hover{ background:#3a3115; }
+  body.tema-oscuro .badge-phoenix{ background:#5c4a10; color:#ffe58a; }
+  body.tema-oscuro .color-chip{ background:#2a2e3a; color:#e4e7ee; }
+  body.tema-oscuro .color-chip.ultimas{ background:#3a3115; color:#ffcf5c; }
+  body.tema-oscuro .color-chip.sin-cobertura-express{ background:#3a1512; color:#ff8a7d; }
+  body.tema-oscuro .pack-aviso{ background:#3a3115; border-color:#5c4a10; }
+  body.tema-oscuro .aviso-linea.err{ background:#3a1512; border-color:#7a3a34; }
+  body.tema-oscuro table.tabla-comparar tr.fila-plan-actual td{ background:#3a3115; }
+  body.tema-oscuro table.tabla-comparar tr.fila-plan-actual:hover td{ background:#4a3e18; }
+  body.tema-oscuro .precio-stat{ background:#1a1e27; }
 </style>
 </head>
 <body>
 <div class="contenedor">
-  <h1>🧪 Laboratorio de Equipos</h1>
+  <div class="encabezado-fila">
+    <div class="encabezado-titulo"><h1>🧪 Laboratorio de Equipos</h1></div>
+    <div class="encabezado-acciones">
+      <a class="link-volver" href="index.html">← Ficha de Llamada</a>
+      <button type="button" class="btn-tema" id="btnTema" title="Cambiar a modo oscuro">🌙</button>
+    </div>
+  </div>
   <div class="subtitulo">
     Consulta equipos disponibles por zona, precios AL CONTADO/FINANCIADO y comparaciones — solo de
     referencia, no guarda nada ni afecta ninguna ficha de llamada. Los datos se leen de los mismos
@@ -155,6 +249,13 @@
   <div class="banner-sin-datos" id="bannerSinDatos">
     ⛔ No se pudieron cargar los datos. Abre esta página desde el mismo servidor local que la Ficha de
     Llamada (no con doble clic / file://).
+  </div>
+
+  <div class="stepper" id="stepper">
+    <div class="step" id="step-ubicacion"><span class="bolita">1</span> Ubicación</div>
+    <div class="step" id="step-plan"><span class="bolita">2</span> Tipo / Plan</div>
+    <div class="step" id="step-equipo"><span class="bolita">3</span> Equipo</div>
+    <div class="step" id="step-resultado"><span class="bolita">4</span> Resultado</div>
   </div>
 
   <div class="panel">
@@ -167,105 +268,111 @@
     <div class="linea" id="ubicacionResumen" style="display:none;"></div>
   </div>
 
-  <div class="panel">
-    <div class="panel-titulo">2. TIPO / SUBTIPO / CONVENIO / PLAN</div>
-    <div class="fila">
-      <div class="campo">
-        <label for="tipo">TIPO</label>
-        <select id="tipo">
-          <option value="">Seleccione...</option>
-          <option value="PREPAGO">PREPAGO</option>
-          <option value="POSTPAGO">POSTPAGO</option>
-          <option value="ESPECIALES">ESPECIALES</option>
-          <option value="OTROS">OTROS</option>
-        </select>
+  <div class="layout">
+    <div class="columna">
+      <div class="panel">
+        <div class="panel-titulo">2. TIPO / SUBTIPO / CONVENIO / PLAN</div>
+        <div class="fila">
+          <div class="campo">
+            <label for="tipo">TIPO</label>
+            <select id="tipo">
+              <option value="">Seleccione...</option>
+              <option value="PREPAGO">PREPAGO</option>
+              <option value="POSTPAGO">POSTPAGO</option>
+              <option value="ESPECIALES">ESPECIALES</option>
+              <option value="OTROS">OTROS</option>
+            </select>
+          </div>
+          <div class="campo">
+            <label for="subtipo">SUBTIPO</label>
+            <select id="subtipo"><option value="">Seleccione un TIPO primero...</option></select>
+          </div>
+        </div>
+        <div class="campo oculto" id="campoConvenio">
+          <label>CONVENIO</label>
+          <div class="radios" id="radiosConvenio"></div>
+        </div>
+        <div class="fila">
+          <div class="campo autocomplete" id="ac-plan">
+            <label for="plan">PLAN</label>
+            <input type="text" id="plan" placeholder="Ej: 39.9" autocomplete="off">
+            <div class="lista" id="lista-plan"></div>
+          </div>
+          <div class="campo">
+            <label for="codFinanciamiento">CÓD FINANCIAMIENTO</label>
+            <select id="codFinanciamiento"></select>
+          </div>
+        </div>
+        <div class="fila">
+          <div class="campo">
+            <label for="cargoFijo">Cargo Fijo Máximo</label>
+            <input type="number" step="0.01" id="cargoFijo" placeholder="S/">
+          </div>
+          <div class="campo">
+            <label for="capFinanciamiento">Cap. Financiamiento</label>
+            <input type="number" step="0.01" id="capFinanciamiento" placeholder="Cuota mensual máxima S/">
+          </div>
+        </div>
       </div>
-      <div class="campo">
-        <label for="subtipo">SUBTIPO</label>
-        <select id="subtipo"><option value="">Seleccione un TIPO primero...</option></select>
-      </div>
-    </div>
-    <div class="campo oculto" id="campoConvenio">
-      <label>CONVENIO</label>
-      <div class="radios" id="radiosConvenio"></div>
-    </div>
-    <div class="fila">
-      <div class="campo autocomplete" id="ac-plan">
-        <label for="plan">PLAN</label>
-        <input type="text" id="plan" placeholder="Ej: 39.9" autocomplete="off">
-        <div class="lista" id="lista-plan"></div>
-      </div>
-      <div class="campo">
-        <label for="codFinanciamiento">CÓD FINANCIAMIENTO</label>
-        <select id="codFinanciamiento"></select>
-      </div>
-    </div>
-    <div class="fila">
-      <div class="campo">
-        <label for="cargoFijo">Cargo Fijo Máximo</label>
-        <input type="number" step="0.01" id="cargoFijo" placeholder="S/">
-      </div>
-      <div class="campo">
-        <label for="capFinanciamiento">Cap. Financiamiento</label>
-        <input type="number" step="0.01" id="capFinanciamiento" placeholder="Cuota mensual máxima S/">
-      </div>
-    </div>
-  </div>
 
-  <div class="panel">
-    <div class="panel-titulo">3. Buscar equipo</div>
-    <div class="campo autocomplete" id="ac-equipo">
-      <label for="equipoBuscar">Nombre del equipo</label>
-      <input type="text" id="equipoBuscar" placeholder="Escriba para buscar..." autocomplete="off">
-    </div>
-    <div class="filtros-grid">
-      <div class="campo"><label for="filtroRam">RAM</label><select id="filtroRam"><option value="">Todas</option></select></div>
-      <div class="campo"><label for="filtroRom">ROM</label><select id="filtroRom"><option value="">Todas</option></select></div>
-      <div class="campo"><label for="filtroGama">GAMA</label><select id="filtroGama"><option value="">Todas</option></select></div>
-      <div class="campo"><label for="filtroCamara">CÁMARA PRINCIPAL</label><select id="filtroCamara"><option value="">Todas</option></select></div>
-      <div class="campo"><label for="filtroBateria">BATERÍA</label><select id="filtroBateria"><option value="">Todas</option></select></div>
-      <div class="campo"><label for="filtroPantalla">PANTALLA</label><select id="filtroPantalla"><option value="">Todas</option></select></div>
-      <div class="campo"><label for="filtroMarca">MARCA</label><select id="filtroMarca"><option value="">Todas</option></select></div>
-      <div class="campo"><label for="filtroProcesador">PROCESADOR</label><select id="filtroProcesador"><option value="">Todas</option></select></div>
-    </div>
-    <div class="fila-botones">
-      <button type="button" id="btnFiltrarTodo">🔍 Filtrar todo</button>
-      <button type="button" class="btn-limpiar" id="btnLimpiarFiltro">🧹 Limpiar filtro</button>
-    </div>
-    <div class="lista-equipos" id="listaEquipos">
-      <div class="lista-equipos-vacio">Escriba, filtre, o presione "Filtrar todo" para ver el catálogo disponible.</div>
-    </div>
-  </div>
-
-  <div class="panel oculto" id="fichaPanel">
-    <div class="panel-titulo">4. Ficha del equipo</div>
-    <div class="ficha-cabecera">
-      <div class="ficha-foto" id="fichaFoto"><span class="icono-generico">📱</span></div>
-      <div>
-        <div class="ficha-titulo" id="fichaTitulo">-</div>
-        <div class="ficha-sub" id="fichaSub"></div>
+      <div class="panel">
+        <div class="panel-titulo">3. Buscar equipo</div>
+        <div class="campo autocomplete" id="ac-equipo">
+          <label for="equipoBuscar">Nombre del equipo</label>
+          <input type="text" id="equipoBuscar" placeholder="Escriba para buscar..." autocomplete="off">
+        </div>
+        <div class="filtros-grid">
+          <div class="campo"><label for="filtroRam">RAM</label><select id="filtroRam"><option value="">Todas</option></select></div>
+          <div class="campo"><label for="filtroRom">ROM</label><select id="filtroRom"><option value="">Todas</option></select></div>
+          <div class="campo"><label for="filtroGama">GAMA</label><select id="filtroGama"><option value="">Todas</option></select></div>
+          <div class="campo"><label for="filtroCamara">CÁMARA PRINCIPAL</label><select id="filtroCamara"><option value="">Todas</option></select></div>
+          <div class="campo"><label for="filtroBateria">BATERÍA</label><select id="filtroBateria"><option value="">Todas</option></select></div>
+          <div class="campo"><label for="filtroPantalla">PANTALLA</label><select id="filtroPantalla"><option value="">Todas</option></select></div>
+          <div class="campo"><label for="filtroMarca">MARCA</label><select id="filtroMarca"><option value="">Todas</option></select></div>
+          <div class="campo"><label for="filtroProcesador">PROCESADOR</label><select id="filtroProcesador"><option value="">Todas</option></select></div>
+        </div>
+        <div class="fila-botones">
+          <button type="button" id="btnFiltrarTodo">🔍 Filtrar todo</button>
+          <button type="button" class="btn-limpiar" id="btnLimpiarFiltro">🧹 Limpiar filtro</button>
+        </div>
+        <div class="lista-equipos-contador oculto" id="listaEquiposContador"></div>
+        <div class="lista-equipos" id="listaEquipos">
+          <div class="lista-equipos-vacio">Escriba, filtre, o presione "Filtrar todo" para ver el catálogo disponible.</div>
+        </div>
       </div>
     </div>
-    <div class="specs-tabla" id="fichaSpecs"></div>
-    <div class="campo" style="margin-top:10px;">
-      <label>Colores en stock (zona elegida)</label>
-      <div id="fichaColores"><span class="sin-stock-zona">Seleccione ubicación para ver stock/colores</span></div>
-    </div>
-    <div class="pack-aviso oculto" id="fichaPack"></div>
-  </div>
 
-  <div class="panel oculto" id="precioPanel">
-    <div class="panel-titulo">5. Precio del equipo</div>
-    <div id="precioContenido"></div>
-  </div>
+    <div class="columna">
+      <div class="panel oculto" id="fichaPanel">
+        <div class="panel-titulo">4. Ficha del equipo</div>
+        <div class="ficha-cabecera">
+          <div class="ficha-foto" id="fichaFoto"><span class="icono-generico">📱</span></div>
+          <div>
+            <div class="ficha-titulo" id="fichaTitulo">-</div>
+            <div class="ficha-sub" id="fichaSub"></div>
+            <div class="ficha-badges" id="fichaBadges"></div>
+          </div>
+        </div>
+        <div class="specs-tabla" id="fichaSpecs"></div>
+        <div class="seccion-subtitulo">Colores en stock (zona elegida)</div>
+        <div id="fichaColores"><span class="sin-stock-zona">Seleccione ubicación para ver stock/colores</span></div>
+        <div class="pack-aviso oculto" id="fichaPack"></div>
+      </div>
 
-  <div class="panel oculto" id="comparaPanel">
-    <div class="panel-titulo">6. Comparar AL CONTADO vs FINANCIADO (todos los planes)</div>
-    <div class="tabla-comparar-wrap">
-      <table class="tabla-comparar">
-        <thead><tr><th>MODELO</th><th>PLAN</th><th>AL CONTADO</th><th>FINANCIADO</th></tr></thead>
-        <tbody id="comparaTbody"></tbody>
-      </table>
+      <div class="panel oculto" id="precioPanel">
+        <div class="panel-titulo">5. Precio del equipo</div>
+        <div id="precioContenido"></div>
+      </div>
+
+      <div class="panel oculto" id="comparaPanel">
+        <div class="panel-titulo">6. Comparar AL CONTADO vs FINANCIADO (todos los planes)</div>
+        <div class="tabla-comparar-wrap">
+          <table class="tabla-comparar">
+            <thead><tr><th>MODELO</th><th>PLAN</th><th>AL CONTADO</th><th>FINANCIADO</th></tr></thead>
+            <tbody id="comparaTbody"></tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -277,9 +384,36 @@
   </div>
 </div>
 
+<div class="resumen-flotante" id="resumenFlotante">
+  <span id="rfEquipo"></span>
+  <span class="rf-sep">·</span>
+  <span id="rfPrecio"></span>
+</div>
+
 <script>
 (function(){
   function $(id){ return document.getElementById(id); }
+
+  // Modo oscuro: misma clave de localStorage que FLUJO/index.html ("tema_oscuro"), asi que
+  // el tema elegido en cualquiera de las dos paginas queda sincronizado (mismo origen, mismo
+  // storage). Se aplica antes del fetch de datos para que no haya flash de modo claro.
+  (function initTema(){
+    var LS_TEMA = "tema_oscuro";
+    var btn = $("btnTema");
+    function aplicar(oscuro){
+      document.body.classList.toggle("tema-oscuro", oscuro);
+      btn.textContent = oscuro ? "☀️" : "🌙";
+      btn.title = oscuro ? "Cambiar a modo claro" : "Cambiar a modo oscuro";
+    }
+    var guardado = false;
+    try{ guardado = localStorage.getItem(LS_TEMA) === "1"; }catch(err){}
+    aplicar(guardado);
+    btn.addEventListener("click", function(){
+      var oscuro = !document.body.classList.contains("tema-oscuro");
+      aplicar(oscuro);
+      try{ localStorage.setItem(LS_TEMA, oscuro ? "1" : "0"); }catch(err){}
+    });
+  })();
 
   var DATA = { cobertura: [], specs: [], equiposPlanes: [], codFinanciamiento: [], stock: [], packs: [],
     planes: [], equiposTipoventa: {}, precios: {}, gamaFinanciamiento: {}, equiposImagenes: [],
@@ -520,6 +654,7 @@
       if (seleccionCobertura && norm(input.value) !== norm(seleccionCobertura.distrito)) {
         seleccionCobertura = null;
         $("ubicacionResumen").style.display = "none";
+        actualizarStepper();
       }
       var q = norm(input.value);
       lista.innerHTML = "";
@@ -552,6 +687,7 @@
           // aca (equipoTieneStockEnZona) — sin esto quedaba desactualizada hasta que el
           // agente volviera a escribir o tocar un filtro.
           refrescarListaEquiposSiHaceFalta();
+          actualizarStepper();
         });
         lista.appendChild(div);
       });
@@ -860,6 +996,7 @@
     var hayFiltro = q || hayFiltroCampo;
     if (!hayFiltro && !forzarTodo){
       $("listaEquipos").innerHTML = '<div class="lista-equipos-vacio">Escriba, filtre, o presione "Filtrar todo" para ver el catálogo disponible.</div>';
+      $("listaEquiposContador").classList.add("oculto");
       return;
     }
     var resultados = DATA.equiposPlanes.filter(function(nombre){
@@ -883,10 +1020,16 @@
   }
   function renderListaEquipos(nombres){
     var cont = $("listaEquipos");
+    var contador = $("listaEquiposContador");
     if (!nombres.length){
       cont.innerHTML = '<div class="lista-equipos-vacio">Sin resultados para los filtros elegidos.</div>';
+      contador.classList.add("oculto");
       return;
     }
+    contador.textContent = nombres.length > 200
+      ? ("Mostrando 200 de " + nombres.length + " equipos — afina la búsqueda para ver el resto")
+      : (nombres.length + (nombres.length === 1 ? " equipo encontrado" : " equipos encontrados"));
+    contador.classList.remove("oculto");
     cont.innerHTML = "";
     nombres.slice(0, 200).forEach(function(nombre){
       var div = document.createElement("div");
@@ -915,6 +1058,7 @@
     CAMPOS_FILTRO.forEach(function(f){ $(f.id).value = ""; });
     actualizarOpcionesFiltros();
     $("listaEquipos").innerHTML = '<div class="lista-equipos-vacio">Escriba, filtre, o presione "Filtrar todo" para ver el catálogo disponible.</div>';
+    $("listaEquiposContador").classList.add("oculto");
   }
 
   // ============ FICHA + FOTO/ZOOM ============
@@ -939,6 +1083,10 @@
     function fila(label, valor){
       return '<div class="specs-label">' + label + '</div><div class="specs-valor">' + valor + '</div>';
     }
+    var esPh = esEquipoPhoenix(nombreSeleccionado), esBc = esEquipoBancos(nombreSeleccionado);
+    $("fichaBadges").innerHTML =
+      (esPh ? '<span class="badge-phoenix">⭐ PHOENIX</span>' : "") +
+      (esBc ? '<span class="badge-bancos">BANCOS</span>' : "");
     var foto = $("fichaFoto");
     var match = mejorMatchImagen(nombreSeleccionado);
     if (match){
@@ -958,14 +1106,49 @@
   $("btnCerrarZoom").addEventListener("click", function(){ $("zoomOverlay").classList.remove("visible"); });
   $("zoomOverlay").addEventListener("click", function(e){ if (e.target === this) this.classList.remove("visible"); });
 
+  // ============ PROGRESO (stepper) + BARRA DE RESUMEN FIJA ============
+  // ultimoPrecioValido: true solo cuando pintarGridSoloContado/pintarGridPrecio pintaron un
+  // precio real (aunque venga con una advertencia, ej. "CÓD 3 = solo contado" o Cap.=0) —
+  // pintarAviso() (sin precio calculable: falta PLAN, equipo no encontrado, etc.) lo pone en
+  // false. Asi el paso "Resultado" del stepper no depende de adivinar el contenido pintado.
+  var ultimoPrecioValido = false;
+  function actualizarStepper(){
+    function set(id, estado){ $(id).className = "step" + (estado ? " " + estado : ""); }
+    var pasoUbicacion = !!seleccionCobertura;
+    var tipo = $("tipo").value, subtipo = $("subtipo").value;
+    var pasoPlan = !!(tipo && subtipo && claveDePlan($("plan").value.trim()));
+    var pasoEquipo = !!equipoActual;
+    var pasoResultado = pasoEquipo && ultimoPrecioValido;
+    set("step-ubicacion", pasoUbicacion ? "completo" : "activo");
+    set("step-plan", pasoPlan ? "completo" : (pasoUbicacion ? "activo" : ""));
+    set("step-equipo", pasoEquipo ? "completo" : (pasoPlan ? "activo" : ""));
+    set("step-resultado", pasoResultado ? "completo" : (pasoEquipo ? "activo" : ""));
+  }
+  function actualizarBarraResumen(equipoTexto, precioTexto){
+    var barra = $("resumenFlotante");
+    if (!equipoTexto || !precioTexto){ barra.classList.remove("visible"); return; }
+    $("rfEquipo").innerHTML = "📱 <b>" + equipoTexto + "</b>";
+    $("rfPrecio").innerHTML = precioTexto;
+    barra.classList.add("visible");
+  }
+
   // ============ PRECIO (CONTADO/FINANCIADO) + COMPARAR ============
   function pintarAviso(texto, tipo){
     $("precioContenido").innerHTML = '<div class="aviso-linea ' + (tipo || "info") + '">' + texto + '</div>';
     $("comparaPanel").classList.add("oculto");
+    ultimoPrecioValido = false;
+    actualizarBarraResumen(null, null);
+    actualizarStepper();
   }
   function recalcularTodo(){
     $("comparaPanel").classList.add("oculto");
-    if (!equipoActual){ $("precioPanel").classList.add("oculto"); return; }
+    if (!equipoActual){
+      $("precioPanel").classList.add("oculto");
+      ultimoPrecioValido = false;
+      actualizarBarraResumen(null, null);
+      actualizarStepper();
+      return;
+    }
     $("precioPanel").classList.remove("oculto");
 
     var tipo = $("tipo").value, subtipo = $("subtipo").value;
@@ -1022,21 +1205,29 @@
   }
   function pintarGridSoloContado(total, modalidad){
     $("precioContenido").innerHTML =
-      '<div class="linea"><span>Total a Pagar</span><b>S/ ' + total.toFixed(2) + '</b></div>' +
-      '<div class="linea"><span>Modalidad</span><b>' + modalidad + '</b></div>' +
+      '<div class="precio-stats">' +
+        '<div class="precio-stat destacado"><div class="stat-label">Total a Pagar</div><div class="stat-valor">S/ ' + total.toFixed(2) + '</div></div>' +
+        '<div class="precio-stat"><div class="stat-label">Modalidad</div><div class="stat-valor" style="font-size:15px;">' + modalidad + '</div></div>' +
+      '</div>' +
       '<div class="aviso-linea info">Sin cuotas: aplica solo a la modalidad FINANCIADO.</div>';
+    ultimoPrecioValido = true;
+    actualizarBarraResumen(equipoActual, "Al contado: <b>S/ " + total.toFixed(2) + "</b>");
+    actualizarStepper();
   }
   function pintarGridPrecio(total, cuota, inicial, inicialTexto, advertencia){
     var planNum = parseFloat($("plan").value);
     var pagoMesTxt = (cuota != null && !isNaN(planNum)) ? ("S/ " + (planNum + cuota).toFixed(2)) : "-";
     $("precioContenido").innerHTML =
-      '<div class="precio-equipo-grid">' +
-        '<div class="linea"><span class="linea-titulo-rojo">Total a Pagar</span><b>S/ ' + total.toFixed(2) + '</b></div>' +
-        '<div class="linea"><span class="linea-titulo-rojo">Cuota Mensual</span><b>' + (cuota != null ? ("S/ " + cuota.toFixed(2)) : "-") + '</b></div>' +
-        '<div class="linea"><span class="linea-titulo-rojo">Cuota Inicial a Pagar</span><b>' + (inicialTexto || "-") + '</b></div>' +
-        '<div class="linea"><span class="linea-titulo-rojo">Pago Mensual (CF+Cuota)</span><b>' + pagoMesTxt + '</b></div>' +
+      '<div class="precio-stats">' +
+        '<div class="precio-stat"><div class="stat-label">Total a Pagar</div><div class="stat-valor">S/ ' + total.toFixed(2) + '</div></div>' +
+        '<div class="precio-stat destacado"><div class="stat-label">Cuota Mensual</div><div class="stat-valor">' + (cuota != null ? ("S/ " + cuota.toFixed(2)) : "-") + '</div></div>' +
+        '<div class="precio-stat"><div class="stat-label">Cuota Inicial a Pagar</div><div class="stat-valor">' + (inicialTexto || "-") + '</div></div>' +
+        '<div class="precio-stat"><div class="stat-label">Pago Mensual (CF+Cuota)</div><div class="stat-valor">' + pagoMesTxt + '</div></div>' +
       '</div>' +
       (advertencia ? ('<div class="aviso-linea err">⚠ ' + advertencia + '</div>') : "");
+    ultimoPrecioValido = true;
+    actualizarBarraResumen(equipoActual, cuota != null ? ("Cuota mensual: <b>S/ " + cuota.toFixed(2) + "</b>") : ("Total: <b>S/ " + total.toFixed(2) + "</b>"));
+    actualizarStepper();
   }
   function renderComparar(tabla, modelo, claveP){
     var preciosContado = tabla.precios.CONTADO[modelo] || {};
@@ -1080,6 +1271,8 @@
     $("btnFiltrarTodo").addEventListener("click", function(){ ultimaBusquedaForzada = true; buscarEquipos(true); });
     $("btnLimpiarFiltro").addEventListener("click", function(){ ultimaBusquedaForzada = false; limpiarFiltros(); });
     CAMPOS_FILTRO.forEach(function(f){ $(f.id).addEventListener("change", function(){ buscarEquipos(); }); });
+
+    actualizarStepper();
   }
 })();
 </script>
