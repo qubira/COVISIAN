@@ -1,56 +1,444 @@
 {
-"fechaAnterior": "2026-09-03T10:03:38",
-"fechaActual": "2026-09-03T11:00:11",
+"fechaAnterior": "2026-09-03T11:00:12",
+"fechaActual": "2026-09-03T15:49:55",
 "agregados": [
 {
+"zona": "AREQUIPA",
+"modelo": "HONOR 600E DORADO LNA-NX3 512GB C/PACK"
+},
+{
+"zona": "AREQUIPA",
+"modelo": "HONOR MAGIC 8 LITE DORADO 512GB 5G"
+},
+{
+"zona": "AREQUIPA",
+"modelo": "HONOR MAGIC 8 LITE DORADO 512GB 5G C/P"
+},
+{
+"zona": "AREQUIPA",
+"modelo": "HONOR MAGIC 8 LITE NEGRO 512GB 5G"
+},
+{
+"zona": "AREQUIPA",
+"modelo": "HONOR MAGIC 8 LITE VERDE 512GB 5G"
+},
+{
+"zona": "AREQUIPA",
+"modelo": "HONOR MAGIC 8 LITE VERDE 512GB 5G C/P"
+},
+{
+"zona": "AREQUIPA",
+"modelo": "HONOR X5D NEGRO NAA-LX3 128GB"
+},
+{
+"zona": "AREQUIPA",
+"modelo": "OPPO A6K AZUL 256GB LTE"
+},
+{
+"zona": "AREQUIPA",
+"modelo": "OPPO A6X GRIS 256GB 5G C/PACK"
+},
+{
+"zona": "AREQUIPA",
+"modelo": "XIAOMI REDMI NOTE 15 AZUL 256GB LTE"
+},
+{
+"zona": "AREQUIPA",
+"modelo": "ZTE BLADE A56 PRO DORADO 128GB"
+},
+{
+"zona": "AREQUIPA",
+"modelo": "ZTE BLADE A56 PRO GRIS 128GB"
+},
+{
+"zona": "AREQUIPA",
+"modelo": "ZTE NUBIA V80 MAX MORADO 256GB"
+},
+{
+"zona": "AREQUIPA",
+"modelo": "ZTE NUBIA V80 PRO NEGRO 256GB C/PACK"
+},
+{
+"zona": "LA LIBERTAD",
+"modelo": "HONOR 600E DORADO LNA-NX3 512GB C/PACK"
+},
+{
+"zona": "LA LIBERTAD",
+"modelo": "HONOR MAGIC 8 LITE DORADO 512GB 5G"
+},
+{
+"zona": "LA LIBERTAD",
+"modelo": "HONOR MAGIC 8 LITE DORADO 512GB 5G C/P"
+},
+{
+"zona": "LA LIBERTAD",
+"modelo": "HONOR MAGIC 8 LITE NEGRO 512GB 5G"
+},
+{
+"zona": "LA LIBERTAD",
+"modelo": "HONOR MAGIC 8 LITE VERDE 512GB 5G"
+},
+{
+"zona": "LA LIBERTAD",
+"modelo": "HONOR MAGIC 8 LITE VERDE 512GB 5G C/P"
+},
+{
+"zona": "LA LIBERTAD",
+"modelo": "OPPO A6K AZUL 256GB LTE"
+},
+{
+"zona": "LA LIBERTAD",
+"modelo": "OPPO A6X GRIS 256GB 5G C/PACK"
+},
+{
+"zona": "LA LIBERTAD",
+"modelo": "XIAOMI REDMI NOTE 15 AZUL 256GB LTE"
+},
+{
+"zona": "LA LIBERTAD",
+"modelo": "XIAOMI REDMI NOTE 15 PRO NEGR 512 5G C/P"
+},
+{
+"zona": "LA LIBERTAD",
+"modelo": "XIAOMI REDMI NOTE 15 PRO+ CAFE 512GB"
+},
+{
+"zona": "LA LIBERTAD",
+"modelo": "ZTE BLADE A56 PRO DORADO 128GB"
+},
+{
+"zona": "LA LIBERTAD",
+"modelo": "ZTE BLADE A56 PRO GRIS 128GB"
+},
+{
+"zona": "LA LIBERTAD",
+"modelo": "ZTE NUBIA V80 MAX MORADO 256GB"
+},
+{
+"zona": "LA LIBERTAD",
+"modelo": "ZTE NUBIA V80 PRO NEGRO 256GB C/PACK"
+},
+{
 "zona": "LAMBAYEQUE",
-"modelo": "MOTOROLA G06 AZUL XT25352 128GB"
+"modelo": "HONOR 600E DORADO LNA-NX3 512GB C/PACK"
+},
+{
+"zona": "LAMBAYEQUE",
+"modelo": "HONOR MAGIC 8 LITE DORADO 512GB 5G"
+},
+{
+"zona": "LAMBAYEQUE",
+"modelo": "HONOR MAGIC 8 LITE DORADO 512GB 5G C/P"
+},
+{
+"zona": "LAMBAYEQUE",
+"modelo": "HONOR MAGIC 8 LITE NEGRO 512GB 5G"
+},
+{
+"zona": "LAMBAYEQUE",
+"modelo": "HONOR MAGIC 8 LITE VERDE 512GB 5G"
+},
+{
+"zona": "LAMBAYEQUE",
+"modelo": "HONOR X5D NEGRO NAA-LX3 128GB"
+},
+{
+"zona": "LAMBAYEQUE",
+"modelo": "OPPO A6K AZUL 256GB LTE"
+},
+{
+"zona": "LAMBAYEQUE",
+"modelo": "OPPO A6X GRIS 256GB 5G C/PACK"
+},
+{
+"zona": "LAMBAYEQUE",
+"modelo": "XIAOMI REDMI NOTE 15 AZUL 256GB LTE"
+},
+{
+"zona": "LAMBAYEQUE",
+"modelo": "XIAOMI REDMI NOTE 15 PRO NEGR 512 5G C/P"
+},
+{
+"zona": "LAMBAYEQUE",
+"modelo": "ZTE BLADE A56 PRO DORADO 128GB"
+},
+{
+"zona": "LAMBAYEQUE",
+"modelo": "ZTE BLADE A56 PRO GRIS 128GB"
+},
+{
+"zona": "LAMBAYEQUE",
+"modelo": "ZTE NUBIA V80 PRO NEGRO 256GB C/PACK"
+},
+{
+"zona": "LIMA",
+"modelo": "HONOR 600 NARANJA VKJ-NX9 512GB C/PACK"
+},
+{
+"zona": "LIMA",
+"modelo": "HONOR 600E DORADO LNA-NX3 512GB C/PACK"
+},
+{
+"zona": "LIMA",
+"modelo": "HONOR MAGIC 8 LITE DORADO 512GB 5G"
+},
+{
+"zona": "LIMA",
+"modelo": "HONOR MAGIC 8 LITE DORADO 512GB 5G C/P"
+},
+{
+"zona": "LIMA",
+"modelo": "HONOR MAGIC 8 LITE NEGRO 512GB 5G"
+},
+{
+"zona": "LIMA",
+"modelo": "HONOR MAGIC 8 LITE VERDE 512GB 5G"
+},
+{
+"zona": "LIMA",
+"modelo": "HONOR MAGIC 8 LITE VERDE 512GB 5G C/P"
+},
+{
+"zona": "LIMA",
+"modelo": "HONOR X5D NEGRO NAA-LX3 128GB"
+},
+{
+"zona": "LIMA",
+"modelo": "HONOR X7E AZUL LAB-LX3 256GB LTE"
+},
+{
+"zona": "LIMA",
+"modelo": "HONOR X7E AZUL LAB-LX3 256GB LTE C/PACK"
+},
+{
+"zona": "LIMA",
+"modelo": "IPHONE 16 PRO MAX NEGRO MYWV3BE/A 256GB"
+},
+{
+"zona": "LIMA",
+"modelo": "OPPO A6K AZUL 256GB LTE"
+},
+{
+"zona": "LIMA",
+"modelo": "OPPO A6X GRIS 256GB 5G C/PACK"
+},
+{
+"zona": "LIMA",
+"modelo": "OPPO A6X MORADO 256GB 5G C/PACK"
+},
+{
+"zona": "LIMA",
+"modelo": "OPPO RENO 16F BLANCO 256GB 5G C/PACK"
+},
+{
+"zona": "LIMA",
+"modelo": "XIAOMI REDMI NOTE 15 AZUL 256GB LTE"
+},
+{
+"zona": "LIMA",
+"modelo": "XIAOMI REDMI NOTE 15 AZUL 256GB LTE C/P"
+},
+{
+"zona": "LIMA",
+"modelo": "XIAOMI REDMI NOTE 15 NEGRO 256GB LTE C/P"
+},
+{
+"zona": "LIMA",
+"modelo": "XIAOMI REDMI NOTE 15 PRO NEGR 512 5G C/P"
+},
+{
+"zona": "LIMA",
+"modelo": "XIAOMI REDMI NOTE 15 PRO+ CAFE 512GB"
+},
+{
+"zona": "LIMA",
+"modelo": "ZTE BLADE A56 PRO DORADO 128GB"
+},
+{
+"zona": "LIMA",
+"modelo": "ZTE BLADE A56 PRO GRIS 128GB"
+},
+{
+"zona": "LIMA",
+"modelo": "ZTE NUBIA NEO 5 MAX NEGRO 512GB 5G C/P"
+},
+{
+"zona": "LIMA",
+"modelo": "ZTE NUBIA NEO 5 PLATA 256GB 5G C/P"
+},
+{
+"zona": "LIMA",
+"modelo": "ZTE NUBIA V80 MAX MORADO 256GB"
+},
+{
+"zona": "LIMA",
+"modelo": "ZTE NUBIA V80 PRO NEGRO 256GB C/PACK"
+},
+{
+"zona": "PIURA",
+"modelo": "HONOR 600E DORADO LNA-NX3 512GB C/PACK"
+},
+{
+"zona": "PIURA",
+"modelo": "HONOR MAGIC 8 LITE DORADO 512GB 5G"
+},
+{
+"zona": "PIURA",
+"modelo": "HONOR MAGIC 8 LITE DORADO 512GB 5G C/P"
+},
+{
+"zona": "PIURA",
+"modelo": "HONOR MAGIC 8 LITE NEGRO 512GB 5G"
+},
+{
+"zona": "PIURA",
+"modelo": "HONOR MAGIC 8 LITE VERDE 512GB 5G"
+},
+{
+"zona": "PIURA",
+"modelo": "HONOR X5D NEGRO NAA-LX3 128GB"
+},
+{
+"zona": "PIURA",
+"modelo": "IPHONE 16 PRO MAX NEGRO MYWV3BE/A 256GB"
+},
+{
+"zona": "PIURA",
+"modelo": "OPPO A6K AZUL 256GB LTE"
+},
+{
+"zona": "PIURA",
+"modelo": "OPPO A6X GRIS 256GB 5G C/PACK"
+},
+{
+"zona": "PIURA",
+"modelo": "XIAOMI REDMI NOTE 15 AZUL 256GB LTE"
+},
+{
+"zona": "PIURA",
+"modelo": "XIAOMI REDMI NOTE 15 PRO+ CAFE 512GB"
+},
+{
+"zona": "PIURA",
+"modelo": "ZTE BLADE A56 PRO GRIS 128GB"
+},
+{
+"zona": "PIURA",
+"modelo": "ZTE NUBIA V80 MAX MORADO 256GB"
+},
+{
+"zona": "PIURA",
+"modelo": "ZTE NUBIA V80 PRO NEGRO 256GB C/PACK"
+},
+{
+"zona": "PROVINCIAS",
+"modelo": "HONOR X5D NEGRO NAA-LX3 128GB"
+},
+{
+"zona": "PROVINCIAS",
+"modelo": "MOTOROLA G77 ESMERALDA XT2621 256GB"
+},
+{
+"zona": "PROVINCIAS",
+"modelo": "OPPO A5 BLANCO 256GB"
+},
+{
+"zona": "PROVINCIAS",
+"modelo": "ZTE BLADE A56 PRO DORADO 128GB"
 }
 ],
 "eliminados": [
 {
 "zona": "AREQUIPA",
-"modelo": "CAMP-IPHONE 17 VERDE MG6N4BE/A 256GB"
+"modelo": "HONOR X7E NEGRO LAB-LX3 256GB LTE C/PACK"
 },
 {
 "zona": "AREQUIPA",
-"modelo": "XIAOMI REDMI NOTE 15 NEGRO 256GB LTE"
+"modelo": "IPHONE AIR ORO MG2N4BE/A 256GB ESIM"
 },
 {
 "zona": "LA LIBERTAD",
-"modelo": "XIAOMI REDMI NOTE 15 NEGRO 256GB LTE"
+"modelo": "HONOR X5D PLATA NAA-LX3 128GB"
 },
 {
 "zona": "LA LIBERTAD",
-"modelo": "XIAOMI REDMI NOTE 15 PRO+ CAFE 512GB"
+"modelo": "HONOR X7E NEGRO LAB-LX3 256GB LTE C/PACK"
 },
 {
 "zona": "LAMBAYEQUE",
-"modelo": "XIAOMI REDMI NOTE 15 NEGRO 256GB LTE"
+"modelo": "HONOR X6E NEGRO LBU-LX3 256GB"
+},
+{
+"zona": "LAMBAYEQUE",
+"modelo": "HONOR X7E NEGRO LAB-LX3 256GB LTE C/PACK"
+},
+{
+"zona": "LAMBAYEQUE",
+"modelo": "IPHONE 17 AZUL MG6L4BE/A 256GB"
+},
+{
+"zona": "LAMBAYEQUE",
+"modelo": "IPHONE 17 PRO MAX AZUL MFYP4BE/A 256GB"
+},
+{
+"zona": "LAMBAYEQUE",
+"modelo": "IPHONE AIR ORO MG2N4BE/A 256GB ESIM"
 },
 {
 "zona": "LIMA",
-"modelo": "XIAOMI REDMI NOTE 15 NEGRO 256GB LTE"
+"modelo": "HONOR X5D PLATA NAA-LX3 128GB"
 },
 {
 "zona": "LIMA",
-"modelo": "XIAOMI REDMI NOTE 15 PRO+ CAFE 512GB"
+"modelo": "HONOR X7E NEGRO LAB-LX3 256GB LTE C/PACK"
+},
+{
+"zona": "LIMA",
+"modelo": "IPHONE AIR ORO MG2N4BE/A 256GB ESIM"
+},
+{
+"zona": "LIMA",
+"modelo": "KLIPXTREME AUDIFONO TWS KTE250 AZUL DLV"
 },
 {
 "zona": "PIURA",
-"modelo": "XIAOMI REDMI NOTE 15 NEGRO 256GB LTE"
-},
-{
-"zona": "PIURA",
-"modelo": "XIAOMI REDMI NOTE 15 PRO+ CAFE 512GB"
+"modelo": "HONOR X7E NEGRO LAB-LX3 256GB LTE C/PACK"
 },
 {
 "zona": "PROVINCIAS",
-"modelo": "XIAOMI REDMI NOTE 15 NEGRO 256GB LTE"
+"modelo": "HONOR 600 NEGRO VKJ-NX9 512GB C/PACK"
 },
 {
 "zona": "PROVINCIAS",
-"modelo": "XIAOMI REDMI NOTE 15 PRO+ CAFE 512GB"
+"modelo": "HONOR 600E GRIS LNA-NX3 512GB C/PACK"
+},
+{
+"zona": "PROVINCIAS",
+"modelo": "HONOR X5D PLATA NAA-LX3 128GB"
+},
+{
+"zona": "PROVINCIAS",
+"modelo": "IPHONE AIR ORO MG2N4BE/A 256GB ESIM"
+},
+{
+"zona": "PROVINCIAS",
+"modelo": "MOTOROLA EDGE 70 512G GRIS"
+},
+{
+"zona": "PROVINCIAS",
+"modelo": "MOTOROLA EDGE 70 FUSION 256G AZUL"
+},
+{
+"zona": "PROVINCIAS",
+"modelo": "OPPO A6 PRO ROSADO 256GB 5G C/PACK"
+},
+{
+"zona": "PROVINCIAS",
+"modelo": "XIAOMI 17T NEGRO 512GB C/PACK"
+},
+{
+"zona": "PROVINCIAS",
+"modelo": "ZTE NUBIA AIR NEGRO 512GB 5G C/C"
 }
 ]
 }
