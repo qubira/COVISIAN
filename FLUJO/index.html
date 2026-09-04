@@ -8668,10 +8668,24 @@ if (location.protocol === "file:") {
     });
   }
 
+  // "Que tan avanzado" esta un caso, para decidir quien gana un choque LOCAL vs REMOTO al
+  // sincronizar (ver sincronizarCitasRemotas). VENCIDO se calcula solo, en el navegador
+  // (vencerCitasPasadas), a partir de la fecha — no es un paso posterior a TOMADO, asi que
+  // comparte rango con PENDIENTE (ninguno de los dos es "ya se atendio").
+  var RANGO_ESTADO_CASO = { PENDIENTE: 0, VENCIDO: 0, TOMADO: 1, CONCRETADO: 2 };
+
   // Trae las citas del Sheet y las combina con las locales: si una cita ya existe en las dos
   // partes, se conserva la version LOCAL (es la unica que puede tener formSnapshot, necesario
-  // para que "Tomar caso" restaure el formulario completo) pero se actualiza su "estado" con
-  // el del Sheet, que es la fuente de verdad cuando OTRO navegador ya tomo/concreto el caso.
+  // para que "Tomar caso" restaure el formulario completo). El "estado" se resuelve por rango,
+  // no por "el del Sheet siempre gana": enviarActualizacionEstadoAgenda() manda el POST con
+  // mode:"no-cors" (no hay forma de confirmar que llego ni cuando Apps Script lo procesa), asi
+  // que el intervalo de 30s de sincronizarCitasRemotas() puede correr ANTES de que el Sheet
+  // ya refleje un "Tomar caso"/"Concretado" recien hecho en ESTE MISMO navegador — sin este
+  // ajuste, listarCitas todavia devolvia el estado viejo (ej. PENDIENTE) y lo pisaba encima del
+  // TOMADO/CONCRETADO local, haciendo que el caso "resucitara" en la alerta de Casos agendados
+  // como si nunca se hubiera tomado. Ahora el remoto solo puede llevar el estado HACIA ADELANTE
+  // (o confirmar el mismo), nunca hacia atras — sigue sirviendo para enterarse de que OTRO
+  // navegador ya tomo/concreto un caso que aca seguia PENDIENTE.
   // Las citas que solo existen en el Sheet se agregan tal cual (sin formSnapshot — tomarCaso()
   // ya sabe precargar solo los datos basicos cuando no hay snapshot, ver mas abajo).
   function sincronizarCitasRemotas(callback){
@@ -8686,7 +8700,9 @@ if (location.protocol === "file:") {
         if (!remota.id) return;
         var local = porId[remota.id];
         if (local){
-          local.estado = remota.estado || local.estado;
+          var rangoRemoto = RANGO_ESTADO_CASO[remota.estado] || 0;
+          var rangoLocal = RANGO_ESTADO_CASO[local.estado] || 0;
+          if (remota.estado && rangoRemoto >= rangoLocal) local.estado = remota.estado;
         } else {
           porId[remota.id] = remota;
         }
